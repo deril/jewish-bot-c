@@ -28,7 +28,7 @@ Usage: /ex [fromCurrency] [toCurrency] [amount]";
         }
 
         private async Task PrepareMessageAsync(string[] args) {
-            if (args.Any(argument => argument == null)) {
+            if (args == null || args.Any(argument => argument == null)) {
                 message = CurrencyExchange.Description;
                 return;
             }
