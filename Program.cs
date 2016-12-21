@@ -12,7 +12,7 @@ namespace JewishBot {
             Bot.OnMessage += BotOnMessageReceived;
 
             Bot.StartReceiving();
-            Console.ReadLine();
+            while (Bot.IsReceiving) {}
             Bot.StopReceiving();
         }
 
