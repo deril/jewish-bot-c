@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using System.Threading;
+using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -11,7 +12,9 @@ namespace JewishBot {
             Bot.OnMessage += BotOnMessageReceived;
 
             Bot.StartReceiving();
-            while (Bot.IsReceiving) {}
+            while (Bot.IsReceiving) {
+                Thread.Sleep(500);
+            }
             Bot.StopReceiving();
         }
 
