@@ -14,7 +14,7 @@ param=${1-undef}
 jsvc=/usr/bin/jsvc
 
 app_name="JewishBot"
-app_home="${HOME}/Projects/JewishBot/bin/release/netcoreapp1.1/osx.10.12-x64"
+app_home="${HOME}/jewish_bot"
 
 pid_file="${app_home}/logs/app.pid"
 std_err_file="${app_home}/logs/std-err.log"
@@ -32,59 +32,20 @@ run_bot() {
 run_bot_stop() {
     if [[ -f ${pid_file} ]]; then
         kill `cat ${pid_file}`
+        rm ${pid_file}
     else
         error "no pidfile found try kill manually"
     fi
 }
 
-do_ps_status() {
-    pid=$1
-    verbose=${2}
-    ps_lines=$(ps -ae -o pid,ppid,uname,args \
-                   | egrep --color=yes "\-procnam[e] ${app_name}" || true)
-    pid_result=$(echo "$ps_lines" | egrep "^[ \t]*${pid}" || true)
-    if [[ -z $pid_result ]]; then
-        if [[ ${verbose} = 1 ]]; then
-            echo "no process is running"
-            if [[ -f ${pid_file} ]]; then
-                pid_content="$(cat ${pid_file})"
-                echo "pidfile content is: ${pid_content}"
-                rm -vf ${pid_file}
-            fi
-        fi
-        return 0
-    else
-        if [[ ${verbose} = 1 ]]; then
-            echo "is running"
-            echo -e "$pid_result"
-        fi
-        return 1
-    fi
-
-}
-
 is_running() {
-    verbose=${1-0}
-    if [[ -f ${pid_file} ]]; then
-        if [[ ${verbose} = 1 ]]; then
-            echo "pidfile found"
-        fi
-        if do_ps_status $(cat ${pid_file}) ${verbose}; then
-            return 1
-        else
-            return 0
-        fi
-    else
-        if [[ ${verbose} = 1 ]]; then
-            echo "no pidfile found"
-        fi
-        if do_ps_status "" ${verbose}; then
-            return 1
-        else
-            return 0
-        fi
-        return 1
-    fi
+    if [ -e ${pid_file} ]; then
+      echo ${app_name} is running, pid=`cat ${pid_file}`
+      return 0
+   else
+      echo ${app_name} is NOT running
+      return 1
+   fi
 }
 
 do_start() {
@@ -121,7 +82,7 @@ case "$param" in
         do_stop
         ;;
     status)
-        is_running 1
+        is_running
         ;;
     restart)
         echo "restarting ${app_name}:"
