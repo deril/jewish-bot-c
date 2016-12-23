@@ -25,7 +25,7 @@ namespace JewishBot {
 
             Command command = new CommandParser(message.Text).Parse();
 
-            new CommandsHandler(Bot).Execute(command, message.Chat.Id);
+            new CommandsHandler(Bot, message).Execute(command);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace JewishBot.Actions {
 
         private readonly TelegramBotClient bot;
         private readonly DictApi UD = new DictApi();
-        private string message = "Please cpecify at least 1 search term";
+        private string message = "Please specify at least 1 search term";
 
         public UrbanDictionary(TelegramBotClient bot) {
             this.bot = bot;
