@@ -35,6 +35,9 @@ namespace JewishBot {
                 case "dice":
                     new RollDice(bot).HandleAsync(chatId, username, command.Arguments);
                     break;
+                case "poem":
+                    new Poem(bot).HandleAsync(chatId);
+                    break;
             }
         }
     }

@@ -5,14 +5,13 @@ using Newtonsoft.Json;
 namespace JewishBot.Services {
     public abstract class ApiService {
         private string baseUrl;
-        private string queryUrl;
-        private string content = string.Empty;
-        private HttpResponseMessage response;
-        private HttpClient httpClient;
+        public string queryUrl;
+        public string content = string.Empty;
+        public HttpResponseMessage response;
+        public HttpClient httpClient = new HttpClient();
         
         public async Task<T> Invoke<T>(string pair) where T : new() {
             try {
-                httpClient = new HttpClient();
                 this.queryUrl = buildEndpointRoute(pair);
                 response = await httpClient.GetAsync(this.queryUrl);
                 response.EnsureSuccessStatusCode();
