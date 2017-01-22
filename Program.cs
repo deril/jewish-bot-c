@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Threading;
+using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
@@ -6,9 +8,22 @@ using Telegram.Bot.Types.Enums;
 
 namespace JewishBot {
     public class Program {
-        private static readonly TelegramBotClient Bot = new TelegramBotClient("183899146:AAELl2uvAuSTCyRakQ0kI5zAKeEkI0KNgxQ");
+        private static IConfiguration Configuration { get; set; }
+        private static TelegramBotClient Bot { get; set; }
 
         public static void Main(string[] args) {
+            try {
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json");
+                Configuration = builder.Build();
+            } catch (FileNotFoundException e) {
+                System.Console.WriteLine(e.Message);
+                return;
+            }
+
+            Bot = new TelegramBotClient(Configuration["telegramBotApi"]);
+
             Bot.OnMessage += BotOnMessageReceived;
 
             Bot.StartReceiving();
