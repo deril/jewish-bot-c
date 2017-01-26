@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,62 +8,73 @@ using Telegram.Bot;
 
 namespace JewishBot.Actions
 {
-    class CurrencyExchange : IAction {
-
-        public static string Description { get; } = @"Converts currencies using Yahoo API; default amount 1. 
+    internal class CurrencyExchange : IAction
+    {
+        public static string Description { get; } = @"Converts currencies using Yahoo API; default amount 1.
 Usage: /ex [fromCurrency] [toCurrency] [amount]";
-        private readonly TelegramBotClient bot;
-        private readonly CurrencyApi currencyApi = new CurrencyApi();
-        private string message;
-        private string fromCurrency;
-        private string toCurrency;
-        private decimal amount = 0;
 
-        public CurrencyExchange(TelegramBotClient bot) {
-            this.bot = bot;
+        private readonly TelegramBotClient _bot;
+        private readonly CurrencyApi _currencyApi = new CurrencyApi();
+        private string _message;
+        private string _fromCurrency;
+        private string _toCurrency;
+        private decimal _amount;
+
+        public CurrencyExchange(TelegramBotClient bot)
+        {
+            _bot = bot;
         }
 
-        public async void HandleAsync(long chatId, string[] args) {
+        public async void HandleAsync(long chatId, string[] args)
+        {
             await PrepareMessageAsync(args);
-            await bot.SendTextMessageAsync(chatId, message);
+            await _bot.SendTextMessageAsync(chatId, _message);
         }
 
-        private async Task PrepareMessageAsync(string[] args) {
-            if (args == null || args.Any(argument => argument == null)) {
-                message = CurrencyExchange.Description;
+        private async Task PrepareMessageAsync(IReadOnlyList<string> args)
+        {
+            if (args == null || args.Any(argument => argument == null))
+            {
+                _message = Description;
                 return;
             }
 
-            switch (args.Length) {
+            switch (args.Count)
+            {
                 case 2:
-                    fromCurrency = args[0];
-                    toCurrency = args[1];
+                    _fromCurrency = args[0];
+                    _toCurrency = args[1];
                     break;
                 case 3:
-                    fromCurrency = args[0];
-                    toCurrency = args[1];
-                    amount = decimal.Parse(args[2]);
+                    _fromCurrency = args[0];
+                    _toCurrency = args[1];
+                    _amount = decimal.Parse(args[2]);
                     break;
                 default:
-                    message = CurrencyExchange.Description;
+                    _message = Description;
                     return;
             }
 
-            if (fromCurrency != null && toCurrency != null) {
-                var rates = await currencyApi.Invoke<QueryModel>($"{fromCurrency}{toCurrency}");
+            if (_fromCurrency != null && _toCurrency != null)
+            {
+                var rates = await _currencyApi.Invoke<QueryModel>($"{_fromCurrency}{_toCurrency}");
 
-                if (rates.Query == null || rates.Query.Results.Rate._Rate == "N/A") {
-                    message = "Something goes wrong";
+                if (rates.Query == null || rates.Query.Results.Rate._Rate == "N/A")
+                {
+                    _message = "Something goes wrong";
                     return;
                 }
 
                 var rateResult = rates.Query.Results.Rate;
 
-                if (amount == 0) {
-                    message = $"{fromCurrency}/{toCurrency} -> {rateResult._Rate}";
-                } else {
-                    decimal value = decimal.Parse(rateResult._Rate, new CultureInfo(rates.Query.Lang)) * amount;
-                    message = String.Format("{0} {1} -> {2:0.00} {3}", amount, fromCurrency, value, toCurrency);
+                if (_amount == 0)
+                {
+                    _message = $"{_fromCurrency}/{_toCurrency} -> {rateResult._Rate}";
+                }
+                else
+                {
+                    var value = decimal.Parse(rateResult._Rate, new CultureInfo(rates.Query.Lang)) * _amount;
+                    _message = $"{_amount} {_fromCurrency} -> {value:0.00} {_toCurrency}";
                 }
             }
         }

@@ -1,12 +1,15 @@
-
 using Newtonsoft.Json;
 
-namespace JewishBot.Services.Yahoo {
-    public class QueryModel {
+namespace JewishBot.Services.Yahoo
+{
+    public class QueryModel
+    {
         [JsonProperty("query")]
         public Query Query { get; set; }
     }
-    public class Query {
+
+    public class Query
+    {
         [JsonProperty("count")]
         public int Count { get; set; }
 
@@ -20,12 +23,14 @@ namespace JewishBot.Services.Yahoo {
         public Results Results { get; set; }
     }
 
-    public class Results {
+    public class Results
+    {
         [JsonProperty("rate")]
         public Rate Rate { get; set; }
     }
 
-    public class Rate {
+    public class Rate
+    {
         [JsonProperty("rate")]
         public string _Rate { get; set; }
     }

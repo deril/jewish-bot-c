@@ -1,17 +1,22 @@
 using Telegram.Bot;
 
-namespace JewishBot.Actions {
-    public class Hey : IAction {
+namespace JewishBot.Actions
+{
+    internal class Hey : IAction
+    {
+        private readonly TelegramBotClient _bot;
 
-        private readonly TelegramBotClient bot;
-        public Hey(TelegramBotClient bot) {
-            this.bot = bot;
+        public Hey(TelegramBotClient bot)
+        {
+            _bot = bot;
         }
-        public static string Description { get; } = @"Helloes to sender. 
+
+        public static string Description { get; } = @"Helloes to sender.
             Usage: /hey";
 
-        public async void HandleAsync(long chatId, string[] args = null) {
-            await bot.SendTextMessageAsync(chatId, "Hey!");
+        public async void HandleAsync(long chatId, string[] args = null)
+        {
+            await _bot.SendTextMessageAsync(chatId, "Hey!");
         }
     }
 }

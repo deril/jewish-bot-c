@@ -1,40 +1,45 @@
 using JewishBot.Services.DuckDuckGo;
 using Telegram.Bot;
 
-namespace JewishBot.Actions {
-    public class DuckDuckGo : IAction {
+namespace JewishBot.Actions
+{
+    internal class DuckDuckGo : IAction
+    {
+        private readonly TelegramBotClient _bot;
+        private readonly GoApi _go = new GoApi();
+        private string _message = "Please specify at least 1 search term";
 
-        private readonly TelegramBotClient bot;
-        private readonly GoApi Go = new GoApi();
-        private string message = "Please specify at least 1 search term";
-
-        public DuckDuckGo(TelegramBotClient bot) {
-            this.bot = bot;
+        public DuckDuckGo(TelegramBotClient bot)
+        {
+            _bot = bot;
         }
 
-        public async void HandleAsync(long chatId, string[] args) {
-            if (args != null) {
-                var result = await Go.Invoke<QueryModel>(string.Join(" ", args));
-                switch (result.Type) {
+        public async void HandleAsync(long chatId, string[] args)
+        {
+            if (args != null)
+            {
+                var result = await _go.Invoke<QueryModel>(string.Join(" ", args));
+                switch (result.Type)
+                {
                     case "A":
-                        message = result.AbstractText;
+                        _message = result.AbstractText;
                         break;
                     case "D":
-                        message = result.RelatedTopics[0].Text;
+                        _message = result.RelatedTopics[0].Text;
                         break;
                     case "E":
-                        message = result.Redirect;
+                        _message = result.Redirect;
                         break;
                     case "C":
-                        message = result.AbstractURL;
+                        _message = result.AbstractUrl;
                         break;
                     default:
                         // TODO: implement here logging
-                        message = "Nothing found \uD83D\uDE22";
+                        _message = "Nothing found \uD83D\uDE22";
                         break;
                 }
             }
-            await bot.SendTextMessageAsync(chatId, message);
+            await _bot.SendTextMessageAsync(chatId, _message);
         }
     }
 }

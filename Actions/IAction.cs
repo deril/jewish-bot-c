@@ -1,4 +1,6 @@
-namespace JewishBot.Actions {
-    interface IAction {
+namespace JewishBot.Actions
+{
+    internal interface IAction
+    {
     }
 }

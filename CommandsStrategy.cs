@@ -2,41 +2,46 @@ using JewishBot.Actions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace JewishBot {
-    public class CommandsHandler {
+namespace JewishBot
+{
+    public class CommandsHandler
+    {
+        private readonly TelegramBotClient _bot;
+        private readonly Message _message;
 
-        private readonly TelegramBotClient bot;
-        private readonly Message message;
-
-        public CommandsHandler(TelegramBotClient bot, Message message) {
-            this.bot = bot;
-            this.message = message;
+        public CommandsHandler(TelegramBotClient bot, Message message)
+        {
+            _bot = bot;
+            _message = message;
         }
-        public void Execute(Command command) {
-            long chatId = message.Chat.Id;
-            string username = message.From.Username;
 
-            switch (command.Name) {
+        public void Execute(Command command)
+        {
+            var chatId = _message.Chat.Id;
+            var username = _message.From.Username;
+
+            switch (command.Name)
+            {
                 case "echo":
-                    new Echo(bot).HandleAsync(chatId, command.Arguments);
+                    new Echo(_bot).HandleAsync(chatId, command.Arguments);
                     break;
                 case "hey":
-                    new Hey(bot).HandleAsync(chatId);
+                    new Hey(_bot).HandleAsync(chatId);
                     break;
                 case "ex":
-                    new CurrencyExchange(bot).HandleAsync(chatId, command.Arguments);
+                    new CurrencyExchange(_bot).HandleAsync(chatId, command.Arguments);
                     break;
                 case "ud":
-                    new UrbanDictionary(bot).HandleAsync(chatId, command.Arguments);
+                    new UrbanDictionary(_bot).HandleAsync(chatId, command.Arguments);
                     break;
                 case "go":
-                    new DuckDuckGo(bot).HandleAsync(chatId, command.Arguments);
+                    new DuckDuckGo(_bot).HandleAsync(chatId, command.Arguments);
                     break;
                 case "dice":
-                    new RollDice(bot).HandleAsync(chatId, username, command.Arguments);
+                    new RollDice(_bot).HandleAsync(chatId, username, command.Arguments);
                     break;
                 case "poem":
-                    new Poem(bot).HandleAsync(chatId);
+                    new Poem(_bot).HandleAsync(chatId);
                     break;
             }
         }

@@ -1,16 +1,20 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace JewishBot.Services.UrbanDictionary {
-    public class DictApi : ApiService {
-        private string baseUrl = "http://api.urbandictionary.com/v0/define";
+namespace JewishBot.Services.UrbanDictionary
+{
+    public class DictApi : ApiService
+    {
+        private const string BaseUrl = "http://api.urbandictionary.com/v0/define";
 
-        public override string buildEndpointRoute(string term) {
-            var parameters = new Dictionary<string, string>();
+        public override string BuildEndpointRoute(string term)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                {"term", term}
+            };
 
-            parameters.Add("term", term);
-
-            return QueryHelpers.AddQueryString(baseUrl, parameters);
+            return QueryHelpers.AddQueryString(BaseUrl, parameters);
         }
     }
 }

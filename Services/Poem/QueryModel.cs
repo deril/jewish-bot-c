@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace JewishBot.Services.Poem {
-    public class QueryModel {
+namespace JewishBot.Services.Poem
+{
+    public class QueryModel
+    {
         [JsonProperty("hashid")]
         public string Hashid { get; set; }
 

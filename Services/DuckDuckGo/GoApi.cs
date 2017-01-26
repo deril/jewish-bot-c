@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace JewishBot.Services.DuckDuckGo {
-    public class GoApi : ApiService {
-        private string baseUrl = "http://api.duckduckgo.com";
+namespace JewishBot.Services.DuckDuckGo
+{
+    public class GoApi : ApiService
+    {
+        private const string BaseUrl = "http://api.duckduckgo.com";
 
-        public override string buildEndpointRoute(string term) {
-            var parameters = new Dictionary<string, string>();
+        public override string BuildEndpointRoute(string term)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                {"q", term},
+                {"format", "json"}
+            };
 
-            parameters.Add("q", term);
-            parameters.Add("format", "json");
-
-            return QueryHelpers.AddQueryString(baseUrl, parameters);
+            return QueryHelpers.AddQueryString(BaseUrl, parameters);
         }
     }
 }
