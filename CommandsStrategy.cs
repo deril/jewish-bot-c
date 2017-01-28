@@ -6,42 +6,45 @@ namespace JewishBot
 {
     public class CommandsHandler
     {
-        private readonly TelegramBotClient _bot;
-        private readonly Message _message;
+        private TelegramBotClient Bot { get; }
+        private Message InputMessage { get; }
 
         public CommandsHandler(TelegramBotClient bot, Message message)
         {
-            _bot = bot;
-            _message = message;
+            Bot = bot;
+            InputMessage = message;
         }
 
         public void Execute(Command command)
         {
-            var chatId = _message.Chat.Id;
-            var username = _message.From.Username;
+            var chatId = InputMessage.Chat.Id;
+            var username = InputMessage.From.Username;
 
             switch (command.Name)
             {
                 case "echo":
-                    new Echo(_bot).HandleAsync(chatId, command.Arguments);
+                    new Echo(Bot).HandleAsync(chatId, command.Arguments);
                     break;
                 case "hey":
-                    new Hey(_bot).HandleAsync(chatId);
+                    new Hey(Bot).HandleAsync(chatId);
                     break;
                 case "ex":
-                    new CurrencyExchange(_bot).HandleAsync(chatId, command.Arguments);
+                    new CurrencyExchange(Bot).HandleAsync(chatId, command.Arguments);
                     break;
                 case "ud":
-                    new UrbanDictionary(_bot).HandleAsync(chatId, command.Arguments);
+                    new UrbanDictionary(Bot).HandleAsync(chatId, command.Arguments);
                     break;
                 case "go":
-                    new DuckDuckGo(_bot).HandleAsync(chatId, command.Arguments);
+                    new DuckDuckGo(Bot).HandleAsync(chatId, command.Arguments);
                     break;
                 case "dice":
-                    new RollDice(_bot).HandleAsync(chatId, username, command.Arguments);
+                    new RollDice(Bot).HandleAsync(chatId, username, command.Arguments);
                     break;
                 case "poem":
-                    new Poem(_bot).HandleAsync(chatId);
+                    new Poem(Bot).HandleAsync(chatId);
+                    break;
+                case "l":
+                    new GoogleMaps(Bot).HandleAsync(chatId, command.Arguments);
                     break;
             }
         }

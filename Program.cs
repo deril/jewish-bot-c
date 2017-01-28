@@ -9,7 +9,7 @@ namespace JewishBot
 {
     public class Program
     {
-        private static IConfiguration Configuration { get; set; }
+        public static IConfiguration Configuration { get; set; }
         private static TelegramBotClient Bot { get; set; }
 
         public static void Main(string[] args)
