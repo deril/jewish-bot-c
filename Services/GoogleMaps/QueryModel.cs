@@ -9,7 +9,7 @@ namespace JewishBot.Services.GoogleMaps
         public List<Result> Results;
 
         [JsonProperty("status")]
-        public Status Status;
+        public string Status;
     }
 
     public class Result

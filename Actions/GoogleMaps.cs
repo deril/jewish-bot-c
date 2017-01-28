@@ -24,10 +24,10 @@ namespace JewishBot.Actions
 
             var response = await MapsApi.Invoke<QueryModel>(string.Join(" ", args));
 
-            if (response.Status != Status.Ok)
+            if (response.Status != "OK")
             {
                 // TODO: implement here logging
-                Message = "An error occured \uD83D\uDE22";
+                Message = "Nothing \uD83D\uDE22";
                 await Bot.SendTextMessageAsync(chatId, Message);
                 return;
             }
