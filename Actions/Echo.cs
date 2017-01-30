@@ -5,11 +5,11 @@ namespace JewishBot.Actions
 {
     internal class Echo : IAction
     {
-        private readonly TelegramBotClient bot;
+        private TelegramBotClient Bot { get; }
 
         public Echo(TelegramBotClient bot)
         {
-            this.bot = bot;
+            Bot = bot;
         }
 
         public static string Description { get; } = @"Returns input text.
@@ -18,7 +18,7 @@ namespace JewishBot.Actions
         public async void HandleAsync(long chatId, string[] args)
         {
             if (args == null) return;
-            await bot.SendTextMessageAsync(chatId, string.Join(" ", args));
+            await Bot.SendTextMessageAsync(chatId, string.Join(" ", args));
         }
     }
 }

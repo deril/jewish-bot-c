@@ -2,11 +2,11 @@ namespace JewishBot
 {
     public class CommandParser
     {
-        private readonly string _message;
+        private string Message { get; }
 
         public CommandParser(string msg)
         {
-            _message = msg;
+            Message = msg;
         }
 
         public char MainDetermiter { get; set; } = ' ';
@@ -15,17 +15,17 @@ namespace JewishBot
 
         public Command Parse()
         {
-            var firstSpace = _message.IndexOf(MainDetermiter);
+            var firstSpace = Message.IndexOf(MainDetermiter);
             var command = new Command();
 
             if (firstSpace == -1)
             {
-                command.Name = _message.Substring(1);
+                command.Name = Message.Substring(1);
             }
             else
             {
-                command.Name = _message.Substring(1, firstSpace - 1);
-                command.Arguments = _message.Substring(firstSpace + 1).Split();
+                command.Name = Message.Substring(1, firstSpace - 1);
+                command.Arguments = Message.Substring(firstSpace + 1).Split();
             }
 
             var botNameDelimiterIndex = command.Name.IndexOf(BotNameDelimiter);
