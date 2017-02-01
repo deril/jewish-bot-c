@@ -46,6 +46,9 @@ namespace JewishBot
                 case "l":
                     new GoogleMaps(Bot).HandleAsync(chatId, command.Arguments);
                     break;
+                 case "advice":
+                     new Advice(Bot).HandleAsync(chatId, username);
+                     break;
             }
         }
     }
