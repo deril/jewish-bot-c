@@ -29,7 +29,7 @@ Usage: /ex [fromCurrency] [toCurrency] [amount]";
         {
             string fromCurrency;
             string toCurrency;
-            decimal amount;
+            decimal amount = 0;
 
             if (args == null || args.Any(argument => argument == null))
             {
@@ -45,32 +45,30 @@ Usage: /ex [fromCurrency] [toCurrency] [amount]";
                 case 3:
                     fromCurrency = args[0];
                     toCurrency = args[1];
-                    amount = decimal.Parse(args[2]);
+                    decimal.TryParse(args[2], out amount);
                     break;
                 default:
                     return Description;
             }
 
-            if (fromCurrency != null && toCurrency != null)
+            if (fromCurrency == null || toCurrency == null) return Description;
+            var currencyApi = new CurrencyApi();
+            var rates = await currencyApi.Invoke<QueryModel>($"{fromCurrency}{toCurrency}");
+
+            if (rates.Query == null || rates.Query.Results.Rate._Rate == "N/A")
             {
-                var currencyApi = new CurrencyApi();
-                var rates = await currencyApi.Invoke<QueryModel>($"{fromCurrency}{toCurrency}");
-
-                if (rates.Query == null || rates.Query.Results.Rate._Rate == "N/A")
-                {
-                    return "Something goes wrong";
-                }
-
-                var rateResult = rates.Query.Results.Rate;
-
-                if (amount == 0)
-                {
-                    return $"{fromCurrency}/{toCurrency} -> {rateResult._Rate}";
-                }
-
-                var value = decimal.Parse(rateResult._Rate, new CultureInfo(rates.Query.Lang)) * amount;
-                return $"{amount} {fromCurrency} -> {value:0.00} {toCurrency}";
+                return "Something goes wrong";
             }
+
+            var rateResult = rates.Query.Results.Rate;
+
+            if (amount == 0)
+            {
+                return $"{fromCurrency}/{toCurrency} -> {rateResult._Rate}";
+            }
+
+            var value = decimal.Parse(rateResult._Rate, new CultureInfo(rates.Query.Lang)) * amount;
+            return $"{amount} {fromCurrency} -> {value:0.00} {toCurrency}";
         }
     }
 }
