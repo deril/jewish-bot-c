@@ -55,7 +55,7 @@ Usage: /ex [fromCurrency] [toCurrency] [amount]";
             var currencyApi = new CurrencyApi();
             var rates = await currencyApi.Invoke<QueryModel>($"{fromCurrency}{toCurrency}");
 
-            if (rates.Query == null || rates.Query.Results.Rate._Rate == "N/A")
+            if (rates.Query?.Results?.Rate?._Rate == null || rates.Query.Results.Rate._Rate == "N/A")
             {
                 return "Something goes wrong";
             }
