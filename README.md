@@ -12,6 +12,7 @@ A Telegram bot for the secret Post-Apocalyptic B. community. This community appe
 - dice - roll a basic dice
 - poem - show a poem written by AI
 - l - find a location by address
+- advice - give very usefull advice
 
 ## Prerequisites
 
