@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Net;
 using JewishBot.Services.GreatAdvice;
 using Telegram.Bot;
 
@@ -17,7 +17,7 @@ namespace JewishBot.Actions
         {
             var adviceService = new GreatAdviceApi();
             var result = await adviceService.Invoke<QueryModel>(null);
-            var textResult = Regex.Replace(result.Text, @"&nbsp;", "");
+            var textResult = WebUtility.HtmlDecode(result.Text);
             var message = $"Advice for {username}: {textResult}";
 
             await Bot.SendTextMessageAsync(chatId, message);
