@@ -10,20 +10,20 @@ namespace JewishBot.Actions
 {
     internal class Poem : IAction
     {
-        private readonly TelegramBotClient _bot;
-        private readonly PoemApi _poemService = new PoemApi();
+        private TelegramBotClient Bot { get; }
+        private PoemApi PoemService { get; } = new PoemApi();
 
         public Poem(TelegramBotClient bot)
         {
-            _bot = bot;
+            Bot = bot;
         }
 
         public async void HandleAsync(long chatId)
         {
-            var result = await _poemService.Invoke<QueryModel>(null);
+            var result = await PoemService.Invoke<QueryModel>(null);
             if (result.Error != null)
             {
-                await _bot.SendTextMessageAsync(chatId, result.Error, parseMode: ParseMode.Markdown);
+                await Bot.SendTextMessageAsync(chatId, result.Error, parseMode: ParseMode.Markdown);
                 return;
             }
 
@@ -35,17 +35,17 @@ namespace JewishBot.Actions
             var keyboard =
                 new InlineKeyboardMarkup(new[] {new InlineKeyboardButton("\uD83D\uDC4D Like", result.Hashid)});
 
-            _bot.OnCallbackQuery += OnLikedPoemAsync;
+            Bot.OnCallbackQuery += OnLikedPoemAsync;
 
-            await _bot.SendTextMessageAsync(chatId, str.ToString(), parseMode: ParseMode.Markdown,
+            await Bot.SendTextMessageAsync(chatId, str.ToString(), parseMode: ParseMode.Markdown,
                 replyMarkup: keyboard);
         }
 
         private async void OnLikedPoemAsync(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
         {
-            _poemService.Like(callbackQueryEventArgs.CallbackQuery.Data);
+            PoemService.Like(callbackQueryEventArgs.CallbackQuery.Data);
 
-            await _bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
+            await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
                 "Thanks for your like!", cacheTime: 1);
         }
     }

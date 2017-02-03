@@ -5,23 +5,24 @@ namespace JewishBot.Actions
 {
     internal class UrbanDictionary : IAction
     {
-        private readonly TelegramBotClient _bot;
-        private readonly DictApi _ud = new DictApi();
-        private string _message = "Please specify at least 1 search term";
+        private TelegramBotClient Bot { get; }
 
         public UrbanDictionary(TelegramBotClient bot)
         {
-            _bot = bot;
+            Bot = bot;
         }
 
         public async void HandleAsync(long chatId, string[] args)
         {
+            var message = "Please specify at least 1 search term";
+
             if (args != null)
             {
-                var result = await _ud.Invoke<QueryModel>(string.Join(" ", args));
-                _message = result.ResultType == "exact" ? result.List[0].Definition : "Nothing found \uD83D\uDE22";
+                var ud = new DictApi();
+                var result = await ud.Invoke<QueryModel>(string.Join(" ", args));
+                message = result.ResultType == "exact" ? result.List[0].Definition : "Nothing found \uD83D\uDE22";
             }
-            await _bot.SendTextMessageAsync(chatId, _message);
+            await Bot.SendTextMessageAsync(chatId, message);
         }
     }
 }

@@ -7,7 +7,6 @@ namespace JewishBot.Actions
     {
         private TelegramBotClient Bot { get; }
         private GoogleMapsApi MapsApi { get; } = new GoogleMapsApi();
-        private string Message { get; set; } = "Please specify an address";
 
         public GoogleMaps(TelegramBotClient bot)
         {
@@ -16,9 +15,10 @@ namespace JewishBot.Actions
 
         public async void HandleAsync(long chatId, string[] args)
         {
+            var message = "Please specify an address";
             if (args == null)
             {
-                await Bot.SendTextMessageAsync(chatId, Message);
+                await Bot.SendTextMessageAsync(chatId, message);
                 return;
             }
 
@@ -27,8 +27,8 @@ namespace JewishBot.Actions
             if (response.Status != "OK")
             {
                 // TODO: implement here logging
-                Message = "Nothing \uD83D\uDE22";
-                await Bot.SendTextMessageAsync(chatId, Message);
+                message = "Nothing \uD83D\uDE22";
+                await Bot.SendTextMessageAsync(chatId, message);
                 return;
             }
 

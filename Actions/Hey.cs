@@ -4,11 +4,11 @@ namespace JewishBot.Actions
 {
     internal class Hey : IAction
     {
-        private readonly TelegramBotClient _bot;
+        private TelegramBotClient Bot { get; }
 
         public Hey(TelegramBotClient bot)
         {
-            _bot = bot;
+            Bot = bot;
         }
 
         public static string Description { get; } = @"Helloes to sender.
@@ -16,7 +16,7 @@ namespace JewishBot.Actions
 
         public async void HandleAsync(long chatId, string[] args = null)
         {
-            await _bot.SendTextMessageAsync(chatId, "Hey!");
+            await Bot.SendTextMessageAsync(chatId, "Hey!");
         }
     }
 }
