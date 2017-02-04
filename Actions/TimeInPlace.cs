@@ -15,7 +15,7 @@ namespace JewishBot.Actions
     public class TimeInPlace : IAction
     {
         private TelegramBotClient Bot { get; }
-        private const string DefaultTimeZone = "Europe/Kiev";
+
         public static string Description { get; } = @"Returns time in specified location
 Usage: /timein location";
 
@@ -48,18 +48,17 @@ Usage: /timein location";
             var mapsApi = new GoogleMapsApi();
             var response = await mapsApi.Invoke<QueryModel>(place);
 
-            return response.Status == "OK" ?
-                new Tuple<Status, Location>(Status.Ok, response.Results[0].Geometry.Location) :
-                new Tuple<Status, Location>(Status.Error, null);
+            return response.Status == "OK"
+                ? new Tuple<Status, Location>(Status.Ok, response.Results[0].Geometry.Location)
+                : new Tuple<Status, Location>(Status.Error, null);
         }
 
         private static string GetTimeInLocation(Location location)
         {
             var timeZone = TimeZoneLookup.GetTimeZone(location.Lattitude, location.Longtitude).Result;
-            var currentTime = TimeZoneInfo.ConvertTime(DateTime.Now,
-                TimeZoneInfo.FindSystemTimeZoneById(DefaultTimeZone));
 
-            return TimeZoneInfo.ConvertTime(currentTime, TimeZoneInfo.FindSystemTimeZoneById(timeZone)).ToString("t");
+            return TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById(timeZone))
+                .ToString("t");
         }
     }
 }
