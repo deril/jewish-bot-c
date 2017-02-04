@@ -13,6 +13,7 @@ A Telegram bot for the secret Post-Apocalyptic B. community. This community appe
 - poem - show a poem written by AI
 - l - find a location by address
 - advice - give very usefull advice
+- weekday - current day of week (in Europe, Kiev timezone)
 
 ## Prerequisites
 
