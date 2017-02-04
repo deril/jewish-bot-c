@@ -52,6 +52,9 @@ namespace JewishBot
                 case "weekday":
                     new WeekDay(Bot).HandleAsync(chatId);
                     break;
+                case "timein":
+                    new TimeInPlace(Bot).HandleAsync(chatId, command.Arguments);
+                    break;
             }
         }
     }
