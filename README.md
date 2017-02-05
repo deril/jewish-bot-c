@@ -6,7 +6,7 @@ A Telegram bot for the secret Post-Apocalyptic B. community. This community appe
 
 ## Available Commands
 
-- ex - exchange currency. Format XXX:YYY amount
+- ex - exchange currency. Format XXX YYY amount
 - ud - define word using Urban Dictionary
 - go - search on DuckDuckGo (beta)
 - dice - roll a basic dice
