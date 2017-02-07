@@ -1,0 +1,16 @@
+version: '2'
+
+services: 
+    bot:
+        image: deril/jewish-bot
+        expose:
+            - "5000"
+    
+    proxy:
+        build: 
+            context: .
+            dockerfile: Dockerfile.nginx
+        ports:
+            - "80:80"
+        links:
+            - bot
