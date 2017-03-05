@@ -7,7 +7,7 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{134184EA-3E0E-4378-96F6-FB3C09EE319F}</ProjectGuid>
+    <ProjectGuid>{838A44A2-2080-4C30-AE33-62B968E92291}</ProjectGuid>
     <RootNamespace>JewishBot</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
