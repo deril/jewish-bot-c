@@ -3,9 +3,10 @@ version: '2'
 services: 
     bot:
         image: deril/jewish-bot
+        restart: on-failure:10
         expose:
             - "5000"
-    
+
     proxy:
         build: 
             context: .
