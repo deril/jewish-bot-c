@@ -1,8 +1,8 @@
 ﻿using System.Net;
-using JewishBot.WebHookHanders.Telegram.Services.GreatAdvice;
+using JewishBot.WebHookHandlers.Telegram.Services.GreatAdvice;
 using Telegram.Bot;
 
-namespace JewishBot.WebHookHanders.Telegram.Actions
+namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     public class Advice : IAction
     {

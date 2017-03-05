@@ -1,9 +1,9 @@
-using JewishBot.WebHookHanders.Telegram.Actions;
+using JewishBot.WebHookHandlers.Telegram.Actions;
 using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace JewishBot.WebHookHanders.Telegram
+namespace JewishBot.WebHookHandlers.Telegram
 {
     public class WebHookHandler
     {

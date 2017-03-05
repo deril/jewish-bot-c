@@ -1,7 +1,7 @@
-using JewishBot.WebHookHanders.Telegram.Services.DuckDuckGo;
+using JewishBot.WebHookHandlers.Telegram.Services.DuckDuckGo;
 using Telegram.Bot;
 
-namespace JewishBot.WebHookHanders.Telegram.Actions
+namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     internal class DuckDuckGo : IAction
     {

@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.Yahoo
+namespace JewishBot.WebHookHandlers.Telegram.Services.Yahoo
 {
     public class QueryModel
     {

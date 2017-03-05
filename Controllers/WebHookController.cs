@@ -1,4 +1,4 @@
-using JewishBot.WebHookHanders.Telegram;
+using JewishBot.WebHookHandlers.Telegram;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Telegram.Bot;

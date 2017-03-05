@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.Yahoo
+namespace JewishBot.WebHookHandlers.Telegram.Services.Yahoo
 {
     public class CurrencyApi : ApiService
     {

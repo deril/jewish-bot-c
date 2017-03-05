@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.UrbanDictionary
+namespace JewishBot.WebHookHandlers.Telegram.Services.UrbanDictionary
 {
     public class DictApi : ApiService
     {

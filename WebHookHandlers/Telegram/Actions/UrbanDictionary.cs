@@ -1,7 +1,7 @@
-using JewishBot.WebHookHanders.Telegram.Services.UrbanDictionary;
+using JewishBot.WebHookHandlers.Telegram.Services.UrbanDictionary;
 using Telegram.Bot;
 
-namespace JewishBot.WebHookHanders.Telegram.Actions
+namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     internal class UrbanDictionary : IAction
     {

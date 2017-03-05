@@ -1,4 +1,4 @@
-namespace JewishBot.WebHookHanders.Telegram
+namespace JewishBot.WebHookHandlers.Telegram
 {
     public class Command
     {

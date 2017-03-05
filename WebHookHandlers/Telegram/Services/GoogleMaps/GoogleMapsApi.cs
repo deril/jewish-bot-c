@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.GoogleMaps
+namespace JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps
 {
     public class GoogleMapsApi : ApiService
     {

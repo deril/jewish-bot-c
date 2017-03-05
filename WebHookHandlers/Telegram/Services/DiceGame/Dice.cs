@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.DiceGame
+namespace JewishBot.WebHookHandlers.Telegram.Services.DiceGame
 {
     public class Dice
     {

@@ -1,4 +1,4 @@
-﻿namespace JewishBot.WebHookHanders.Telegram.Services.GreatAdvice
+﻿namespace JewishBot.WebHookHandlers.Telegram.Services.GreatAdvice
 {
     public class GreatAdviceApi : ApiService
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GeoTimeZone;
-using JewishBot.WebHookHanders.Telegram.Services.GoogleMaps;
+using JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps;
 using Telegram.Bot;
 
-namespace JewishBot.WebHookHanders.Telegram.Actions
+namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     public enum Status
     {

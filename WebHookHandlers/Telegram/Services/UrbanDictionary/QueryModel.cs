@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.UrbanDictionary
+namespace JewishBot.WebHookHandlers.Telegram.Services.UrbanDictionary
 {
     public class QueryModel
     {

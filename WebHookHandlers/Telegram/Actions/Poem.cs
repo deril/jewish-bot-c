@@ -1,12 +1,12 @@
 using System.Text;
-using JewishBot.WebHookHanders.Telegram.Services.Poem;
+using JewishBot.WebHookHandlers.Telegram.Services.Poem;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace JewishBot.WebHookHanders.Telegram.Actions
+namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     internal class Poem : IAction
     {

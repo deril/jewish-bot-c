@@ -1,4 +1,4 @@
-namespace JewishBot.WebHookHanders.Telegram.Actions
+namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     internal interface IAction
     {

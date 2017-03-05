@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace JewishBot.WebHookHanders.Telegram.Services
+namespace JewishBot.WebHookHandlers.Telegram.Services
 {
     public abstract class ApiService
     {

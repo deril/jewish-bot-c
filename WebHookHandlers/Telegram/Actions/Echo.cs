@@ -1,6 +1,6 @@
 using Telegram.Bot;
 
-namespace JewishBot.WebHookHanders.Telegram.Actions
+namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     internal class Echo : IAction
     {

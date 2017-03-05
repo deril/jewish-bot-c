@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.Poem
+namespace JewishBot.WebHookHandlers.Telegram.Services.Poem
 {
     public class QueryModel
     {

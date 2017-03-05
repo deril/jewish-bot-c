@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.DuckDuckGo
+namespace JewishBot.WebHookHandlers.Telegram.Services.DuckDuckGo
 {
     public class GoApi : ApiService
     {

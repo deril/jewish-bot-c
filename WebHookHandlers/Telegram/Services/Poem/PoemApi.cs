@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.Poem
+namespace JewishBot.WebHookHandlers.Telegram.Services.Poem
 {
     public class PoemApi : ApiService
     {

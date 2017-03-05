@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using JewishBot.WebHookHanders.Telegram.Services.Yahoo;
+using JewishBot.WebHookHandlers.Telegram.Services.Yahoo;
 using Telegram.Bot;
 
-namespace JewishBot.WebHookHanders.Telegram.Actions
+namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     internal class CurrencyExchange : IAction
     {

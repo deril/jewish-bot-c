@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace JewishBot.WebHookHanders.Telegram.Services.GoogleMaps
+namespace JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps
 {
     public class QueryModel
     {
