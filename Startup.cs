@@ -45,9 +45,12 @@ namespace JewishBot
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseStatusCodePages();
-            app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
+            app.UseStatusCodePages();
             app.UseMvcWithDefaultRoute();
         }
     }
