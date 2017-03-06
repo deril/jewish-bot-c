@@ -57,6 +57,9 @@ namespace JewishBot.WebHookHandlers.Telegram
                 case "timein":
                     new TimeInPlace(Bot, Configuration["googleApiKey"]).HandleAsync(chatId, command.Arguments);
                     break;
+                case "calc":
+                    new Calc(Bot).HandleAsync(chatId, command.Arguments);
+                    break;
             }
         }
     }

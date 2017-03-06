@@ -15,6 +15,7 @@ A Telegram bot for the secret Post-Apocalyptic B. community. This community appe
 - advice - give very usefull advice
 - weekday - current day of week (in Europe, Kiev timezone)
 - timein - gets time at specific location
+- calc - calculates using math.js
 
 ## Prerequisites
 
