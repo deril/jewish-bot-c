@@ -23,7 +23,7 @@ namespace JewishBot
             Bot = new TelegramBotClient(Configuration["telegramBotApi"]);
             var fs = new FileStream("jewish_bot.pem", FileMode.Open);
             var certificate = new FileToSend("jewish_bot.pem", fs);
-            Bot.SetWebhookAsync($"https://{Configuration["hostName"]}/WebHook/Post", certificate).Wait();
+            Bot.SetWebhookAsync($"https://{Configuration["hostN"]}/WebHook/Post", certificate).Wait();
         }
 
         public IConfigurationRoot Configuration { get; }
