@@ -44,7 +44,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
 		async void OnLikedPoemAsync(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
 		{
-			PoemService.Like(callbackQueryEventArgs.CallbackQuery.Data);
+			await PoemService.Like(callbackQueryEventArgs.CallbackQuery.Data);
 
 			await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
 				"Thanks for your like!");

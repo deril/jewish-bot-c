@@ -1,4 +1,5 @@
-﻿using JewishBot.WebHookHandlers.Telegram;
+using System.Threading.Tasks;
+using JewishBot.WebHookHandlers.Telegram;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
@@ -24,13 +25,13 @@ namespace JewishBot.Controllers
 		}
 
 		[HttpPost]
-		public StatusCodeResult Post([FromBody] Update update)
+		public async Task<StatusCodeResult> Post([FromBody] Update update)
 		{
 			var message = update.Message;
 			if (message == null || message.Type != MessageType.TextMessage) return NoContent();
 
 			var handler = new WebHookHandler(_bot, _configuration);
-			handler.OnMessageRecieved(message);
+			await handler.OnMessageRecieved(message);
 
 			return Ok();
 		}
