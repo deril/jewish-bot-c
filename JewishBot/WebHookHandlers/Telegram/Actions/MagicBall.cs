@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 			"Outlook good",
 			"Yes",
 			"Signs point to yes",
-			"Don\"t count on it",
+			"Don't count on it",
 			"My reply is no",
 			"My sources say no",
 			"Outlook not so good",
@@ -59,10 +60,19 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 				{
 					var time = DateTime.Now.Ticks;
 					var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", args) + time));
-					var index = BitConverter.ToInt32(hash, 0);
+					var index = (int)(ConvertHash(hash) % Answers.Count);
 					await Bot.SendTextMessageAsync(chatId, Answers[index]);
 				}
 			}
+		}
+
+		BigInteger ConvertHash(byte[] hash)
+		{
+			// make int unsigned
+			var uhash = new byte[hash.Length + 1];
+			hash.CopyTo(uhash, 0);
+			uhash[hash.Length] = 00;
+			return new BigInteger(uhash);
 		}
 	}
 }
