@@ -14,6 +14,9 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
 		Random Rnd { get; } = new Random();
 
+		public static string Description { get; } = @"Predicts a future.
+            Usage: /ball <question>";
+
 		List<string> Answers { get; } = new List<string>
 		{
 			"It is certain",
@@ -49,6 +52,12 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
 		public async Task HandleAsync(long chatId, string[] args)
 		{
+			if (args == null)
+			{
+				await Bot.SendTextMessageAsync(chatId, Description);
+				return;
+			}
+
 			if (Rnd.Next(1, 6) == 1)
 			{
 				var index = Rnd.Next(AskAgainAnswers.Count + 1);
