@@ -5,8 +5,8 @@ using Telegram.Bot;
 
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    public class Calc : IAction
-    {
+	public class Calc : IAction
+	{
 		TelegramBotClient Bot { get; }
 		long ChatId { get; }
 		string[] Args { get; }
@@ -22,10 +22,10 @@ Usage: /calc <query>";
 		}
 
 		public async Task HandleAsync()
-        {
-            var message = await PrepareMessageAsync();
-            await Bot.SendTextMessageAsync(ChatId, message);
-        }
+		{
+			var message = await PrepareMessageAsync();
+			await Bot.SendTextMessageAsync(ChatId, message);
+		}
 
 		async Task<string> PrepareMessageAsync()
 		{

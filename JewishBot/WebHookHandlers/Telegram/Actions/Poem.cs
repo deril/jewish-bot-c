@@ -12,13 +12,13 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 	class Poem : IAction
 	{
 		TelegramBotClient Bot { get; }
-        long ChatId { get; }
+		long ChatId { get; }
 		PoemApi PoemService { get; } = new PoemApi();
 
-        public Poem(TelegramBotClient bot, long chatId)
+		public Poem(TelegramBotClient bot, long chatId)
 		{
 			Bot = bot;
-            ChatId = chatId;
+			ChatId = chatId;
 		}
 
 		public async Task HandleAsync()

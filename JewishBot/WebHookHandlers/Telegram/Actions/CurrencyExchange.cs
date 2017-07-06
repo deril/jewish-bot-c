@@ -40,7 +40,7 @@ Usage: /ex [fromCurrency] [toCurrency] [amount]";
 				return Description;
 			}
 
-            switch (Args.Length)
+			switch (Args.Length)
 			{
 				case 2:
 					fromCurrency = Args[0];

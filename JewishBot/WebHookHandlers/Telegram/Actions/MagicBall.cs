@@ -17,7 +17,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 		Random Rnd { get; } = new Random();
 
 		public static string Description { get; } = @"Predicts a future.
-            Usage: /ball <question>";
+			Usage: /ball <question>";
 
 		List<string> Answers { get; } = new List<string>
 		{

@@ -4,6 +4,6 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
 	interface IAction
 	{
-        Task HandleAsync();
+	Task HandleAsync();
 	}
 }

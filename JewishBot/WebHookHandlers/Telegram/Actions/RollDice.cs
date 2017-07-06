@@ -10,14 +10,14 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 		TelegramBotClient Bot { get; }
 		long ChatId { get; }
 		string[] Args { get; }
-        string Username { get; }
+		string Username { get; }
 
-        public RollDice(TelegramBotClient bot, long chatId, string[] args, string username)
+		public RollDice(TelegramBotClient bot, long chatId, string[] args, string username)
 		{
 			Bot = bot;
 			ChatId = chatId;
 			Args = args;
-            Username = username;
+			Username = username;
 		}
 
 		public async Task HandleAsync()

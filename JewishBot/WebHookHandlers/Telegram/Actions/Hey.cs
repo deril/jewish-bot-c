@@ -6,16 +6,16 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 	class Hey : IAction
 	{
 		TelegramBotClient Bot { get; }
-        long ChatId { get; }
+		long ChatId { get; }
 
 		public Hey(TelegramBotClient bot, long chatId)
 		{
 			Bot = bot;
-            ChatId = chatId;
+			ChatId = chatId;
 		}
 
 		public static string Description { get; } = @"Helloes to sender.
-            Usage: /hey";
+			Usage: /hey";
 
 		public async Task HandleAsync()
 		{

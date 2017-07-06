@@ -4,19 +4,19 @@ using Telegram.Bot;
 
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    class GoogleMaps : IAction
+	class GoogleMaps : IAction
 	{
-        TelegramBotClient Bot { get; }
-        long ChatId { get; }
-        string[] Args { get; }
+		TelegramBotClient Bot { get; }
+		long ChatId { get; }
+		string[] Args { get; }
 		
-        readonly string _key;
+		readonly string _key;
 
-        public GoogleMaps(TelegramBotClient bot, long chatId, string[] args, string key)
+		public GoogleMaps(TelegramBotClient bot, long chatId, string[] args, string key)
 		{
 			Bot = bot;
-            ChatId = chatId;
-            Args = args;
+			ChatId = chatId;
+			Args = args;
 			_key = key;
 		}
 
