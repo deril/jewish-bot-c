@@ -19,7 +19,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
 		public async Task HandleAsync()
 		{
-			await Bot.SendTextMessageAsync(ChatId, "!היי (Hey)");
+			await Bot.SendTextMessageAsync(ChatId, "היי! (Hey)");
 		}
 	}
 }

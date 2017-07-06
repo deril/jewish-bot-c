@@ -6,14 +6,17 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     class GoogleMaps : IAction
 	{
-		readonly string _key;
-		TelegramBotClient Bot { get; }
-		long ChatId { get; }
-		string[] Args { get; }
+        TelegramBotClient Bot { get; }
+        long ChatId { get; }
+        string[] Args { get; }
+		
+        readonly string _key;
 
         public GoogleMaps(TelegramBotClient bot, long chatId, string[] args, string key)
 		{
 			Bot = bot;
+            ChatId = chatId;
+            Args = args;
 			_key = key;
 		}
 
