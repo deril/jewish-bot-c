@@ -6,18 +6,20 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     class WeekDay : IAction
     {
-		TelegramBotClient Bot { get; }
 		const string TimeZoneId = "Europe/Kiev";
+        TelegramBotClient Bot { get; }
+        long ChatId { get; }
 
-		public WeekDay(TelegramBotClient bot)
+		public WeekDay(TelegramBotClient bot, long chatId)
         {
             Bot = bot;
+            ChatId = chatId;
         }
 
-        public async Task HandleAsync(long chatId)
+        public async Task HandleAsync()
         {
             var currentTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId));
-            await Bot.SendTextMessageAsync(chatId, $"Today is {currentTime.DayOfWeek}");
+            await Bot.SendTextMessageAsync(ChatId, $"Today is {currentTime.DayOfWeek}");
         }
     }
 }

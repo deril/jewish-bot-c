@@ -4,39 +4,41 @@ using Telegram.Bot;
 
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-	class GoogleMaps
+    class GoogleMaps : IAction
 	{
 		readonly string _key;
 		TelegramBotClient Bot { get; }
+		long ChatId { get; }
+		string[] Args { get; }
 
-		public GoogleMaps(TelegramBotClient bot, string key)
+        public GoogleMaps(TelegramBotClient bot, long chatId, string[] args, string key)
 		{
 			Bot = bot;
 			_key = key;
 		}
 
-		public async Task HandleAsync(long chatId, string[] args)
+		public async Task HandleAsync()
 		{
 			var message = "Please specify an address";
-			if (args == null)
+			if (Args == null)
 			{
-				await Bot.SendTextMessageAsync(chatId, message);
+				await Bot.SendTextMessageAsync(ChatId, message);
 				return;
 			}
 
 			var mapsApi = new GoogleMapsApi(_key);
-			var response = await mapsApi.Invoke<QueryModel>(string.Join(" ", args));
+			var response = await mapsApi.Invoke<QueryModel>(string.Join(" ", Args));
 
 			if (response.Status != "OK")
 			{
 				// TODO: implement here logging
 				message = "Nothing \uD83D\uDE22";
-				await Bot.SendTextMessageAsync(chatId, message);
+				await Bot.SendTextMessageAsync(ChatId, message);
 				return;
 			}
 
 			var location = response.Results[0].Geometry.Location;
-			await Bot.SendLocationAsync(chatId, location.Lattitude, location.Longtitude);
+			await Bot.SendLocationAsync(ChatId, location.Lattitude, location.Longtitude);
 		}
 	}
 }

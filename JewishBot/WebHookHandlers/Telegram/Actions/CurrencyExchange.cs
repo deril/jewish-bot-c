@@ -13,39 +13,43 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 Usage: /ex [fromCurrency] [toCurrency] [amount]";
 
 		TelegramBotClient Bot { get; }
+		long ChatId { get; }
+		string[] Args { get; }
 
-		public CurrencyExchange(TelegramBotClient bot)
+		public CurrencyExchange(TelegramBotClient bot, long chatId, string[] args)
 		{
 			Bot = bot;
+			ChatId = chatId;
+			Args = args;
 		}
 
-		public async Task HandleAsync(long chatId, string[] args)
+		public async Task HandleAsync()
 		{
-			var message = await PrepareMessageAsync(args);
-			await Bot.SendTextMessageAsync(chatId, message);
+			var message = await PrepareMessageAsync();
+			await Bot.SendTextMessageAsync(ChatId, message);
 		}
 
-		static async Task<string> PrepareMessageAsync(IReadOnlyList<string> args)
+		async Task<string> PrepareMessageAsync()
 		{
 			string fromCurrency;
 			string toCurrency;
 			decimal amount = 0;
 
-			if (args == null || args.Any(argument => argument == null))
+			if (Args == null || Args.Any(argument => argument == null))
 			{
 				return Description;
 			}
 
-			switch (args.Count)
+            switch (Args.Length)
 			{
 				case 2:
-					fromCurrency = args[0];
-					toCurrency = args[1];
+					fromCurrency = Args[0];
+					toCurrency = Args[1];
 					break;
 				case 3:
-					fromCurrency = args[0];
-					toCurrency = args[1];
-					decimal.TryParse(args[2], out amount);
+					fromCurrency = Args[0];
+					toCurrency = Args[1];
+					decimal.TryParse(Args[2], out amount);
 					break;
 				default:
 					return Description;

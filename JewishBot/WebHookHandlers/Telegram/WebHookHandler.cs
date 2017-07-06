@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JewishBot.WebHookHandlers.Telegram.Actions;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +7,7 @@ using Telegram.Bot.Types;
 
 namespace JewishBot.WebHookHandlers.Telegram
 {
-	public class WebHookHandler
+    public class WebHookHandler
 	{
 		TelegramBotClient Bot { get; }
 		IConfiguration Configuration { get; }
@@ -21,50 +22,31 @@ namespace JewishBot.WebHookHandlers.Telegram
 		{
 			var command = new CommandParser(message.Text).Parse();
 			var chatId = message.Chat.Id;
-			var username = message.From.Username;
+            var username = string.IsNullOrEmpty(message.From.Username)
+                                 ? $"{message.From.FirstName} {message.From.LastName}"
+                                 : message.From.Username;
 
-			switch (command.Name)
-			{
-				case "echo":
-					await new Echo(Bot).HandleAsync(chatId, command.Arguments);
-					break;
-				case "hey":
-					await new Hey(Bot).HandleAsync(chatId);
-					break;
-				case "ex":
-					await new CurrencyExchange(Bot).HandleAsync(chatId, command.Arguments);
-					break;
-				case "ud":
-					await new UrbanDictionary(Bot).HandleAsync(chatId, command.Arguments);
-					break;
-				case "go":
-					await new DuckDuckGo(Bot).HandleAsync(chatId, command.Arguments);
-					break;
-				case "dice":
-					await new RollDice(Bot).HandleAsync(chatId, username, command.Arguments);
-					break;
-				case "poem":
-					await new Poem(Bot).HandleAsync(chatId);
-					break;
-				case "l":
-					await new GoogleMaps(Bot, Configuration["googleApiKey"]).HandleAsync(chatId, command.Arguments);
-					break;
-				case "advice":
-					await new Advice(Bot).HandleAsync(chatId, username);
-					break;
-				case "weekday":
-					await new WeekDay(Bot).HandleAsync(chatId);
-					break;
-				case "timein":
-					await new TimeInPlace(Bot, Configuration["googleApiKey"]).HandleAsync(chatId, command.Arguments);
-					break;
-				case "calc":
-					await new Calc(Bot).HandleAsync(chatId, command.Arguments);
-					break;
-				case "ball":
-					await new MagicBall(Bot).HandleAsync(chatId, command.Arguments);
-					break;
-			}
+            var commands = new Dictionary<string, IAction>()
+            {
+                { "echo",    new Echo(Bot, chatId, command.Arguments) },
+                { "hey",     new Hey(Bot, chatId) },
+                { "ex",      new CurrencyExchange(Bot, chatId, command.Arguments) },
+                { "ud",      new UrbanDictionary(Bot, chatId, command.Arguments) },
+                { "go",      new DuckDuckGo(Bot, chatId, command.Arguments) },
+                { "dice",    new RollDice(Bot, chatId, command.Arguments, username) },
+                { "poem",    new Poem(Bot, chatId) },
+                { "l",       new GoogleMaps(Bot, chatId, command.Arguments, Configuration["googleApiKey"]) },
+                { "advice",  new Advice(Bot, chatId, username) },
+                { "weekday", new WeekDay(Bot, chatId) },
+                { "timein",  new TimeInPlace(Bot, chatId, command.Arguments, Configuration["googleApiKey"]) },
+                { "calc",    new Calc(Bot, chatId, command.Arguments) },
+                { "ball",    new MagicBall(Bot, chatId, command.Arguments) }
+            };
+
+            if (commands.ContainsKey(command.Name))
+            {
+                await commands[command.Name].HandleAsync();
+            }
 		}
 	}
 }

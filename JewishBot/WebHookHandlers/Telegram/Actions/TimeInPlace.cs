@@ -16,33 +16,37 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     {
 		readonly string _key;
 		TelegramBotClient Bot { get; }
+		long ChatId { get; }
+		string[] Args { get; }
 
 		public static string Description { get; } = @"Returns time in specified location
 Usage: /timein location";
 
-        public TimeInPlace(TelegramBotClient bot, string key)
+        public TimeInPlace(TelegramBotClient bot, long chatId, string[] args, string key)
         {
             Bot = bot;
+            ChatId = chatId;
+            Args = args;
 			_key = key;
         }
 
-		public async Task HandleAsync(long chatId, string[] args)
+		public async Task HandleAsync()
         {
-            if (args == null)
+            if (Args == null)
             {
-                await Bot.SendTextMessageAsync(chatId, Description);
+                await Bot.SendTextMessageAsync(ChatId, Description);
                 return;
             }
-            var location = string.Join(" ", args);
+            var location = string.Join(" ", Args);
             var locationResult = await GetLocation(location);
             if (locationResult.Item1 == Status.Error)
             {
                 const string errorMessage = "Something goes wrong \uD83D\uDE22";
-                await Bot.SendTextMessageAsync(chatId, errorMessage);
+                await Bot.SendTextMessageAsync(ChatId, errorMessage);
                 return;
             }
             var time = GetTimeInLocation(locationResult.Item2);
-            await Bot.SendTextMessageAsync(chatId, $"In {location}: {time}");
+            await Bot.SendTextMessageAsync(ChatId, $"In {location}: {time}");
         }
 
 		async Task<Tuple<Status, Location>> GetLocation(string place)

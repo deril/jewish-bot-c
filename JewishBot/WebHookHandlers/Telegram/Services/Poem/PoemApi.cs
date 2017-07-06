@@ -24,7 +24,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.Poem
 
 				QueryUrl = BaseUrl;
             }
-			catch (System.Exception e)
+			catch
 			{
 				// TODO: implement here logging
 			}

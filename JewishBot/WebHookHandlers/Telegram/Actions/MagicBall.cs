@@ -11,6 +11,8 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 	public class MagicBall : IAction
 	{
 		TelegramBotClient Bot { get; }
+		long ChatId { get; }
+		string[] Args { get; }
 
 		Random Rnd { get; } = new Random();
 
@@ -45,32 +47,34 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 			"Concentrate and ask again"
 		};
 
-		public MagicBall(TelegramBotClient bot)
+		public MagicBall(TelegramBotClient bot, long chatId, string[] args)
 		{
 			Bot = bot;
+			ChatId = chatId;
+			Args = args;
 		}
 
-		public async Task HandleAsync(long chatId, string[] args)
+		public async Task HandleAsync()
 		{
-			if (args == null)
+			if (Args == null)
 			{
-				await Bot.SendTextMessageAsync(chatId, Description);
+				await Bot.SendTextMessageAsync(ChatId, Description);
 				return;
 			}
 
 			if (Rnd.Next(1, 6) == 1)
 			{
 				var index = Rnd.Next(AskAgainAnswers.Count + 1);
-				await Bot.SendTextMessageAsync(chatId, AskAgainAnswers[index]);
+				await Bot.SendTextMessageAsync(ChatId, AskAgainAnswers[index]);
 			}
 			else
 			{
 				using (var algorithm = SHA256.Create())
 				{
 					var time = DateTime.Now.Ticks;
-					var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", args) + time));
+					var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", Args) + time));
 					var index = (int)(ConvertHash(hash) % Answers.Count);
-					await Bot.SendTextMessageAsync(chatId, Answers[index]);
+					await Bot.SendTextMessageAsync(ChatId, Answers[index]);
 				}
 			}
 		}

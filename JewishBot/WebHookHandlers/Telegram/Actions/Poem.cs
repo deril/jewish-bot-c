@@ -12,19 +12,21 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 	class Poem : IAction
 	{
 		TelegramBotClient Bot { get; }
+        long ChatId { get; }
 		PoemApi PoemService { get; } = new PoemApi();
 
-		public Poem(TelegramBotClient bot)
+        public Poem(TelegramBotClient bot, long chatId)
 		{
 			Bot = bot;
+            ChatId = chatId;
 		}
 
-		public async Task HandleAsync(long chatId)
+		public async Task HandleAsync()
 		{
 			var result = await PoemService.Invoke<QueryModel>(null);
 			if (result.Error != null)
 			{
-				await Bot.SendTextMessageAsync(chatId, result.Error, parseMode: ParseMode.Markdown);
+				await Bot.SendTextMessageAsync(ChatId, result.Error, parseMode: ParseMode.Markdown);
 				return;
 			}
 
@@ -38,7 +40,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
 			Bot.OnCallbackQuery += OnLikedPoemAsync;
 
-			await Bot.SendTextMessageAsync(chatId, str.ToString(), parseMode: ParseMode.Markdown,
+			await Bot.SendTextMessageAsync(ChatId, str.ToString(), parseMode: ParseMode.Markdown,
 				replyMarkup: keyboard);
 		}
 
