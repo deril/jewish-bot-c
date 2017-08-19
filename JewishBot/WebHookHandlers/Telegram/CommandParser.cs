@@ -1,10 +1,10 @@
-namespace JewishBot.WebHookHandlers.Telegram
+﻿namespace JewishBot.WebHookHandlers.Telegram
 {
     public class CommandParser
     {
-		string Message { get; }
+        string Message { get; }
 
-		public CommandParser(string msg)
+        public CommandParser(string msg)
         {
             Message = msg;
         }

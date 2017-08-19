@@ -1,6 +1,6 @@
-﻿FROM microsoft/aspnetcore:1.1.1
+﻿FROM microsoft/aspnetcore:2.0.0-jessie
 
-COPY bin/Debug/netcoreapp1.1/publish /app
+COPY bin/Debug/netcoreapp2.0/publish /app
 
 WORKDIR /app
 
