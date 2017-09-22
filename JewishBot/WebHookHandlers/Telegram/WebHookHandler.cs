@@ -34,13 +34,14 @@ namespace JewishBot.WebHookHandlers.Telegram
 				{ "ud",         new UrbanDictionary(Bot, chatId, command.Arguments) },
 				{ "go",         new DuckDuckGo(Bot, chatId, command.Arguments) },
 				{ "dice",       new RollDice(Bot, chatId, command.Arguments, username) },
-				{ "poem",       new Poem(Bot, chatId) },
+				//{ "poem",       new Poem(Bot, chatId) },
 				{ "l",          new GoogleMaps(Bot, chatId, command.Arguments, Configuration["googleApiKey"]) },
 				{ "advice",     new Advice(Bot, chatId, username) },
 				{ "weekday",    new WeekDay(Bot, chatId) },
 				{ "timein",     new TimeInPlace(Bot, chatId, command.Arguments, Configuration["googleApiKey"]) },
 				{ "calc",       new Calc(Bot, chatId, command.Arguments) },
-				{ "ball",       new MagicBall(Bot, chatId, command.Arguments) }
+				{ "ball",       new MagicBall(Bot, chatId, command.Arguments) },
+                { "lunch",      new Lunch(Bot, chatId, command.Arguments, Configuration) }
 			};
 
 			if (commands.ContainsKey(command.Name))

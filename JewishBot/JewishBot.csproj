@@ -10,12 +10,14 @@
     <Folder Include="WebHookHandlers\Telegram\" />
     <Folder Include="WebHookHandlers\Telegram\Actions\" />
     <Folder Include="WebHookHandlers\Telegram\Services\" />
+    <Folder Include="WebHookHandlers\Telegram\Services\Lunch\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Telegram.Bot" Version="13.1.0" />
     <PackageReference Include="GeoTimeZone" Version="2.0.0" />
+    <PackageReference Include="CsQuery.NETStandard" Version="1.3.6.1" />
   </ItemGroup>
 
   <ItemGroup>
