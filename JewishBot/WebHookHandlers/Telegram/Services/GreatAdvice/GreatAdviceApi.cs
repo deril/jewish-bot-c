@@ -2,9 +2,9 @@
 {
     public class GreatAdviceApi : ApiService
     {
-		const string BaseUrl = "http://fucking-great-advice.ru/api/random";
+        const string BaseUrl = "http://fucking-great-advice.ru/api/random";
 
-		public override string BuildEndpointRoute(string argument)
+        public override string BuildEndpointRoute(string argument)
         {
             return BaseUrl;
         }

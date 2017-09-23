@@ -5,10 +5,10 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps
 {
     public class GoogleMapsApi : ApiService
     {
-		const string BaseUrl = "https://maps.googleapis.com/maps/api/geocode/json";
-		string ApiKey { get; }
+        const string BaseUrl = "https://maps.googleapis.com/maps/api/geocode/json";
+        string ApiKey { get; }
 
-		public GoogleMapsApi(string apiKey)
+        public GoogleMapsApi(string apiKey)
         {
             ApiKey = apiKey;
         }

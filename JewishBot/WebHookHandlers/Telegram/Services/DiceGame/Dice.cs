@@ -7,8 +7,8 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.DiceGame
 {
     public class Dice
     {
-		readonly Random _rnd = new Random();
-		public const string CommonRollRegexPattern = "d *\\d+(?: *k *\\d+)?";
+        readonly Random _rnd = new Random();
+        public const string CommonRollRegexPattern = "d *\\d+(?: *k *\\d+)?";
         public const string StrictRollPattern = "(?:(?:\\d* +)|(?:\\d+ *)|^)" + CommonRollRegexPattern;
 
         public int Quantity { get; set; }
@@ -37,12 +37,12 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.DiceGame
             return rollMatch.Success && rollMatch.Value == trimmedSource;
         }
 
-		int Roll()
-		{
-			return _rnd.Next(Die) + 1;
-		}
+        int Roll()
+        {
+            return _rnd.Next(Die) + 1;
+        }
 
-		public IEnumerable<int> GetRolls()
+        public IEnumerable<int> GetRolls()
         {
             var rolls = new List<int>(Quantity);
 

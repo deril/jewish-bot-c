@@ -5,9 +5,9 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.Yahoo
 {
     public class CurrencyApi : ApiService
     {
-		const string BaseUrl = "https://query.yahooapis.com/v1/public/yql";
+        const string BaseUrl = "https://query.yahooapis.com/v1/public/yql";
 
-		public override string BuildEndpointRoute(string argument)
+        public override string BuildEndpointRoute(string argument)
         {
             var parameters = new Dictionary<string, string>
             {

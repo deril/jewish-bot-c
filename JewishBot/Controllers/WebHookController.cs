@@ -40,7 +40,7 @@ namespace JewishBot.Controllers
             return Ok();
         }
 
-		// GET: /WebHook/Error
-		public IActionResult Error() => View();
+        // GET: /WebHook/Error
+        public IActionResult Error() => View();
     }
 }

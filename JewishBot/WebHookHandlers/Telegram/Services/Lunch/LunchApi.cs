@@ -17,11 +17,11 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.Lunch
         readonly FormUrlEncodedContent _authParams;
         readonly string[] _members;
 
-		struct Order
-		{
-			public string Meal { get; set; }
-			public String Name { get; set; }
-		}
+        struct Order
+        {
+            public string Meal { get; set; }
+            public String Name { get; set; }
+        }
 
         public LunchApi(string email, string password, string members)
         {
@@ -44,23 +44,23 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.Lunch
             var output = new StringBuilder();
             if (!String.IsNullOrEmpty(obediFormated))
                 output.Append($"Obedi:\n\n{obediFormated}\n\n");
-			if (!String.IsNullOrEmpty(koloSmakuFormated))
-				output.Append($"Kolo Smaku:\n\n{koloSmakuFormated}\n\n");
+            if (!String.IsNullOrEmpty(koloSmakuFormated))
+                output.Append($"Kolo Smaku:\n\n{koloSmakuFormated}\n\n");
             return String.IsNullOrEmpty(output.ToString()) ? "Not Found." : output.ToString();
         }
 
-		IEnumerable<Order> ParseMeals(CQ provider)
-		{
-			return provider["strong.mr_r_1"].Select(element =>
-			{
-				var names = element.NextSibling.NodeValue.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
-				return names.Select(name => new Order
-				{
-					Meal = HttpUtility.HtmlDecode(element.InnerText).Replace(":", string.Empty),
-					Name = name.Trim()
-				});
-			}).SelectMany(i => i);
-		}
+        IEnumerable<Order> ParseMeals(CQ provider)
+        {
+            return provider["strong.mr_r_1"].Select(element =>
+            {
+                var names = element.NextSibling.NodeValue.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
+                return names.Select(name => new Order
+                {
+                    Meal = HttpUtility.HtmlDecode(element.InnerText).Replace(":", string.Empty),
+                    Name = name.Trim()
+                });
+            }).SelectMany(i => i);
+        }
 
         CQ RequestResult(string url)
         {
@@ -71,12 +71,12 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.Lunch
             return dom["div#print"];
         }
 
-		string FormatMeals(IEnumerable<Order> orders)
-		{
-			var i = orders.Where(order => Array.Exists(_members, member => order.Name.ToLowerInvariant().Contains(member.ToLowerInvariant()))).
-			ToLookup(order => order.Name, order => order.Meal).ToList().
-			Select(group => $"☻ {group.Key}\n\n{String.Join("\n", group.Select(meal => $"• {meal}"))}");
-			return String.Join("\n\n", i);
-		}
+        string FormatMeals(IEnumerable<Order> orders)
+        {
+            var i = orders.Where(order => Array.Exists(_members, member => order.Name.ToLowerInvariant().Contains(member.ToLowerInvariant()))).
+            ToLookup(order => order.Name, order => order.Meal).ToList().
+            Select(group => $"☻ {group.Key}\n\n{String.Join("\n", group.Select(meal => $"• {meal}"))}");
+            return String.Join("\n\n", i);
+        }
     }
 }

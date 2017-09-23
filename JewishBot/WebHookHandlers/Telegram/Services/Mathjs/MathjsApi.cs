@@ -5,9 +5,9 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.Mathjs
 {
     public class MathjsApi : ApiService
     {
-		const string BaseUrl = "http://math.leftforliving.com/query";
+        const string BaseUrl = "http://math.leftforliving.com/query";
 
-		public override string BuildEndpointRoute(string argument)
+        public override string BuildEndpointRoute(string argument)
         {
             var parameters = new Dictionary<string, string>
             {

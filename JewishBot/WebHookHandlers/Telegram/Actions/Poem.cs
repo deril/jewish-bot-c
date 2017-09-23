@@ -10,16 +10,16 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     class Poem : IAction
-	{
-		TelegramBotClient Bot { get; }
-		long ChatId { get; }
-		PoemApi PoemService { get; } = new PoemApi();
+    {
+        TelegramBotClient Bot { get; }
+        long ChatId { get; }
+        PoemApi PoemService { get; } = new PoemApi();
 
-		public Poem(TelegramBotClient bot, long chatId)
-		{
-			Bot = bot;
-			ChatId = chatId;
-		}
+        public Poem(TelegramBotClient bot, long chatId)
+        {
+            Bot = bot;
+            ChatId = chatId;
+        }
 
         public async Task HandleAsync()
         {
@@ -45,11 +45,11 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
         }
 
         async void OnLikedPoemAsync(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
-		{
-			await PoemService.Like(callbackQueryEventArgs.CallbackQuery.Data);
+        {
+            await PoemService.Like(callbackQueryEventArgs.CallbackQuery.Data);
 
-			await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
-				"Thanks for your like!");
-		}
-	}
+            await Bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
+                "Thanks for your like!");
+        }
+    }
 }
