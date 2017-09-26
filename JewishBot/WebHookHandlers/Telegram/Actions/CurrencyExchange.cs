@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +9,8 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     class CurrencyExchange : IAction
     {
         public static string Description { get; } = @"Converts currencies using Yahoo API; default amount 1.
-Usage: /ex [fromCurrency] [toCurrency] [amount]";
+Usage: /ex [amount] [fromCurrency] in [toCurrency];
+/ex [fromCurrency] [toCurrency]";
 
         TelegramBotClient Bot { get; }
         long ChatId { get; }
@@ -46,10 +46,10 @@ Usage: /ex [fromCurrency] [toCurrency] [amount]";
                     fromCurrency = Args[0];
                     toCurrency = Args[1];
                     break;
-                case 3:
-                    fromCurrency = Args[0];
-                    toCurrency = Args[1];
-                    decimal.TryParse(Args[2], out amount);
+                case 4:
+                    decimal.TryParse(Args[0], out amount);
+                    fromCurrency = Args[1];
+                    toCurrency = Args[3];
                     break;
                 default:
                     return Description;

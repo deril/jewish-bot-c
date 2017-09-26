@@ -6,17 +6,17 @@ A Telegram bot for the secret Post-Apocalyptic B. community. This community appe
 
 ## Available Commands
 
-- ex - exchange currency. Format XXX YYY amount
+- ex - exchange currency. Format amount XXX in YYY
 - ud - define word using Urban Dictionary
 - go - search on DuckDuckGo (beta)
 - dice - roll a basic dice
-- poem - show a poem written by AI
 - l - find a location by address
 - advice - give very usefull advice
 - weekday - current day of week (in Europe, Kiev timezone)
 - timein - gets time at specific location
 - calc - calculates using math.js
 - ball - ask Magic Ball a question
+- lunch - get lunch data for today
 
 ## Prerequisites
 
