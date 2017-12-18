@@ -1,6 +1,5 @@
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace JewishBot.WebHookHandlers.Telegram.Services
 {
@@ -11,25 +10,15 @@ namespace JewishBot.WebHookHandlers.Telegram.Services
         public HttpResponseMessage Response;
         public HttpClient HttpClient = new HttpClient();
 
-        public async Task<T> Invoke<T>(string pair) where T : new()
+        public abstract string BuildEndpointRoute(string[] arguments);
+        public abstract Task<string> InvokeAsync(string[] arguments);
+
+        protected virtual async Task Requester(string[] pair)
         {
-            try
-            {
-                QueryUrl = BuildEndpointRoute(pair);
-                Response = await HttpClient.GetAsync(QueryUrl);
-                Response.EnsureSuccessStatusCode();
-                Content = await Response.Content.ReadAsStringAsync();
-            }
-            catch
-            {
-                // TODO: implement here logging
-                // Create nullable JSON
-                Content = JsonConvert.SerializeObject(new T());
-            }
-
-            return JsonConvert.DeserializeObject<T>(Content);
+            QueryUrl = BuildEndpointRoute(pair);
+            Response = await HttpClient.GetAsync(QueryUrl);
+            Response.EnsureSuccessStatusCode();
+            Content = await Response.Content.ReadAsStringAsync();
         }
-
-        public abstract string BuildEndpointRoute(string argument);
     }
 }

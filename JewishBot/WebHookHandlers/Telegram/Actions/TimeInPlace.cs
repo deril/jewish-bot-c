@@ -38,7 +38,7 @@ Usage: /timein location";
                 return;
             }
             var location = string.Join(" ", Args);
-            var locationResult = await GetLocation(location);
+            var locationResult = await GetLocationAsync(location);
             if (locationResult.Item1 == Status.Error)
             {
                 const string errorMessage = "Something goes wrong \uD83D\uDE22";
@@ -49,10 +49,10 @@ Usage: /timein location";
             await Bot.SendTextMessageAsync(ChatId, $"In {location}: {time}");
         }
 
-        async Task<Tuple<Status, Location>> GetLocation(string place)
+        async Task<Tuple<Status, Location>> GetLocationAsync(string place)
         {
             var mapsApi = new GoogleMapsApi(_key);
-            var response = await mapsApi.Invoke<QueryModel>(place);
+            var response = await mapsApi.InvokeAsync<QueryModel>(new string[] { place });
 
             return response.Status == "OK"
                 ? new Tuple<Status, Location>(Status.Ok, response.Results[0].Geometry.Location)

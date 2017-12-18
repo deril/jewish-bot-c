@@ -36,7 +36,7 @@ Usage: /calc <query>";
 
             try
             {
-                var answer = await mathjsApi.Invoke<QueryModel>(question);
+                var answer = await mathjsApi.InvokeAsync<QueryModel>(new string[] { question });
                 return answer.Error ? $"Unable to evaluate {question}" : $"{question}, {answer.Answer}";
             }
             catch

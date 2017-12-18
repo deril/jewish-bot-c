@@ -4,14 +4,11 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace JewishBot.WebHookHandlers.Telegram.Services.Poem
 {
-    public class PoemApi : ApiService
+    public class PoemApi : ApiServiceJson
     {
         const string BaseUrl = "https://poem.alv.in/api/generate";
 
-        public override string BuildEndpointRoute(string argument)
-        {
-            return BaseUrl;
-        }
+        public override string BuildEndpointRoute(string[] arguments) => BaseUrl;
 
         public async Task Like(string hashid)
         {

@@ -24,7 +24,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             if (Args != null)
             {
                 var ud = new DictApi();
-                var result = await ud.Invoke<QueryModel>(string.Join(" ", Args));
+                var result = await ud.InvokeAsync<QueryModel>(new string[] { string.Join(" ", Args) });
                 message = result.ResultType == "exact" ? result.List[0].Definition : "Nothing found \uD83D\uDE22";
             }
             await Bot.SendTextMessageAsync(ChatId, message);

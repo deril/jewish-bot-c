@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using JewishBot.WebHookHandlers.Telegram.Services.Yahoo;
+using JewishBot.WebHookHandlers.Telegram.Services;
 using Telegram.Bot;
 
 namespace JewishBot.WebHookHandlers.Telegram.Actions
@@ -12,15 +12,17 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 Usage: /ex [amount] [fromCurrency] in [toCurrency];
 /ex [fromCurrency] [toCurrency]";
 
-        TelegramBotClient Bot { get; }
+        ITelegramBotClient Bot { get; }
         long ChatId { get; }
         string[] Args { get; }
+        ApiService FinanceApi { get; }
 
-        public CurrencyExchange(TelegramBotClient bot, long chatId, string[] args)
+        public CurrencyExchange(ITelegramBotClient bot, long chatId, string[] args, ApiService apiService)
         {
             Bot = bot;
             ChatId = chatId;
             Args = args;
+            FinanceApi = apiService;
         }
 
         public async Task HandleAsync()
@@ -56,22 +58,9 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
             }
 
             if (fromCurrency == null || toCurrency == null) return Description;
-            var currencyApi = new CurrencyApi();
-            var rates = await currencyApi.Invoke<QueryModel>($"{fromCurrency}{toCurrency}");
+            var rate = await FinanceApi.InvokeAsync(new string[] { amount.ToString(), fromCurrency, toCurrency });
+            var value = decimal.Parse(rate, CultureInfo.InvariantCulture);
 
-            if (rates.Query?.Results?.Rate?._Rate == null || rates.Query.Results.Rate._Rate == "N/A")
-            {
-                return "Something goes wrong";
-            }
-
-            var rateResult = rates.Query.Results.Rate;
-
-            if (amount == 0)
-            {
-                return $"{fromCurrency}/{toCurrency} -> {rateResult._Rate}";
-            }
-
-            var value = decimal.Parse(rateResult._Rate, new CultureInfo(rates.Query.Lang)) * amount;
             return $"{amount} {fromCurrency} -> {value:0.00} {toCurrency}";
         }
     }

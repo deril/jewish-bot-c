@@ -30,7 +30,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             }
 
             var mapsApi = new GoogleMapsApi(_key);
-            var response = await mapsApi.Invoke<QueryModel>(string.Join(" ", Args));
+            var response = await mapsApi.InvokeAsync<QueryModel>(new string[] { string.Join(" ", Args) });
 
             if (response.Status != "OK")
             {

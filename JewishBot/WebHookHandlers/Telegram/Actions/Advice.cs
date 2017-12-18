@@ -21,7 +21,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
         public async Task HandleAsync()
         {
             var adviceService = new GreatAdviceApi();
-            var result = await adviceService.Invoke<QueryModel>(null);
+            var result = await adviceService.InvokeAsync<QueryModel>(null);
             var textResult = WebUtility.HtmlDecode(result.Text);
             var message = $"Advice for {Username}: {textResult}";
 

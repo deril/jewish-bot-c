@@ -23,7 +23,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
         public async Task HandleAsync()
         {
-            var result = await PoemService.Invoke<QueryModel>(null);
+            var result = await PoemService.InvokeAsync<QueryModel>(null);
             if (result.Error != null)
             {
                 await Bot.SendTextMessageAsync(ChatId, result.Error, parseMode: ParseMode.Markdown);

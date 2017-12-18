@@ -12,13 +12,13 @@ namespace JewishBot.Controllers
 {
     public class WebHookController : Controller
     {
-        readonly TelegramBotClient _bot;
-        readonly IConfiguration _configuration;
+        readonly TelegramBotClient bot;
+        readonly IConfiguration configuration;
 
         public WebHookController(TelegramBotClient bot, IConfiguration configuration)
         {
-            _bot = bot;
-            _configuration = configuration;
+            this.bot = bot;
+            this.configuration = configuration;
         }
 
         // GET: /WebHook/
@@ -34,13 +34,13 @@ namespace JewishBot.Controllers
             var message = update.Message;
             if (message == null || message.Type != MessageType.TextMessage) return NoContent();
 
-            var handler = new WebHookHandler(_bot, _configuration);
+            var handler = new WebHookHandler(bot, configuration);
             await handler.OnMessageReceived(message);
 
             return Ok();
         }
 
         // GET: /WebHook/Error
-        public IActionResult Error() => View();
+        public IActionResult Error() => BadRequest();
     }
 }

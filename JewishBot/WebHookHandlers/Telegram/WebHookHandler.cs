@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using JewishBot.WebHookHandlers.Telegram.Actions;
+using JewishBot.WebHookHandlers.Telegram.Services.GoogleFinance;
 using Microsoft.Extensions.Configuration;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -30,7 +31,7 @@ namespace JewishBot.WebHookHandlers.Telegram
             {
                 { "echo",       new Echo(Bot, chatId, command.Arguments) },
                 { "hey",        new Hey(Bot, chatId) },
-                { "ex",         new CurrencyExchange(Bot, chatId, command.Arguments) },
+                { "ex",         new CurrencyExchange(Bot, chatId, command.Arguments, new FinanceApi()) },
                 { "ud",         new UrbanDictionary(Bot, chatId, command.Arguments) },
                 { "go",         new DuckDuckGo(Bot, chatId, command.Arguments) },
                 { "dice",       new RollDice(Bot, chatId, command.Arguments, username) },

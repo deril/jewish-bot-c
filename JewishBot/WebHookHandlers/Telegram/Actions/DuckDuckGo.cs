@@ -23,7 +23,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             if (Args != null)
             {
                 var go = new GoApi();
-                var result = await go.Invoke<QueryModel>(string.Join(" ", Args));
+                var result = await go.InvokeAsync<QueryModel>(new string[] { string.Join(" ", Args) });
                 switch (result.Type)
                 {
                     case "A":

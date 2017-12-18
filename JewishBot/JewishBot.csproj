@@ -12,6 +12,7 @@
     <Folder Include="WebHookHandlers\Telegram\Actions\" />
     <Folder Include="WebHookHandlers\Telegram\Services\" />
     <Folder Include="WebHookHandlers\Telegram\Services\Lunch\" />
+    <Folder Include="WebHookHandlers\Telegram\Services\GoogleFinance\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,5 +26,4 @@
    <None Include="appsettings.json" CopyToPublishDirectory="Always" />
    <None Include="jewish_bot.pem" CopyToPublishDirectory="Always" />
   </ItemGroup>
-
 </Project>

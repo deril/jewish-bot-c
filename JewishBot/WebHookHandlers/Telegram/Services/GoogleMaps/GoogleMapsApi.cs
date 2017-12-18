@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps
 {
-    public class GoogleMapsApi : ApiService
+    public class GoogleMapsApi : ApiServiceJson
     {
         const string BaseUrl = "https://maps.googleapis.com/maps/api/geocode/json";
         string ApiKey { get; }
@@ -12,12 +13,12 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps
         {
             ApiKey = apiKey;
         }
-        public override string BuildEndpointRoute(string argument)
+        public override string BuildEndpointRoute(string[] arguments)
         {
             
             var parameters = new Dictionary<string, string>
             {
-                {"address", argument},
+                {"address", String.Join("", arguments)},
                 {"key", ApiKey}
             };
 
