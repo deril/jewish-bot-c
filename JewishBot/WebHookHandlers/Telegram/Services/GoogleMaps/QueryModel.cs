@@ -1,35 +1,14 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-
-namespace JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps
+﻿namespace JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps
 {
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
     public class QueryModel
     {
         [JsonProperty("results")]
-        public List<Result> Results;
+        public List<Result> Results { get; set; }
 
         [JsonProperty("status")]
-        public string Status;
-    }
-
-    public class Result
-    {
-        [JsonProperty("geometry")]
-        public Geometry Geometry;
-    }
-
-    public class Geometry
-    {
-        [JsonProperty("location")]
-        public Location Location;
-    }
-
-    public class Location
-    {
-        [JsonProperty("lat")]
-        public float Lattitude;
-
-        [JsonProperty("lng")]
-        public float Longtitude;
+        public string Status { get; set; }
     }
 }

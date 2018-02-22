@@ -1,29 +1,29 @@
-using System.Threading.Tasks;
-using JewishBot.WebHookHandlers.Telegram.Services.DuckDuckGo;
-using Telegram.Bot;
-
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    class DuckDuckGo : IAction
+    using System.Threading.Tasks;
+    using global::Telegram.Bot;
+    using Services.DuckDuckGo;
+
+    internal class DuckDuckGo : IAction
     {
-        TelegramBotClient Bot { get; }
-        long ChatId { get; }
-        string[] Args { get; }
+        private readonly TelegramBotClient bot;
+        private readonly long chatId;
+        private readonly string[] args;
 
         public DuckDuckGo(TelegramBotClient bot, long chatId, string[] args)
         {
-            Bot = bot;
-            ChatId = chatId;
-            Args = args;
+            this.bot = bot;
+            this.chatId = chatId;
+            this.args = args;
         }
 
         public async Task HandleAsync()
         {
             var message = "Please specify at least 1 search term";
-            if (Args != null)
+            if (this.args != null)
             {
                 var go = new GoApi();
-                var result = await go.InvokeAsync<QueryModel>(new string[] { string.Join(" ", Args) });
+                var result = await go.InvokeAsync<QueryModel>(new string[] { string.Join(" ", this.args) });
                 switch (result.Type)
                 {
                     case "A":
@@ -44,7 +44,8 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
                         break;
                 }
             }
-            await Bot.SendTextMessageAsync(ChatId, message);
+
+            await this.bot.SendTextMessageAsync(this.chatId, message);
         }
     }
 }

@@ -1,33 +1,33 @@
-using System.Threading.Tasks;
-using JewishBot.WebHookHandlers.Telegram.Services.DiceGame;
-using Telegram.Bot;
-
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    class RollDice : IAction
+    using System.Threading.Tasks;
+    using global::Telegram.Bot;
+    using Services.DiceGame;
+
+    internal class RollDice : IAction
     {
-        const string DefaultPatern = "1d6";
-        TelegramBotClient Bot { get; }
-        long ChatId { get; }
-        string[] Args { get; }
-        string Username { get; }
+        private const string DefaultPatern = "1d6";
+        private readonly long chatId;
+        private readonly string[] args;
+        private readonly string username;
+        private readonly TelegramBotClient bot;
 
         public RollDice(TelegramBotClient bot, long chatId, string[] args, string username)
         {
-            Bot = bot;
-            ChatId = chatId;
-            Args = args;
-            Username = username;
+            this.bot = bot;
+            this.chatId = chatId;
+            this.args = args;
+            this.username = username;
         }
 
         public async Task HandleAsync()
         {
-            var toParse = (Args != null && Dice.CanParse(Args[0])) ? Args[0] : DefaultPatern;
+            var toParse = (this.args != null && Dice.CanParse(this.args[0])) ? this.args[0] : DefaultPatern;
             var result = new Dice(toParse);
 
             var message = result.GetSum().ToString();
 
-            await Bot.SendTextMessageAsync(ChatId, $"{Username}: \uD83C\uDFB2 {message}");
+            await this.bot.SendTextMessageAsync(this.chatId, $"{this.username}: \uD83C\uDFB2 {message}");
         }
     }
 }

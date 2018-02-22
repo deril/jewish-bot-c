@@ -1,19 +1,17 @@
-﻿using System.Threading.Tasks;
-using JewishBot.WebHookHandlers.Telegram;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace JewishBot.Controllers
+﻿namespace JewishBot.Controllers
 {
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
+    using Telegram.Bot;
+    using Telegram.Bot.Types;
+    using Telegram.Bot.Types.Enums;
+    using WebHookHandlers.Telegram;
+
     public class WebHookController : Controller
     {
-        readonly TelegramBotClient bot;
-        readonly IConfiguration configuration;
+        private readonly TelegramBotClient bot;
+        private readonly IConfiguration configuration;
 
         public WebHookController(TelegramBotClient bot, IConfiguration configuration)
         {
@@ -32,15 +30,18 @@ namespace JewishBot.Controllers
         public async Task<StatusCodeResult> Post([FromBody] Update update)
         {
             var message = update.Message;
-            if (message == null || message.Type != MessageType.TextMessage) return NoContent();
+            if (message == null || message.Type != MessageType.TextMessage)
+            {
+                return this.NoContent();
+            }
 
-            var handler = new WebHookHandler(bot, configuration);
+            var handler = new WebHookHandler(this.bot, this.configuration);
             await handler.OnMessageReceived(message);
 
-            return Ok();
+            return this.Ok();
         }
 
         // GET: /WebHook/Error
-        public IActionResult Error() => BadRequest();
+        public IActionResult Error() => this.BadRequest();
     }
 }

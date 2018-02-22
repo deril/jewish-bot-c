@@ -2,33 +2,33 @@
 {
     public class CommandParser
     {
-        string Message { get; }
-
         public CommandParser(string msg)
         {
-            Message = msg;
+            this.Message = msg;
         }
 
         public char MainDetermiter { get; set; } = ' ';
 
         public char BotNameDelimiter { get; set; } = '@';
 
+        private string Message { get; }
+
         public Command Parse()
         {
-            var firstSpace = Message.IndexOf(MainDetermiter);
+            var firstSpace = this.Message.IndexOf(this.MainDetermiter);
             var command = new Command();
 
             if (firstSpace == -1)
             {
-                command.Name = Message.Substring(1);
+                command.Name = this.Message.Substring(1);
             }
             else
             {
-                command.Name = Message.Substring(1, firstSpace - 1);
-                command.Arguments = Message.Substring(firstSpace + 1).Split();
+                command.Name = this.Message.Substring(1, firstSpace - 1);
+                command.Arguments = this.Message.Substring(firstSpace + 1).Split();
             }
 
-            var botNameDelimiterIndex = command.Name.IndexOf(BotNameDelimiter);
+            var botNameDelimiterIndex = command.Name.IndexOf(this.BotNameDelimiter);
 
             if (botNameDelimiterIndex != -1)
             {

@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace JewishBot.WebHookHandlers.Telegram.Services.DuckDuckGo
 {
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
     public class QueryModel
     {
         [JsonProperty("AbstractText")]
@@ -19,11 +19,5 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.DuckDuckGo
 
         [JsonProperty("RelatedTopics")]
         public List<RelatedTopic> RelatedTopics { get; set; }
-    }
-
-    public class RelatedTopic
-    {
-        [JsonProperty("Text")]
-        public string Text { get; set; }
     }
 }

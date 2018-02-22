@@ -19,7 +19,7 @@ namespace TestJewishBot
         [Fact]
         public async void MakeValidExchangeAsync()
         {
-            var bot = new Mock<ITelegramBotClient>(MockBehavior.Strict);
+            var bot = new Mock<ITelegramBotClient>();
             ChatId actualChatId = 0;
             long chatId = 42;
             string amount = "42", fromCurrency = "XXX", toCurrency = "UAH", rate = "1166.9070";
@@ -27,13 +27,14 @@ namespace TestJewishBot
             var externalArgs = new string[] { amount, fromCurrency, "in", toCurrency };
             var financeArgs = new string[] { amount, fromCurrency, toCurrency };
             var financeApi = new Mock<FinanceApi>();
-            bot.Setup(b => b.SendTextMessageAsync(chatId, expectedResult, 0, false, false, 0, null, It.IsAny<CancellationToken>())).Verifiable();
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(20));
+            bot.Setup(b => b.SendTextMessageAsync(chatId, expectedResult, 0, false, false, 0, null, source.Token)).Verifiable();
             financeApi.Setup(f => f.InvokeAsync(financeArgs)).ReturnsAsync(rate);
             IAction currencyExchange = new CurrencyExchange(bot.Object, chatId, externalArgs, financeApi.Object);
 
             await currencyExchange.HandleAsync();
 
-            bot.Verify(m => m.SendTextMessageAsync(chatId, expectedResult, 0, false, false, 0, null, It.IsAny<CancellationToken>()));
+            bot.Verify(m => m.SendTextMessageAsync(chatId, expectedResult, 0, false, false, 0, null, source.Token));
             financeApi.VerifyAll();
         }
     }

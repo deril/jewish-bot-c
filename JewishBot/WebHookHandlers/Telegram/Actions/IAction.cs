@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
-
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    interface IAction
+    using System.Threading.Tasks;
+
+    internal interface IAction
     {
         Task HandleAsync();
     }

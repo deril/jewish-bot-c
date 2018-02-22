@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
-
-namespace JewishBot.WebHookHandlers.Telegram.Actions
+﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    public class MagicBall : IAction
+    using System;
+    using System.Collections.Generic;
+    using System.Numerics;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Threading.Tasks;
+    using global::Telegram.Bot;
+
+    internal class MagicBall : IAction
     {
-        TelegramBotClient Bot { get; }
-        long ChatId { get; }
-        string[] Args { get; }
-
-        Random Rnd { get; } = new Random();
-
-        public static string Description { get; } = @"Predicts a future.
-            Usage: /ball <question>";
-
-        List<string> Answers { get; } = new List<string>
+        private readonly TelegramBotClient bot;
+        private readonly long chatId;
+        private readonly string[] args;
+        private readonly Random rnd = new Random();
+        private readonly List<string> answers = new List<string>
         {
             "It is certain",
             "It is decidedly so",
@@ -38,7 +33,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             "Very doubtful"
         };
 
-        List<string> AskAgainAnswers { get; } = new List<string>
+        private readonly List<string> askAgainAnswers = new List<string>
         {
             "Reply hazy try again",
             "Ask again later",
@@ -49,37 +44,40 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
         public MagicBall(TelegramBotClient bot, long chatId, string[] args)
         {
-            Bot = bot;
-            ChatId = chatId;
-            Args = args;
+            this.bot = bot;
+            this.chatId = chatId;
+            this.args = args;
         }
+
+        public static string Description { get; } = @"Predicts a future.
+            Usage: /ball <question>";
 
         public async Task HandleAsync()
         {
-            if (Args == null)
+            if (this.args == null)
             {
-                await Bot.SendTextMessageAsync(ChatId, Description);
+                await this.bot.SendTextMessageAsync(this.chatId, Description);
                 return;
             }
 
-            if (Rnd.Next(1, 6) == 1)
+            if (this.rnd.Next(1, 6) == 1)
             {
-                var index = Rnd.Next(AskAgainAnswers.Count + 1);
-                await Bot.SendTextMessageAsync(ChatId, AskAgainAnswers[index]);
+                var index = this.rnd.Next(this.askAgainAnswers.Count + 1);
+                await this.bot.SendTextMessageAsync(this.chatId, this.askAgainAnswers[index]);
             }
             else
             {
                 using (var algorithm = SHA256.Create())
                 {
                     var time = DateTime.Now.Ticks;
-                    var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", Args) + time));
-                    var index = (int)(ConvertHash(hash) % Answers.Count);
-                    await Bot.SendTextMessageAsync(ChatId, Answers[index]);
+                    var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", this.args) + time));
+                    var index = (int)(ConvertHash(hash) % this.answers.Count);
+                    await this.bot.SendTextMessageAsync(this.chatId, this.answers[index]);
                 }
             }
         }
 
-        BigInteger ConvertHash(byte[] hash)
+        private static BigInteger ConvertHash(byte[] hash)
         {
             // make int unsigned
             var uhash = new byte[hash.Length + 1];

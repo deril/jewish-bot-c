@@ -1,47 +1,46 @@
-﻿using System.Threading.Tasks;
-using JewishBot.WebHookHandlers.Telegram.Services.GoogleMaps;
-using Telegram.Bot;
-
-namespace JewishBot.WebHookHandlers.Telegram.Actions
+﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    class GoogleMaps : IAction
+    using System.Threading.Tasks;
+    using global::Telegram.Bot;
+    using Services.GoogleMaps;
+
+    internal class GoogleMaps : IAction
     {
-        TelegramBotClient Bot { get; }
-        long ChatId { get; }
-        string[] Args { get; }
-        
-        readonly string _key;
+        private readonly TelegramBotClient bot;
+        private readonly long chatId;
+        private readonly string[] args;
+        private readonly string key;
 
         public GoogleMaps(TelegramBotClient bot, long chatId, string[] args, string key)
         {
-            Bot = bot;
-            ChatId = chatId;
-            Args = args;
-            _key = key;
+            this.bot = bot;
+            this.chatId = chatId;
+            this.args = args;
+            this.key = key;
         }
 
         public async Task HandleAsync()
         {
             var message = "Please specify an address";
-            if (Args == null)
+            if (this.args == null)
             {
-                await Bot.SendTextMessageAsync(ChatId, message);
+                await this.bot.SendTextMessageAsync(this.chatId, message);
                 return;
             }
 
-            var mapsApi = new GoogleMapsApi(_key);
-            var response = await mapsApi.InvokeAsync<QueryModel>(new string[] { string.Join(" ", Args) });
+            var mapsApi = new GoogleMapsApi(this.key);
+            var response = await mapsApi.InvokeAsync<QueryModel>(new string[] { string.Join(" ", this.args) });
 
             if (response.Status != "OK")
             {
                 // TODO: implement here logging
                 message = "Nothing \uD83D\uDE22";
-                await Bot.SendTextMessageAsync(ChatId, message);
+                await this.bot.SendTextMessageAsync(this.chatId, message);
                 return;
             }
 
             var location = response.Results[0].Geometry.Location;
-            await Bot.SendLocationAsync(ChatId, location.Lattitude, location.Longtitude);
+            await this.bot.SendLocationAsync(this.chatId, location.Lattitude, location.Longtitude);
         }
     }
 }

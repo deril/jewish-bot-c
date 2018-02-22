@@ -1,17 +1,17 @@
-using System.Threading.Tasks;
-using Telegram.Bot;
-
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    class Hey : IAction
+    using System.Threading.Tasks;
+    using global::Telegram.Bot;
+
+    internal class Hey : IAction
     {
-        TelegramBotClient Bot { get; }
-        long ChatId { get; }
+        private readonly TelegramBotClient bot;
+        private readonly long chatId;
 
         public Hey(TelegramBotClient bot, long chatId)
         {
-            Bot = bot;
-            ChatId = chatId;
+            this.bot = bot;
+            this.chatId = chatId;
         }
 
         public static string Description { get; } = @"Helloes to sender.
@@ -19,7 +19,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
         public async Task HandleAsync()
         {
-            await Bot.SendTextMessageAsync(ChatId, "היי! (Hey)");
+            await this.bot.SendTextMessageAsync(this.chatId, "היי! (Hey)");
         }
     }
 }

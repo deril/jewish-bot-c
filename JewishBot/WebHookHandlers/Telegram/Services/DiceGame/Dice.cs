@@ -1,34 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
 namespace JewishBot.WebHookHandlers.Telegram.Services.DiceGame
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
     public class Dice
     {
-        readonly Random _rnd = new Random();
-        public const string CommonRollRegexPattern = "d *\\d+(?: *k *\\d+)?";
-        public const string StrictRollPattern = "(?:(?:\\d* +)|(?:\\d+ *)|^)" + CommonRollRegexPattern;
+        private const string CommonRollRegexPattern = "d *\\d+(?: *k *\\d+)?";
+        private const string StrictRollPattern = "(?:(?:\\d* +)|(?:\\d+ *)|^)" + CommonRollRegexPattern;
 
-        public int Quantity { get; set; }
-        public int Die { get; set; }
+        private readonly Random rnd = new Random();
+        private readonly int quantity;
+        private readonly int die;
 
         public Dice(string toParse)
         {
             var sections = toParse.Split('d');
-            Die = Convert.ToInt32(sections[1]);
-            Quantity = 1;
+            this.die = Convert.ToInt32(sections[1]);
+            this.quantity = 1;
             if (!string.IsNullOrEmpty(sections[0]))
             {
-                Quantity = Convert.ToInt32(sections[0]);
+                this.quantity = Convert.ToInt32(sections[0]);
             }
         }
 
         public static bool CanParse(string toParse)
         {
             if (string.IsNullOrWhiteSpace(toParse))
+            {
                 return false;
+            }
 
             var trimmedSource = toParse.Trim();
             var strictRollRegex = new Regex(StrictRollPattern);
@@ -37,27 +39,27 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.DiceGame
             return rollMatch.Success && rollMatch.Value == trimmedSource;
         }
 
-        int Roll()
+        public int GetSum()
         {
-            return _rnd.Next(Die) + 1;
+            var rolls = this.GetRolls();
+            return rolls.Sum();
         }
 
-        public IEnumerable<int> GetRolls()
+        private int Roll()
         {
-            var rolls = new List<int>(Quantity);
+            return this.rnd.Next(this.die) + 1;
+        }
 
-            for (var i = 0; i < Quantity; i++)
+        private IEnumerable<int> GetRolls()
+        {
+            var rolls = new List<int>(this.quantity);
+
+            for (var i = 0; i < this.quantity; i++)
             {
-                rolls.Add(Roll());
+                rolls.Add(this.Roll());
             }
 
             return rolls;
-        }
-
-        public int GetSum()
-        {
-            var rolls = GetRolls();
-            return rolls.Sum();
         }
     }
 }

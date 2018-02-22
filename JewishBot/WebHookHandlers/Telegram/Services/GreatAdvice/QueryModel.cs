@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-
-namespace JewishBot.WebHookHandlers.Telegram.Services.GreatAdvice
+﻿namespace JewishBot.WebHookHandlers.Telegram.Services.GreatAdvice
 {
+    using Newtonsoft.Json;
+
     public class QueryModel
     {
         [JsonProperty("id")]

@@ -1,19 +1,18 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.WebUtilities;
-
 namespace JewishBot.WebHookHandlers.Telegram.Services.DuckDuckGo
 {
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.WebUtilities;
+
     public class GoApi : ApiServiceJson
     {
-        const string BaseUrl = "http://api.duckduckgo.com";
+        private const string BaseUrl = "http://api.duckduckgo.com";
 
         public override string BuildEndpointRoute(string[] arguments)
         {
             var parameters = new Dictionary<string, string>
             {
-                {"q", String.Join("", arguments)},
-                {"format", "json"}
+                { "q", string.Join(string.Empty, arguments) },
+                { "format", "json" }
             };
 
             return QueryHelpers.AddQueryString(BaseUrl, parameters);

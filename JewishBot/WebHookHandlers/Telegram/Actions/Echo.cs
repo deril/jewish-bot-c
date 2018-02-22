@@ -1,19 +1,19 @@
-using System.Threading.Tasks;
-using Telegram.Bot;
-
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    class Echo : IAction
+    using System.Threading.Tasks;
+    using global::Telegram.Bot;
+
+    internal class Echo : IAction
     {
-        TelegramBotClient Bot { get; }
-        long ChatId { get; }
-        string[] Args { get; }
+        private readonly TelegramBotClient bot;
+        private readonly long chatId;
+        private readonly string[] args;
 
         public Echo(TelegramBotClient bot, long chatId, string[] args)
         {
-            Bot = bot;
-            ChatId = chatId;
-            Args = args;
+            this.bot = bot;
+            this.chatId = chatId;
+            this.args = args;
         }
 
         public static string Description { get; } = @"Returns input text.
@@ -21,8 +21,12 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
         public async Task HandleAsync()
         {
-            if (Args == null) return;
-            await Bot.SendTextMessageAsync(ChatId, string.Join(" ", Args));
+            if (this.args == null)
+            {
+                return;
+            }
+
+            await this.bot.SendTextMessageAsync(this.chatId, string.Join(" ", this.args));
         }
     }
 }

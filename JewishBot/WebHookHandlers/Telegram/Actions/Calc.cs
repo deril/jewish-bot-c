@@ -1,37 +1,39 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using JewishBot.WebHookHandlers.Telegram.Services.Mathjs;
-using Telegram.Bot;
-
-namespace JewishBot.WebHookHandlers.Telegram.Actions
+﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System.Threading.Tasks;
+    using global::Telegram.Bot;
+    using Services.Mathjs;
+
     public class Calc : IAction
     {
-        TelegramBotClient Bot { get; }
-        long ChatId { get; }
-        string[] Args { get; }
+        private readonly TelegramBotClient bot;
+        private readonly long chatId;
+        private readonly string[] args;
+
+        public Calc(TelegramBotClient bot, long chatId, string[] args)
+        {
+            this.bot = bot;
+            this.chatId = chatId;
+            this.args = args;
+        }
 
         public static string Description { get; } = @"Calculate using math.js API.
 Usage: /calc <query>";
 
-        public Calc(TelegramBotClient bot, long chatId, string[] args)
-        {
-            Bot = bot;
-            ChatId = chatId;
-            Args = args;
-        }
-
         public async Task HandleAsync()
         {
-            var message = await PrepareMessageAsync();
-            await Bot.SendTextMessageAsync(ChatId, message);
+            var message = await this.PrepareMessageAsync();
+            await this.bot.SendTextMessageAsync(this.chatId, message);
         }
 
-        async Task<string> PrepareMessageAsync()
+        private async Task<string> PrepareMessageAsync()
         {
-            if (Args == null) return Description;
+            if (this.args == null)
+            {
+                return Description;
+            }
 
-            var question = string.Join(" ", Args);
+            var question = string.Join(" ", this.args);
             var mathjsApi = new MathjsApi();
 
             try

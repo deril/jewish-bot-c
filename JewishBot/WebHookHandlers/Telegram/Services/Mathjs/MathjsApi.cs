@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.WebUtilities;
-
-namespace JewishBot.WebHookHandlers.Telegram.Services.Mathjs
+﻿namespace JewishBot.WebHookHandlers.Telegram.Services.Mathjs
 {
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.WebUtilities;
+
     public class MathjsApi : ApiServiceJson
     {
-        const string BaseUrl = "http://math.leftforliving.com/query";
+        private const string BaseUrl = "http://math.leftforliving.com/query";
 
         public override string BuildEndpointRoute(string[] arguments)
         {
             var parameters = new Dictionary<string, string>
             {
-                {"question", String.Join("", arguments)}
+                { "question", string.Join(string.Empty, arguments) }
             };
 
             return QueryHelpers.AddQueryString(BaseUrl, parameters);

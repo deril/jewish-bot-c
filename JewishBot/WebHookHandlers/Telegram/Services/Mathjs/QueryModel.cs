@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
-
 namespace JewishBot.WebHookHandlers.Telegram.Services.Mathjs
 {
+    using Newtonsoft.Json;
+
     public class QueryModel
     {
         [JsonProperty("error")]
