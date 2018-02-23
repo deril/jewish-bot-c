@@ -9,14 +9,14 @@
         private readonly TelegramBotClient bot;
         private readonly long chatId;
         private readonly string[] args;
-        private readonly string key;
+        private readonly GoogleMapsApi mapsApi;
 
         public GoogleMaps(TelegramBotClient bot, long chatId, string[] args, string key)
         {
             this.bot = bot;
             this.chatId = chatId;
             this.args = args;
-            this.key = key;
+            this.mapsApi = new GoogleMapsApi(key);
         }
 
         public async Task HandleAsync()
@@ -28,8 +28,7 @@
                 return;
             }
 
-            var mapsApi = new GoogleMapsApi(this.key);
-            var response = await mapsApi.InvokeAsync<QueryModel>(new string[] { string.Join(" ", this.args) });
+            var response = await this.mapsApi.InvokeAsync<QueryModel>(new string[] { string.Join(" ", this.args) });
 
             if (response.Status != "OK")
             {

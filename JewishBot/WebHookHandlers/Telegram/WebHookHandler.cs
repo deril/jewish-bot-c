@@ -10,15 +10,14 @@
 
     public class WebHookHandler
     {
+        private readonly TelegramBotClient bot;
+        private readonly IConfiguration configuration;
+
         public WebHookHandler(TelegramBotClient bot, IConfiguration configuration)
         {
-            this.Bot = bot;
-            this.Configuration = configuration;
+            this.bot = bot;
+            this.configuration = configuration;
         }
-
-        private TelegramBotClient Bot { get; }
-
-        private IConfiguration Configuration { get; }
 
         public async Task OnMessageReceived(Message message)
         {
@@ -30,21 +29,21 @@
 
             var commands = new Dictionary<string, IAction>()
             {
-                { "echo",       new Echo(this.Bot, chatId, command.Arguments) },
-                { "hey",        new Hey(this.Bot, chatId) },
-                { "ex",         new CurrencyExchange(this.Bot, chatId, command.Arguments, new FinanceApi()) },
-                { "ud",         new UrbanDictionary(this.Bot, chatId, command.Arguments) },
-                { "go",         new DuckDuckGo(this.Bot, chatId, command.Arguments) },
-                { "dice",       new RollDice(this.Bot, chatId, command.Arguments, username) },
+                { "echo",       new Echo(this.bot, chatId, command.Arguments) },
+                { "hey",        new Hey(this.bot, chatId) },
+                { "ex",         new CurrencyExchange(this.bot, chatId, command.Arguments, new FinanceApi()) },
+                { "ud",         new UrbanDictionary(this.bot, chatId, command.Arguments) },
+                { "go",         new DuckDuckGo(this.bot, chatId, command.Arguments) },
+                { "dice",       new RollDice(this.bot, chatId, command.Arguments, username) },
 
                 // { "poem",       new Poem(Bot, chatId) },
-                { "l",          new GoogleMaps(this.Bot, chatId, command.Arguments, this.Configuration["googleApiKey"]) },
-                { "advice",     new Advice(this.Bot, chatId, username) },
-                { "weekday",    new WeekDay(this.Bot, chatId) },
-                { "timein",     new TimeInPlace(this.Bot, chatId, command.Arguments, this.Configuration["googleApiKey"]) },
-                { "calc",       new Calc(this.Bot, chatId, command.Arguments) },
-                { "ball",       new MagicBall(this.Bot, chatId, command.Arguments) },
-                { "lunch",      new Lunch(this.Bot, chatId, command.Arguments, this.Configuration) }
+                { "l",          new GoogleMaps(this.bot, chatId, command.Arguments, this.configuration["googleApiKey"]) },
+                { "advice",     new Advice(this.bot, chatId, username) },
+                { "weekday",    new WeekDay(this.bot, chatId) },
+                { "timein",     new TimeInPlace(this.bot, chatId, command.Arguments, this.configuration["googleApiKey"]) },
+                { "calc",       new Calc(this.bot, chatId, command.Arguments) },
+                { "ball",       new MagicBall(this.bot, chatId, command.Arguments) },
+                { "lunch",      new Lunch(this.bot, chatId, command.Arguments, this.configuration) }
             };
 
             if (commands.ContainsKey(command.Name))

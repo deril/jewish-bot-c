@@ -9,18 +9,6 @@
     {
         private const string BaseUrl = "https://finance.google.com/finance/converter";
 
-        public override string BuildEndpointRoute(string[] arguments)
-        {
-            var parameters = new Dictionary<string, string>
-            {
-                { "a", arguments[0] },
-                { "from", arguments[1] },
-                { "to", arguments[2] }
-            };
-
-            return QueryHelpers.AddQueryString(BaseUrl, parameters);
-        }
-
         public override async Task<string> InvokeAsync(string[] arguments)
         {
             string rate;
@@ -38,6 +26,18 @@
             }
 
             return rate;
+        }
+
+        protected override string BuildEndpointRoute(string[] arguments)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                { "a", arguments[0] },
+                { "from", arguments[1] },
+                { "to", arguments[2] }
+            };
+
+            return QueryHelpers.AddQueryString(BaseUrl, parameters);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.DuckDuckGo
     {
         private const string BaseUrl = "http://api.duckduckgo.com";
 
-        public override string BuildEndpointRoute(string[] arguments)
+        protected override string BuildEndpointRoute(string[] arguments)
         {
             var parameters = new Dictionary<string, string>
             {

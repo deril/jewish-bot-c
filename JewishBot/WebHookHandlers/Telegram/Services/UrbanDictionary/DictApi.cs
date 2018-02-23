@@ -8,7 +8,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Services.UrbanDictionary
     {
         private const string BaseUrl = "http://api.urbandictionary.com/v0/define";
 
-        public override string BuildEndpointRoute(string[] arguments)
+        protected override string BuildEndpointRoute(string[] arguments)
         {
             var parameters = new Dictionary<string, string>
             {

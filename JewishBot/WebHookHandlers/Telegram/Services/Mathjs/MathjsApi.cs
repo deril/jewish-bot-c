@@ -7,7 +7,7 @@
     {
         private const string BaseUrl = "http://math.leftforliving.com/query";
 
-        public override string BuildEndpointRoute(string[] arguments)
+        protected override string BuildEndpointRoute(string[] arguments)
         {
             var parameters = new Dictionary<string, string>
             {

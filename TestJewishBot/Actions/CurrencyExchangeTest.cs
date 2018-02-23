@@ -17,10 +17,9 @@ namespace TestJewishBot
     public class CurrencyExchangeTest
     {
         [Fact]
-        public async void MakeValidExchangeAsync()
+        public void MakeValidExchangeAsync()
         {
             var bot = new Mock<ITelegramBotClient>();
-            ChatId actualChatId = 0;
             long chatId = 42;
             string amount = "42", fromCurrency = "XXX", toCurrency = "UAH", rate = "1166.9070";
             var expectedResult = $"{amount} {fromCurrency} -> 1166.91 {toCurrency}";
@@ -32,7 +31,7 @@ namespace TestJewishBot
             financeApi.Setup(f => f.InvokeAsync(financeArgs)).ReturnsAsync(rate);
             IAction currencyExchange = new CurrencyExchange(bot.Object, chatId, externalArgs, financeApi.Object);
 
-            await currencyExchange.HandleAsync();
+            currencyExchange.HandleAsync().GetAwaiter();
 
             bot.Verify(m => m.SendTextMessageAsync(chatId, expectedResult, 0, false, false, 0, null, source.Token));
             financeApi.VerifyAll();

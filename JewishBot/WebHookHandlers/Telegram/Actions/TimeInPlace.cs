@@ -14,17 +14,17 @@
 
     internal class TimeInPlace : IAction
     {
-        private readonly string key;
-        private TelegramBotClient bot;
-        private long chatId;
-        private string[] args;
+        private readonly TelegramBotClient bot;
+        private readonly long chatId;
+        private readonly string[] args;
+        private readonly GoogleMapsApi mapsApi;
 
         public TimeInPlace(TelegramBotClient bot, long chatId, string[] args, string key)
         {
             this.bot = bot;
             this.chatId = chatId;
             this.args = args;
-            this.key = key;
+            this.mapsApi = new GoogleMapsApi(key);
         }
 
         public static string Description { get; } = @"Returns time in specified location
@@ -61,8 +61,7 @@ Usage: /timein location";
 
         private async Task<Tuple<Status, Location>> GetLocationAsync(string place)
         {
-            var mapsApi = new GoogleMapsApi(this.key);
-            var response = await mapsApi.InvokeAsync<QueryModel>(new string[] { place });
+            var response = await this.mapsApi.InvokeAsync<QueryModel>(new[] { place });
 
             return response.Status == "OK"
                 ? new Tuple<Status, Location>(Status.Ok, response.Results[0].Geometry.Location)

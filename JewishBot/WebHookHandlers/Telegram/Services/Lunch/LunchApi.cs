@@ -10,7 +10,6 @@
 
     public class LunchApi
     {
-        private const string BaseUrl = "http://lunches.vps.lviv.ua/staff";
         private const string ObediUrl = "http://lunches.vps.lviv.ua/staff/1/bills";
         private const string KoloSmakuUrl = "http://lunches.vps.lviv.ua/staff/5/bills";
         private readonly HttpClient httpClient = new HttpClient();
@@ -56,7 +55,7 @@
                 var names = element.NextSibling.NodeValue.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
                 return names.Select(name => new Order
                 {
-                    Meal = HttpUtility.HtmlDecode(element.InnerText).Replace(":", string.Empty),
+                    Meal = HttpUtility.HtmlDecode(element.InnerText)?.Replace(":", string.Empty),
                     Name = name.Trim()
                 });
             }).SelectMany(i => i);
@@ -73,9 +72,9 @@
 
         private string FormatMeals(IEnumerable<Order> orders)
         {
-            var i = orders.Where(order => Array.Exists(this.members, member => order.Name.ToLowerInvariant().Contains(member.ToLowerInvariant()))).
-            ToLookup(order => order.Name, order => order.Meal).ToList().
-            Select(group => $"☻ {group.Key}\n\n{string.Join("\n", group.Select(meal => $"• {meal}"))}");
+            var i = orders.Where(order => Array.Exists(this.members, member => order.Name.ToLowerInvariant().Contains(member.ToLowerInvariant())))
+                          .ToLookup(order => order.Name, order => order.Meal)
+                          .Select(group => $"☻ {group.Key}\n\n{string.Join("\n", group.Select(meal => $"• {meal}"))}");
             return string.Join("\n\n", i);
         }
 
