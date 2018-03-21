@@ -1,15 +1,9 @@
 using System;
-using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 using JewishBot.WebHookHandlers.Telegram.Actions;
-using JewishBot.WebHookHandlers.Telegram.Services;
 using JewishBot.WebHookHandlers.Telegram.Services.GoogleFinance;
 using Moq;
 using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 using Xunit;
 
 namespace TestJewishBot

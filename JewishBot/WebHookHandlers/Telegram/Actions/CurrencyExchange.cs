@@ -1,24 +1,24 @@
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
-    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+    using Api.Forex.Sharp;
+    using Api.Forex.Sharp.Models;
     using global::Telegram.Bot;
-    using Services;
 
     internal class CurrencyExchange : IAction
     {
         private readonly ITelegramBotClient bot;
         private readonly long chatId;
         private readonly string[] args;
-        private readonly ApiService financeApi;
+        private readonly ApiForexRates financeApi;
 
-        public CurrencyExchange(ITelegramBotClient bot, long chatId, string[] args, ApiService apiService)
+        public CurrencyExchange(ITelegramBotClient bot, long chatId, string[] args, string key)
         {
             this.bot = bot;
             this.chatId = chatId;
             this.args = args;
-            this.financeApi = apiService;
+            this.financeApi = ApiForex.GetRate(key).Result;
         }
 
         public static string Description { get; } = @"Converts currencies using Yahoo API; default amount 1.
@@ -27,11 +27,11 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
 
         public async Task HandleAsync()
         {
-            var message = await this.PrepareMessageAsync();
+            var message = this.PrepareMessage();
             await this.bot.SendTextMessageAsync(this.chatId, message);
         }
 
-        private async Task<string> PrepareMessageAsync()
+        private string PrepareMessage()
         {
             string fromCurrency;
             string toCurrency;
@@ -62,8 +62,7 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
                 return Description;
             }
 
-            var rate = await this.financeApi.InvokeAsync(new string[] { amount.ToString(), fromCurrency, toCurrency });
-            var value = decimal.Parse(rate, CultureInfo.InvariantCulture);
+            var value = this.financeApi.Convert(toCurrency.ToUpper(), fromCurrency.ToUpper(), amount);
 
             return $"{amount} {fromCurrency} -> {value:0.00} {toCurrency}";
         }

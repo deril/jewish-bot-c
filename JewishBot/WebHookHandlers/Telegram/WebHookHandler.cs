@@ -31,7 +31,7 @@
             {
                 { "echo",       new Echo(this.bot, chatId, command.Arguments) },
                 { "hey",        new Hey(this.bot, chatId) },
-                { "ex",         new CurrencyExchange(this.bot, chatId, command.Arguments, new FinanceApi()) },
+                { "ex",         new CurrencyExchange(this.bot, chatId, command.Arguments, this.configuration["apiForexKey"]) },
                 { "ud",         new UrbanDictionary(this.bot, chatId, command.Arguments) },
                 { "go",         new DuckDuckGo(this.bot, chatId, command.Arguments) },
                 { "dice",       new RollDice(this.bot, chatId, command.Arguments, username) },
