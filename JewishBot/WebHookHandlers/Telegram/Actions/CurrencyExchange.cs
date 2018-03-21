@@ -1,5 +1,6 @@
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Api.Forex.Sharp;
@@ -62,9 +63,16 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
                 return Description;
             }
 
-            var value = this.financeApi.Convert(toCurrency.ToUpper(), fromCurrency.ToUpper(), amount);
-
-            return $"{amount} {fromCurrency} -> {value:0.00} {toCurrency}";
+            try
+            {
+                var value = this.financeApi.Convert(toCurrency.ToUpper(), fromCurrency.ToUpper(), amount);
+                return $"{amount} {fromCurrency} -> {value:0.00} {toCurrency}";
+            }
+            catch (InvalidOperationException)
+            {
+                // When currency wasn't found
+                return $"Cannot convert from {fromCurrency} to {toCurrency}";
+            }
         }
     }
 }
