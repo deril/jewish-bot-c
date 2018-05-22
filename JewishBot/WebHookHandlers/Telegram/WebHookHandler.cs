@@ -5,18 +5,20 @@
     using Actions;
     using global::Telegram.Bot;
     using global::Telegram.Bot.Types;
+    using JewishBot.Data;
     using Microsoft.Extensions.Configuration;
-    using Services.GoogleFinance;
 
     public class WebHookHandler
     {
         private readonly TelegramBotClient bot;
         private readonly IConfiguration configuration;
+        private readonly IUserRepository repository;
 
-        public WebHookHandler(TelegramBotClient bot, IConfiguration configuration)
+        public WebHookHandler(TelegramBotClient bot, IConfiguration configuration, IUserRepository repo)
         {
             this.bot = bot;
             this.configuration = configuration;
+            this.repository = repo;
         }
 
         public async Task OnMessageReceived(Message message)
@@ -42,7 +44,7 @@
                 { "timein",     new TimeInPlace(this.bot, chatId, command.Arguments, this.configuration["googleApiKey"]) },
                 { "calc",       new Calc(this.bot, chatId, command.Arguments) },
                 { "ball",       new MagicBall(this.bot, chatId, command.Arguments) },
-                { "lunch",      new Lunch(this.bot, chatId, command.Arguments, this.configuration) }
+                { "lunch",      new Lunch(this.bot, chatId, command.Arguments, this.configuration, this.repository) }
             };
 
             if (commands.ContainsKey(command.Name))

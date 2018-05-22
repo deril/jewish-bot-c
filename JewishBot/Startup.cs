@@ -1,6 +1,7 @@
 ﻿namespace JewishBot
 {
     using System.IO;
+    using JewishBot.Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -35,6 +36,7 @@
         {
             services.AddSingleton<IConfiguration>(this.Configuration);
             services.AddSingleton(this.Bot);
+            services.AddTransient<IUserRepository, FakeUserRepository>();
             services.AddMvc();
         }
 

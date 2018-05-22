@@ -1,6 +1,7 @@
 ﻿namespace JewishBot.Controllers
 {
     using System.Threading.Tasks;
+    using JewishBot.Data;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Telegram.Bot;
@@ -12,11 +13,13 @@
     {
         private readonly TelegramBotClient bot;
         private readonly IConfiguration configuration;
+        private IUserRepository repository;
 
-        public WebHookController(TelegramBotClient bot, IConfiguration configuration)
+        public WebHookController(TelegramBotClient bot, IConfiguration configuration, IUserRepository repo)
         {
             this.bot = bot;
             this.configuration = configuration;
+            this.repository = repo;
         }
 
         // GET: /WebHook/
@@ -35,7 +38,7 @@
                 return this.NoContent();
             }
 
-            var handler = new WebHookHandler(this.bot, this.configuration);
+            var handler = new WebHookHandler(this.bot, this.configuration, this.repository);
             await handler.OnMessageReceived(message);
 
             return this.Ok();
