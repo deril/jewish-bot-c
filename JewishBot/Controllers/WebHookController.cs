@@ -33,7 +33,7 @@
         public async Task<StatusCodeResult> Post([FromBody] Update update)
         {
             var message = update.Message;
-            if (message == null || message.Type != MessageType.TextMessage)
+            if (message == null || message.Type != MessageType.Text)
             {
                 return this.NoContent();
             }

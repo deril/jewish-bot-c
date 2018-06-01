@@ -1,6 +1,6 @@
-﻿FROM microsoft/aspnetcore:2.0.0-jessie
+﻿FROM microsoft/dotnet:2.1-aspnetcore-runtime
 
-COPY bin/Debug/netcoreapp2.0/publish /app
+COPY bin/Release/netcoreapp2.1/publish /app
 
 WORKDIR /app
 

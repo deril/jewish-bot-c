@@ -23,7 +23,7 @@
                                 new KeyValuePair<string, string>("auth[email]", email),
                                 new KeyValuePair<string, string>("auth[password]", password)
                             });
-			this.members = members;
+            this.members = members;
         }
 
         public string Invoke()

@@ -25,6 +25,8 @@
         {
             var command = new CommandParser(message.Text).Parse();
             var chatId = message.Chat.Id;
+            var chatType = message.Chat.Type;
+            var userId = message.From.Id;
             var username = string.IsNullOrEmpty(message.From.Username)
                                  ? $"{message.From.FirstName} {message.From.LastName}"
                                  : message.From.Username;
@@ -44,7 +46,8 @@
                 { "timein",     new TimeInPlace(this.bot, chatId, command.Arguments, this.configuration["googleApiKey"]) },
                 { "calc",       new Calc(this.bot, chatId, command.Arguments) },
                 { "ball",       new MagicBall(this.bot, chatId, command.Arguments) },
-                { "lunch",      new Lunch(this.bot, chatId, command.Arguments, this.configuration, this.repository) }
+                { "lunch",      new Lunch(this.bot, chatId, userId, chatType, command.Arguments, this.configuration, this.repository) },
+                { "setlunch",   new SetLunch(this.bot, chatId, userId, chatType, command.Arguments, this.repository) }
             };
 
             if (commands.ContainsKey(command.Name))
