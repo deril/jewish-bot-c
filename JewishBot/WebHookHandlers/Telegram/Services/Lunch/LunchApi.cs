@@ -16,14 +16,14 @@
         private readonly FormUrlEncodedContent authParams;
         private readonly string[] members;
 
-        public LunchApi(string email, string password, string members)
+        public LunchApi(string email, string password, string[] members)
         {
             this.authParams = new FormUrlEncodedContent(new[]
                             {
                                 new KeyValuePair<string, string>("auth[email]", email),
                                 new KeyValuePair<string, string>("auth[password]", password)
                             });
-            this.members = members.Split(",");
+            this.members = members;
         }
 
         public string Invoke()

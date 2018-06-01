@@ -6,6 +6,8 @@ services:
     restart: on-failure:10
     expose:
       - "5000"
+    volumes:
+      - ./database:/db
 
   proxy:
     build:

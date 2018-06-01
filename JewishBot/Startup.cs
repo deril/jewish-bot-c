@@ -1,12 +1,13 @@
 ﻿namespace JewishBot
 {
     using System.IO;
+    using JewishBot.Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Telegram.Bot;
-    using Telegram.Bot.Types;
 
     public class Startup
     {
@@ -20,8 +21,7 @@
             this.Configuration = builder.Build();
 
             this.Bot = new TelegramBotClient(this.Configuration["telegramBotApi"]);
-            var fs = new FileStream("jewish_bot.pem", FileMode.Open);
-            var certificate = new FileToSend("jewish_bot.pem", fs);
+            var certificate = File.OpenRead("jewish_bot.pem");
             this.Bot.SetWebhookAsync($"https://{this.Configuration["hostN"]}/WebHook/Post", certificate).Wait();
         }
 
@@ -33,8 +33,10 @@
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(this.Configuration["Data:ConnectionString"]));
             services.AddSingleton<IConfiguration>(this.Configuration);
             services.AddSingleton(this.Bot);
+            services.AddTransient<IUserRepository, EFUserRepository>();
             services.AddMvc();
         }
 

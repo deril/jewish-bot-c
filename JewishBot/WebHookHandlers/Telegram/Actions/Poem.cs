@@ -5,7 +5,6 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     using global::Telegram.Bot;
     using global::Telegram.Bot.Args;
     using global::Telegram.Bot.Types.Enums;
-    using global::Telegram.Bot.Types.InlineKeyboardButtons;
     using global::Telegram.Bot.Types.ReplyMarkups;
     using JewishBot.WebHookHandlers.Telegram.Services.Poem;
 
@@ -37,7 +36,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             str.Append(string.Join("\n", result.Lines));
 
             var keyboard =
-                new InlineKeyboardMarkup(new[] { new InlineKeyboardCallbackButton("\uD83D\uDC4D Like", result.Hashid) });
+                new InlineKeyboardMarkup(new[] { InlineKeyboardButton.WithCallbackData("\uD83D\uDC4D Like", result.Hashid) });
 
             this.bot.OnCallbackQuery += this.OnLikedPoemAsync;
 

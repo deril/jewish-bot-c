@@ -41,3 +41,5 @@ Thumbs.db
 
 appsettings.json
 .vscode/
+.idea/
+.vs/
