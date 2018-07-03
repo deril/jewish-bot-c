@@ -15,7 +15,6 @@
             }
             catch
             {
-                // TODO: implement here logging
                 // Create nullable JSON
                 this.Content = JsonConvert.SerializeObject(new T());
             }

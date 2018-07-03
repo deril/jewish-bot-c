@@ -32,7 +32,6 @@
 
             if (response.Status != "OK")
             {
-                // TODO: implement here logging
                 message = "Nothing \uD83D\uDE22";
                 await this.bot.SendTextMessageAsync(this.chatId, message);
                 return;

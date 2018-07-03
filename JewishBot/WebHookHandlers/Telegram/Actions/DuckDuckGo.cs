@@ -39,7 +39,6 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
                         message = result.AbstractUrl;
                         break;
                     default:
-                        // TODO: implement here logging
                         message = "Nothing found \uD83D\uDE22";
                         break;
                 }
