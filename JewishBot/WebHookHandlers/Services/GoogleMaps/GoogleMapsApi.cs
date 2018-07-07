@@ -26,8 +26,10 @@
                 { "address", string.Join(string.Empty, arguments) },
                 { "key", this.apiKey }
             };
-            var route = new UriBuilder(client.BaseAddress);
-            route.Path = "maps/api/geocode/json";
+            var route = new UriBuilder(client.BaseAddress)
+            {
+                Path = "maps/api/geocode/json"
+            };
 
             try
             {

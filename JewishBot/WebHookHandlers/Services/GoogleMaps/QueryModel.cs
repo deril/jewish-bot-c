@@ -6,7 +6,7 @@
     public class QueryModel
     {
         [JsonProperty("results")]
-        public List<Result> Results { get; }
+        public IList<Result> Results { get; set; }
 
         [JsonProperty("status")]
         public string Status { get; set; }

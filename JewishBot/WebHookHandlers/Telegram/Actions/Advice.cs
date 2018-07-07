@@ -23,7 +23,7 @@
 
         public async Task HandleAsync()
         {
-            var adviceService = new GreatAdviceApi(clientFactory);
+            var adviceService = new GreatAdviceApi(this.clientFactory);
             var result = await adviceService.InvokeAsync();
             var textResult = WebUtility.HtmlDecode(result.Text);
             var message = $"Advice for {this.username}: {textResult}";

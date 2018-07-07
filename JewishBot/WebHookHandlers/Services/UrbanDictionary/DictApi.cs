@@ -23,8 +23,10 @@ namespace JewishBot.WebHookHandlers.Services.UrbanDictionary
             {
                 { "term", string.Join(string.Empty, arguments) }
             };
-            var route = new UriBuilder(client.BaseAddress);
-            route.Path = "v0/define";
+            var route = new UriBuilder(client.BaseAddress)
+            {
+                Path = "v0/define"
+            };
 
             try
             {

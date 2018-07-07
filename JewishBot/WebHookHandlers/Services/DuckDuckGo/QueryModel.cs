@@ -19,6 +19,6 @@ namespace JewishBot.WebHookHandlers.Services.DuckDuckGo
         public string Redirect { get; set; }
 
         [JsonProperty("RelatedTopics")]
-        public List<RelatedTopic> RelatedTopics { get; }
+        public IList<RelatedTopic> RelatedTopics { get; set; }
     }
 }

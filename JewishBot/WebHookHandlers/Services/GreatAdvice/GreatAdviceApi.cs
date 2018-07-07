@@ -18,8 +18,10 @@
         public async Task<QueryModel> InvokeAsync()
         {
             var client = this.clientFactory.CreateClient("greadadvice");
-            var route = new UriBuilder(client.BaseAddress);
-            route.Path = "api/random";
+            var route = new UriBuilder(client.BaseAddress)
+            {
+                Path = "api/random"
+            };
 
             try
             {
