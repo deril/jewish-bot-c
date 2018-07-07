@@ -1,5 +1,7 @@
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System.Collections.Generic;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using global::Telegram.Bot;
     using Services.UrbanDictionary;
@@ -8,11 +10,13 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     {
         private readonly TelegramBotClient bot;
         private readonly long chatId;
-        private readonly string[] args;
+        private readonly IHttpClientFactory clientFactory;
+        private IReadOnlyCollection<string> args;
 
-        public UrbanDictionary(TelegramBotClient bot, long chatId, string[] args)
+        public UrbanDictionary(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
         {
             this.bot = bot;
+            this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
         }
@@ -23,8 +27,8 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
             if (this.args != null)
             {
-                var ud = new DictApi();
-                var result = await ud.InvokeAsync<QueryModel>(new string[] { string.Join(" ", this.args) });
+                var ud = new DictApi(this.clientFactory);
+                var result = await ud.InvokeAsync(new string[] { string.Join(" ", this.args) });
                 message = result.ResultType == "exact" ? result.List[0].Definition : "Nothing found \uD83D\uDE22";
             }
 

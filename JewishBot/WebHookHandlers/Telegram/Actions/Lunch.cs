@@ -1,6 +1,8 @@
 ﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using Data;
     using global::Telegram.Bot;
@@ -14,11 +16,12 @@
         private readonly long chatId;
         private readonly int userId;
         private readonly ChatType chatType;
-        private readonly string[] args;
+        private readonly IReadOnlyCollection<string> args;
         private readonly IConfiguration config;
         private readonly IUserRepository repository;
+        private readonly IHttpClientFactory clientFactory;
 
-        public Lunch(TelegramBotClient bot, long chatId, int userId, ChatType chatType, string[] args, IConfiguration config, IUserRepository repo)
+        public Lunch(TelegramBotClient bot, long chatId, int userId, ChatType chatType, IReadOnlyCollection<string> args, IConfiguration config, IUserRepository repo, IHttpClientFactory clientFactory)
         {
             this.bot = bot;
             this.chatId = chatId;
@@ -27,6 +30,7 @@
             this.args = args;
             this.config = config;
             this.repository = repo;
+            this.clientFactory = clientFactory;
         }
 
         public async Task HandleAsync()
@@ -42,10 +46,10 @@
             }
             else
             {
-                members = this.args ?? this.config["lunch:members"].Split(",");
+                members = this.args.ToArray() ?? this.config["lunch:members"].Split(",");
             }
 
-            var lunchApi = new LunchApi(this.config["lunch:email"], this.config["lunch:password"], members);
+            var lunchApi = new LunchApi(this.config["lunch:email"], this.config["lunch:password"], members, this.clientFactory);
             await this.bot.SendTextMessageAsync(this.chatId, lunchApi.Invoke());
         }
     }

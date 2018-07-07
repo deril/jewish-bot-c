@@ -12,7 +12,7 @@
     {
         private readonly TelegramBotClient bot;
         private readonly long chatId;
-        private readonly string[] args;
+        private readonly IReadOnlyCollection<string> args;
         private readonly Random rnd = new Random();
         private readonly List<string> answers = new List<string>
         {
@@ -42,7 +42,7 @@
             "Concentrate and ask again"
         };
 
-        public MagicBall(TelegramBotClient bot, long chatId, string[] args)
+        public MagicBall(TelegramBotClient bot, long chatId, IReadOnlyCollection<string> args)
         {
             this.bot = bot;
             this.chatId = chatId;

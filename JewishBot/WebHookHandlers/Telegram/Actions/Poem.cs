@@ -1,53 +1,43 @@
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System.Globalization;
+    using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
     using global::Telegram.Bot;
-    using global::Telegram.Bot.Args;
     using global::Telegram.Bot.Types.Enums;
-    using global::Telegram.Bot.Types.ReplyMarkups;
-    using JewishBot.WebHookHandlers.Telegram.Services.Poem;
+    using JewishBot.WebHookHandlers.Services.Poem;
 
     internal class Poem : IAction
     {
         private readonly TelegramBotClient bot;
         private readonly long chatId;
-        private readonly PoemApi poemApi;
+        private readonly IHttpClientFactory clientFactory;
 
-        public Poem(TelegramBotClient bot, long chatId)
+        public Poem(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId)
         {
             this.bot = bot;
+            this.clientFactory = clientFactory;
             this.chatId = chatId;
-            this.poemApi = new PoemApi();
         }
 
         public async Task HandleAsync()
         {
-            var result = await this.poemApi.InvokeAsync<QueryModel>(null);
+            var poemApi = new PoemApi(this.clientFactory);
+            var result = await poemApi.InvokeAsync();
             if (result.Error != null)
             {
                 await this.bot.SendTextMessageAsync(this.chatId, result.Error, parseMode: ParseMode.Markdown);
                 return;
             }
 
+            var culture = new CultureInfo("uk-UA", true);
             var str = new StringBuilder();
-            str.AppendFormat("*{0}*", result.Title);
+            str.AppendFormat(culture, "*{0}*", result.Title);
             str.Append("\n\n");
             str.Append(string.Join("\n", result.Lines));
 
-            var keyboard =
-                new InlineKeyboardMarkup(new[] { InlineKeyboardButton.WithCallbackData("\uD83D\uDC4D Like", result.Hashid) });
-
-            this.bot.OnCallbackQuery += this.OnLikedPoemAsync;
-
-            await this.bot.SendTextMessageAsync(this.chatId, str.ToString(), parseMode: ParseMode.Markdown, replyMarkup: keyboard);
-        }
-
-        private async void OnLikedPoemAsync(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
-        {
-            await this.poemApi.Like(callbackQueryEventArgs.CallbackQuery.Data);
-
-            await this.bot.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id, "Thanks for your like!");
+            await this.bot.SendTextMessageAsync(this.chatId, str.ToString());
         }
     }
 }

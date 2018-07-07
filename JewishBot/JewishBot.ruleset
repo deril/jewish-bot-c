@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Custom Rulset" Description="Custom Rulset" ToolsVersion="14.0">
+    <Rules AnalyzerId="AsyncUsageAnalyzers" RuleNamespace="AsyncUsageAnalyzers">
+        <Rule Id="UseConfigureAwait" Action="Warning" />
+    </Rules>
+    <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+        <Rule Id="CA2007" Action="None" />
+    </Rules>
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+        <Rule Id="SA1652" Action="None" />
+        <Rule Id="SA1633" Action="None" />
+    </Rules>
+</RuleSet>

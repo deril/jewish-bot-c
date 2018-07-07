@@ -1,5 +1,7 @@
 ﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System.Collections.Generic;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using global::Telegram.Bot;
     using Services.GoogleMaps;
@@ -8,15 +10,17 @@
     {
         private readonly TelegramBotClient bot;
         private readonly long chatId;
-        private readonly string[] args;
-        private readonly GoogleMapsApi mapsApi;
+        private readonly IHttpClientFactory clientFactory;
+        private readonly string apiKey;
+        private IReadOnlyCollection<string> args;
 
-        public GoogleMaps(TelegramBotClient bot, long chatId, string[] args, string key)
+        public GoogleMaps(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args, string key)
         {
             this.bot = bot;
+            this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
-            this.mapsApi = new GoogleMapsApi(key);
+            this.apiKey = key;
         }
 
         public async Task HandleAsync()
@@ -28,7 +32,8 @@
                 return;
             }
 
-            var response = await this.mapsApi.InvokeAsync<QueryModel>(new string[] { string.Join(" ", this.args) });
+            var mapsApi = new GoogleMapsApi(this.clientFactory, this.apiKey);
+            var response = await mapsApi.InvokeAsync(this.args);
 
             if (response.Status != "OK")
             {

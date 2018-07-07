@@ -1,5 +1,6 @@
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using global::Telegram.Bot;
 
@@ -7,9 +8,9 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     {
         private readonly TelegramBotClient bot;
         private readonly long chatId;
-        private readonly string[] args;
+        private IReadOnlyCollection<string> args;
 
-        public Echo(TelegramBotClient bot, long chatId, string[] args)
+        public Echo(TelegramBotClient bot, long chatId, IReadOnlyCollection<string> args)
         {
             this.bot = bot;
             this.chatId = chatId;

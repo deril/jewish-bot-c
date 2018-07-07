@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace JewishBot.Migrations
+﻿namespace JewishBot.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

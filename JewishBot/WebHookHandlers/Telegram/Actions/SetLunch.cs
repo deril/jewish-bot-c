@@ -1,6 +1,8 @@
 ﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
     using global::Telegram.Bot;
@@ -14,10 +16,11 @@
         private readonly long chatId;
         private readonly int userId;
         private readonly ChatType chatType;
-        private readonly string[] args;
         private readonly IUserRepository repository;
+        private IReadOnlyCollection<string> args;
 
-        public SetLunch(TelegramBotClient bot, long chatId, int userId, ChatType chatType, string[] args, IUserRepository repo)
+        [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1008:OpeningParenthesisMustBeSpacedCorrectly", Justification = "This is OK here.")]
+        public SetLunch(TelegramBotClient bot, long chatId, int userId, ChatType chatType, IReadOnlyCollection<string> args, IUserRepository repo)
         {
             (this.bot, this.chatId, this.userId, this.chatType, this.args, this.repository) = (bot, chatId, userId, chatType, args, repo);
         }
@@ -28,7 +31,7 @@
             if (this.chatType != ChatType.Private)
             {
                 message = "Allowed only in private conversation!";
-                await this.bot.SendTextMessageAsync(this.chatId, message);
+                await this.bot.SendTextMessageAsync(this.chatId, message).ConfigureAwait(false);
                 return;
             }
 

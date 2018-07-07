@@ -1,5 +1,7 @@
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System.Collections.Generic;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using global::Telegram.Bot;
     using Services.DuckDuckGo;
@@ -8,11 +10,13 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     {
         private readonly TelegramBotClient bot;
         private readonly long chatId;
-        private readonly string[] args;
+        private readonly IHttpClientFactory clientFactory;
+        private IReadOnlyCollection<string> args;
 
-        public DuckDuckGo(TelegramBotClient bot, long chatId, string[] args)
+        public DuckDuckGo(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
         {
             this.bot = bot;
+            this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
         }
@@ -22,8 +26,8 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             var message = "Please specify at least 1 search term";
             if (this.args != null)
             {
-                var go = new GoApi();
-                var result = await go.InvokeAsync<QueryModel>(new string[] { string.Join(" ", this.args) });
+                var go = new GoApi(this.clientFactory);
+                var result = await go.InvokeAsync(this.args);
                 switch (result.Type)
                 {
                     case "A":
@@ -36,7 +40,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
                         message = result.Redirect;
                         break;
                     case "C":
-                        message = result.AbstractUrl;
+                        message = result.AbstractUrl.ToString();
                         break;
                     default:
                         message = "Nothing found \uD83D\uDE22";

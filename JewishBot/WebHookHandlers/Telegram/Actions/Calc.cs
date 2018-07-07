@@ -1,5 +1,7 @@
 ﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
+    using System.Collections.Generic;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using global::Telegram.Bot;
     using Services.Mathjs;
@@ -8,11 +10,13 @@
     {
         private readonly TelegramBotClient bot;
         private readonly long chatId;
-        private readonly string[] args;
+        private readonly IHttpClientFactory clientFactory;
+        private IReadOnlyCollection<string> args;
 
-        public Calc(TelegramBotClient bot, long chatId, string[] args)
+        public Calc(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
         {
             this.bot = bot;
+            this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
         }
@@ -33,13 +37,12 @@ Usage: /calc <query>";
                 return Description;
             }
 
-            var question = string.Join(" ", this.args);
-            var mathjsApi = new MathjsApi();
-
             try
             {
-                var answer = await mathjsApi.InvokeAsync<QueryModel>(new string[] { question });
-                return answer.Error ? $"Unable to evaluate {question}" : $"{question}, {answer.Answer}";
+                var mathjsApi = new MathjsApi(this.clientFactory);
+                var answer = await mathjsApi.InvokeAsync(this.args);
+                var question = string.Join(" ", this.args);
+                return answer.Error ? $"Unable to evaluate {question}" : $"{question} => {answer.Answer}";
             }
             catch
             {

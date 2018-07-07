@@ -1,6 +1,8 @@
 namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     using System;
+    using System.Collections.ObjectModel;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using Api.Forex.Sharp;
@@ -11,15 +13,15 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     {
         private readonly ITelegramBotClient bot;
         private readonly long chatId;
-        private readonly string[] args;
-        private readonly ApiForexRates financeApi;
+        private readonly string apiKey;
+        private ReadOnlyCollection<string> args;
 
-        public CurrencyExchange(ITelegramBotClient bot, long chatId, string[] args, string key)
+        public CurrencyExchange(ITelegramBotClient bot, long chatId, ReadOnlyCollection<string> args, string key)
         {
             this.bot = bot;
             this.chatId = chatId;
             this.args = args;
-            this.financeApi = ApiForex.GetRate(key).Result;
+            this.apiKey = key;
         }
 
         public static string Description { get; } = @"Converts currencies using Yahoo API; default amount 1.
@@ -43,14 +45,18 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
                 return Description;
             }
 
-            switch (this.args.Length)
+            switch (this.args.Count)
             {
                 case 2:
                     fromCurrency = this.args[0];
                     toCurrency = this.args[1];
                     break;
                 case 4:
-                    decimal.TryParse(this.args[0], out amount);
+                    if (!decimal.TryParse(this.args[0], out amount))
+                    {
+                        amount = 0;
+                    }
+
                     fromCurrency = this.args[1];
                     toCurrency = this.args[3];
                     break;
@@ -65,7 +71,9 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
 
             try
             {
-                var value = this.financeApi.Convert(toCurrency.ToUpper(), fromCurrency.ToUpper(), amount);
+                var culture = new CultureInfo("uk-UA", true);
+                var financeApi = ApiForex.GetRate(this.apiKey).Result;
+                var value = financeApi.Convert(toCurrency.ToUpper(culture), fromCurrency.ToUpper(culture), amount);
                 return $"{amount} {fromCurrency} -> {value:0.00} {toCurrency}";
             }
             catch (InvalidOperationException)

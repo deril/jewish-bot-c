@@ -1,30 +1,35 @@
 ﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using GeoTimeZone;
     using global::Telegram.Bot;
     using Services.GoogleMaps;
 
-    public enum Status
-    {
-        Ok,
-        Error
-    }
-
     internal class TimeInPlace : IAction
     {
         private readonly TelegramBotClient bot;
         private readonly long chatId;
-        private readonly string[] args;
-        private readonly GoogleMapsApi mapsApi;
+        private readonly string apiKey;
+        private readonly IHttpClientFactory clientFactory;
+        private IReadOnlyCollection<string> args;
 
-        public TimeInPlace(TelegramBotClient bot, long chatId, string[] args, string key)
+        public TimeInPlace(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args, string key)
         {
             this.bot = bot;
+            this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
-            this.mapsApi = new GoogleMapsApi(key);
+            this.apiKey = key;
+        }
+
+        private enum Status
+        {
+            Ok,
+            Error
         }
 
         public static string Description { get; } = @"Returns time in specified location
@@ -38,8 +43,7 @@ Usage: /timein location";
                 return;
             }
 
-            var location = string.Join(" ", this.args);
-            var locationResult = await this.GetLocationAsync(location);
+            var locationResult = await this.GetLocationAsync(this.args);
             if (locationResult.Item1 == Status.Error)
             {
                 const string errorMessage = "Something goes wrong \uD83D\uDE22";
@@ -48,20 +52,22 @@ Usage: /timein location";
             }
 
             var time = GetTimeInLocation(locationResult.Item2);
-            await this.bot.SendTextMessageAsync(this.chatId, $"In {location}: {time}");
+            await this.bot.SendTextMessageAsync(this.chatId, $"In {string.Join(" ", this.args)}: {time}");
         }
 
         private static string GetTimeInLocation(Location location)
         {
             var timeZone = TimeZoneLookup.GetTimeZone(location.Lattitude, location.Longtitude).Result;
+            var culture = new CultureInfo("uk-UA", true);
 
             return TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById(timeZone))
-                .ToString("t");
+                               .ToString("t", culture);
         }
 
-        private async Task<Tuple<Status, Location>> GetLocationAsync(string place)
+        private async Task<Tuple<Status, Location>> GetLocationAsync(IReadOnlyCollection<string> place)
         {
-            var response = await this.mapsApi.InvokeAsync<QueryModel>(new[] { place });
+            var mapsApi = new GoogleMapsApi(this.clientFactory, this.apiKey);
+            var response = await mapsApi.InvokeAsync(place);
 
             return response.Status == "OK"
                 ? new Tuple<Status, Location>(Status.Ok, response.Results[0].Geometry.Location)

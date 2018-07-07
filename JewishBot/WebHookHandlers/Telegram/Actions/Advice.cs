@@ -1,6 +1,7 @@
 ﻿namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     using System.Net;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using global::Telegram.Bot;
     using Services.GreatAdvice;
@@ -10,18 +11,20 @@
         private readonly TelegramBotClient bot;
         private readonly long chatId;
         private readonly string username;
+        private readonly IHttpClientFactory clientFactory;
 
-        public Advice(TelegramBotClient bot, long chatId, string username)
+        public Advice(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, string username)
         {
             this.bot = bot;
+            this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.username = username;
         }
 
         public async Task HandleAsync()
         {
-            var adviceService = new GreatAdviceApi();
-            var result = await adviceService.InvokeAsync<QueryModel>(null);
+            var adviceService = new GreatAdviceApi(clientFactory);
+            var result = await adviceService.InvokeAsync();
             var textResult = WebUtility.HtmlDecode(result.Text);
             var message = $"Advice for {this.username}: {textResult}";
 

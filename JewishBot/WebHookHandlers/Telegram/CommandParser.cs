@@ -1,41 +1,45 @@
 ﻿namespace JewishBot.WebHookHandlers.Telegram
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
     public class CommandParser
     {
+        private const char MainDetermiter = ' ';
+        private const char BotNameDelimiter = '@';
+
         public CommandParser(string msg)
         {
             this.Message = msg;
         }
 
-        public char MainDetermiter { get; set; } = ' ';
-
-        public char BotNameDelimiter { get; set; } = '@';
-
         private string Message { get; }
 
         public Command Parse()
         {
-            var firstSpace = this.Message.IndexOf(this.MainDetermiter);
-            var command = new Command();
+            var firstSpace = this.Message.IndexOf(MainDetermiter, StringComparison.OrdinalIgnoreCase);
+            string name;
+            var args = new ReadOnlyCollection<string>(new List<string>());
 
             if (firstSpace == -1)
             {
-                command.Name = this.Message.Substring(1);
+                name = this.Message.Substring(1);
             }
             else
             {
-                command.Name = this.Message.Substring(1, firstSpace - 1);
-                command.Arguments = this.Message.Substring(firstSpace + 1).Split();
+                name = this.Message.Substring(1, firstSpace - 1);
+                args = Array.AsReadOnly(this.Message.Substring(firstSpace + 1).Split());
             }
 
-            var botNameDelimiterIndex = command.Name.IndexOf(this.BotNameDelimiter);
+            var botNameDelimiterIndex = name.IndexOf(BotNameDelimiter, StringComparison.OrdinalIgnoreCase);
 
             if (botNameDelimiterIndex != -1)
             {
-                command.Name = command.Name.Substring(0, botNameDelimiterIndex);
+                name = name.Substring(0, botNameDelimiterIndex);
             }
 
-            return command;
+            return new Command(name, args);
         }
     }
 }
