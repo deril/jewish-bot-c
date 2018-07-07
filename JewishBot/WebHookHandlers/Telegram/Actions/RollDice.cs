@@ -24,7 +24,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 
         public async Task HandleAsync()
         {
-            var toParse = (this.args != null && Dice.CanParse(this.args[0])) ? this.args[0] : DefaultPatern;
+            var toParse = (this.args.Count != 0 && Dice.CanParse(this.args[0])) ? this.args[0] : DefaultPatern;
             var result = new Dice(toParse);
 
             var message = result.GetSum();
