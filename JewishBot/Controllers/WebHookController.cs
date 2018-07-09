@@ -27,7 +27,7 @@
         public async Task<StatusCodeResult> Post([FromBody] Update update)
         {
             var message = update.Message;
-            if (message == null || message.Type != MessageType.Text)
+            if (CannotHandleMessage(message))
             {
                 return this.NoContent();
             }
@@ -39,5 +39,20 @@
 
         // GET: /WebHook/Error
         public IActionResult Error() => this.BadRequest();
+
+        private static bool CannotHandleMessage(Message message)
+        {
+            return IsEmptyMessage(message) || !IsTextMessage(message);
+        }
+
+        private static bool IsTextMessage(Message message)
+        {
+            return message.Type == MessageType.Text;
+        }
+
+        private static bool IsEmptyMessage(Message message)
+        {
+            return message == null;
+        }
     }
 }

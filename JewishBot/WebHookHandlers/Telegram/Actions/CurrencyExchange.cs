@@ -40,7 +40,7 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
             string toCurrency;
             decimal amount = 0;
 
-            if (this.args == null || this.args.Any(argument => argument == null))
+            if (this.IsInvalidArguments())
             {
                 return Description;
             }
@@ -64,11 +64,6 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
                     return Description;
             }
 
-            if (fromCurrency == null || toCurrency == null)
-            {
-                return Description;
-            }
-
             try
             {
                 var culture = new CultureInfo("uk-UA", true);
@@ -81,6 +76,11 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
                 // When currency wasn't found
                 return $"Cannot convert from {fromCurrency} to {toCurrency}";
             }
+        }
+
+        private bool IsInvalidArguments()
+        {
+            return this.args == null || this.args.Any(argument => argument == null);
         }
     }
 }

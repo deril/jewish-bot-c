@@ -39,7 +39,7 @@
 
             // if user send something via arguments use that values, otherwise look for its name in repo
             // if nothing found or group message use predefined names
-            if (this.args == null && this.chatType == ChatType.Private)
+            if (this.CanUsePresetedName())
             {
                 var member = this.repository.Users.FirstOrDefault(u => u.TelegramID == this.userId)?.LunchName;
                 members = member == null ? this.config["lunch:members"].Split(",") : new[] { member };
@@ -51,6 +51,21 @@
 
             var lunchApi = new LunchApi(this.config["lunch:email"], this.config["lunch:password"], members, this.clientFactory);
             await this.bot.SendTextMessageAsync(this.chatId, lunchApi.Invoke());
+        }
+
+        private bool CanUsePresetedName()
+        {
+            return this.IsNoArgumentsForAction() && this.IsPrivateChat();
+        }
+
+        private bool IsNoArgumentsForAction()
+        {
+            return this.args == null;
+        }
+
+        private bool IsPrivateChat()
+        {
+            return this.chatType == ChatType.Private;
         }
     }
 }
