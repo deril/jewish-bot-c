@@ -5,13 +5,10 @@ namespace JewishBot.WebHookHandlers.Services.UrbanDictionary
 
     public class QueryModel
     {
-        [JsonProperty("result_type")]
-        public string ResultType { get; set; }
-
         [JsonProperty("list")]
         public IList<List> List { get; set; }
 
         [JsonProperty("errors")]
-        public Errors Errors { get; set; }
+        public string Errors { get; set; }
     }
 }

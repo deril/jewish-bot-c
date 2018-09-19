@@ -42,15 +42,20 @@
             if (this.CanUsePresetedName())
             {
                 var member = this.repository.Users.FirstOrDefault(u => u.TelegramID == this.userId)?.LunchName;
-                members = member == null ? this.config["lunch:members"].Split(",") : new[] { member };
+                members = member == null ? this.MembersFromConfig() : new[] { member };
             }
             else
             {
-                members = this.args.ToArray() ?? this.config["lunch:members"].Split(",");
+                members = this.args.Count == 0 ? this.MembersFromConfig() : this.args.ToArray();
             }
 
             var lunchApi = new LunchApi(this.config["lunch:email"], this.config["lunch:password"], members, this.clientFactory);
             await this.bot.SendTextMessageAsync(this.chatId, lunchApi.Invoke());
+        }
+
+        private string[] MembersFromConfig()
+        {
+            return this.config["lunch:members"].Split(",");
         }
 
         private bool CanUsePresetedName()
