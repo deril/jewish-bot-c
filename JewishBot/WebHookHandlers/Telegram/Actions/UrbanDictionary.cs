@@ -29,10 +29,10 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             {
                 var ud = new DictApi(this.clientFactory);
                 var result = await ud.InvokeAsync(this.args);
-                message = result.Errors == null && result.List.Count > 0 ? result.List[0].Definition : "Nothing found \uD83D\uDE22";
+                message = result.Errors == null && result.List.Count > 0 ? result.List[0].Definition : result.Errors;
             }
 
-            await this.bot.SendTextMessageAsync(this.chatId, message);
+            await this.bot.SendTextMessageAsync(this.chatId, string.IsNullOrEmpty(message) ? "Nothing found \uD83D\uDE22" : message);
         }
     }
 }
