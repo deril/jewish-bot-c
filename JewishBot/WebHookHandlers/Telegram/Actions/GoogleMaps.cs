@@ -3,20 +3,19 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using global::Telegram.Bot;
     using Services.GoogleMaps;
 
     internal class GoogleMaps : IAction
     {
-        private readonly TelegramBotClient bot;
+        private readonly IBotService botService;
         private readonly long chatId;
         private readonly IHttpClientFactory clientFactory;
         private readonly string apiKey;
-        private IReadOnlyCollection<string> args;
+        private readonly IReadOnlyCollection<string> args;
 
-        public GoogleMaps(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args, string key)
+        public GoogleMaps(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args, string key)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
@@ -28,7 +27,7 @@
             var message = "Please specify an address";
             if (this.args == null)
             {
-                await this.bot.SendTextMessageAsync(this.chatId, message);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, message);
                 return;
             }
 
@@ -38,12 +37,12 @@
             if (response.Status != "OK")
             {
                 message = "Nothing \uD83D\uDE22";
-                await this.bot.SendTextMessageAsync(this.chatId, message);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, message);
                 return;
             }
 
             var location = response.Results[0].Geometry.Location;
-            await this.bot.SendLocationAsync(this.chatId, location.Lattitude, location.Longtitude);
+            await this.botService.Client.SendLocationAsync(this.chatId, location.Lattitude, location.Longtitude);
         }
     }
 }

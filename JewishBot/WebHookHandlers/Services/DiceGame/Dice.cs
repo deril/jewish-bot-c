@@ -26,12 +26,14 @@ namespace JewishBot.WebHookHandlers.Services.DiceGame
             }
 
             this.quantity = 1;
-            if (!string.IsNullOrEmpty(sections[0]))
+            if (string.IsNullOrEmpty(sections[0]))
             {
-                if (!int.TryParse(sections[0], out this.quantity))
-                {
-                    this.quantity = 1;
-                }
+                return;
+            }
+
+            if (!int.TryParse(sections[0], out this.quantity))
+            {
+                this.quantity = 1;
             }
         }
 

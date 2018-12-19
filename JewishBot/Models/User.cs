@@ -2,9 +2,9 @@
 {
     public class User
     {
-        public int UserID { get; set; }
+        public int UserId { get; set; }
 
-        public int TelegramID { get; set; }
+        public int TelegramId { get; set; }
 
         public string LunchName { get; set; }
     }

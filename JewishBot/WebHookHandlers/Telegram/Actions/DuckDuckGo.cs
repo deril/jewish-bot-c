@@ -3,19 +3,18 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using global::Telegram.Bot;
     using Services.DuckDuckGo;
 
     internal class DuckDuckGo : IAction
     {
-        private readonly TelegramBotClient bot;
+        private readonly IBotService botService;
         private readonly long chatId;
         private readonly IHttpClientFactory clientFactory;
-        private IReadOnlyCollection<string> args;
+        private readonly IReadOnlyCollection<string> args;
 
-        public DuckDuckGo(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
+        public DuckDuckGo(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
@@ -48,7 +47,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
                 }
             }
 
-            await this.bot.SendTextMessageAsync(this.chatId, message);
+            await this.botService.Client.SendTextMessageAsync(this.chatId, message);
         }
     }
 }

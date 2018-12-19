@@ -6,7 +6,7 @@ namespace JewishBot.WebHookHandlers.Services.Poem
     public class QueryModel
     {
         [JsonProperty("hashid")]
-        public string Hashid { get; set; }
+        public string HashId { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }

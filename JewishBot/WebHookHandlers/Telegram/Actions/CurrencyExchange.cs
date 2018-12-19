@@ -6,32 +6,30 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     using System.Linq;
     using System.Threading.Tasks;
     using Api.Forex.Sharp;
-    using Api.Forex.Sharp.Models;
-    using global::Telegram.Bot;
 
     internal class CurrencyExchange : IAction
     {
-        private readonly ITelegramBotClient bot;
+        private const string Description = @"Converts currencies using Yahoo API; default amount 1.
+Usage: /ex [amount] [fromCurrency] in [toCurrency];
+/ex [fromCurrency] [toCurrency]";
+
+        private readonly IBotService botService;
         private readonly long chatId;
         private readonly string apiKey;
-        private ReadOnlyCollection<string> args;
+        private readonly ReadOnlyCollection<string> args;
 
-        public CurrencyExchange(ITelegramBotClient bot, long chatId, ReadOnlyCollection<string> args, string key)
+        public CurrencyExchange(IBotService botService, long chatId, ReadOnlyCollection<string> args, string key)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.chatId = chatId;
             this.args = args;
             this.apiKey = key;
         }
 
-        public static string Description { get; } = @"Converts currencies using Yahoo API; default amount 1.
-Usage: /ex [amount] [fromCurrency] in [toCurrency];
-/ex [fromCurrency] [toCurrency]";
-
         public async Task HandleAsync()
         {
             var message = this.PrepareMessage();
-            await this.bot.SendTextMessageAsync(this.chatId, message);
+            await this.botService.Client.SendTextMessageAsync(this.chatId, message);
         }
 
         private string PrepareMessage()

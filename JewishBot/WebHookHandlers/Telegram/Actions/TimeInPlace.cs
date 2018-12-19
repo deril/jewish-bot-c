@@ -6,20 +6,22 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using GeoTimeZone;
-    using global::Telegram.Bot;
     using Services.GoogleMaps;
 
     internal class TimeInPlace : IAction
     {
-        private readonly TelegramBotClient bot;
+        private const string Description = @"Returns time in specified location
+Usage: /timein location";
+
+        private readonly IBotService botService;
         private readonly long chatId;
         private readonly string apiKey;
         private readonly IHttpClientFactory clientFactory;
         private IReadOnlyCollection<string> args;
 
-        public TimeInPlace(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args, string key)
+        public TimeInPlace(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args, string key)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
@@ -32,14 +34,11 @@
             Error
         }
 
-        public static string Description { get; } = @"Returns time in specified location
-Usage: /timein location";
-
         public async Task HandleAsync()
         {
             if (this.args == null)
             {
-                await this.bot.SendTextMessageAsync(this.chatId, Description);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, Description);
                 return;
             }
 
@@ -47,12 +46,12 @@ Usage: /timein location";
             if (locationResult.Item1 == Status.Error)
             {
                 const string errorMessage = "Something goes wrong \uD83D\uDE22";
-                await this.bot.SendTextMessageAsync(this.chatId, errorMessage);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, errorMessage);
                 return;
             }
 
             var time = GetTimeInLocation(locationResult.Item2);
-            await this.bot.SendTextMessageAsync(this.chatId, $"In {string.Join(" ", this.args)}: {time}");
+            await this.botService.Client.SendTextMessageAsync(this.chatId, $"In {string.Join(" ", this.args)}: {time}");
         }
 
         private static string GetTimeInLocation(Location location)

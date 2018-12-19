@@ -6,11 +6,13 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
-    using global::Telegram.Bot;
 
     internal class MagicBall : IAction
     {
-        private readonly TelegramBotClient bot;
+        private const string Description = @"Predicts a future.
+            Usage: /ball <question>";
+
+        private readonly IBotService botService;
         private readonly long chatId;
         private readonly IReadOnlyCollection<string> args;
         private readonly Random rnd = new Random();
@@ -42,28 +44,25 @@
             "Concentrate and ask again"
         };
 
-        public MagicBall(TelegramBotClient bot, long chatId, IReadOnlyCollection<string> args)
+        public MagicBall(IBotService botService, long chatId, IReadOnlyCollection<string> args)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.chatId = chatId;
             this.args = args;
         }
-
-        public static string Description { get; } = @"Predicts a future.
-            Usage: /ball <question>";
 
         public async Task HandleAsync()
         {
             if (this.args == null)
             {
-                await this.bot.SendTextMessageAsync(this.chatId, Description);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, Description);
                 return;
             }
 
             if (this.rnd.Next(1, 6) == 1)
             {
                 var index = this.rnd.Next(this.askAgainAnswers.Count + 1);
-                await this.bot.SendTextMessageAsync(this.chatId, this.askAgainAnswers[index]);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, this.askAgainAnswers[index]);
             }
             else
             {
@@ -72,7 +71,7 @@
                     var time = DateTime.Now.Ticks;
                     var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", this.args) + time));
                     var index = (int)(ConvertHash(hash) % this.answers.Count);
-                    await this.bot.SendTextMessageAsync(this.chatId, this.answers[index]);
+                    await this.botService.Client.SendTextMessageAsync(this.chatId, this.answers[index]);
                 }
             }
         }

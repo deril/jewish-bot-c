@@ -4,21 +4,20 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using Actions;
-    using global::Telegram.Bot;
+    using Data;
     using global::Telegram.Bot.Types;
-    using JewishBot.Data;
     using Microsoft.Extensions.Configuration;
 
-    public class WebHookHandler
+    public class WebHookHandler : IWebHookHandler
     {
-        private readonly TelegramBotClient bot;
+        private readonly IBotService botService;
         private readonly IConfiguration configuration;
         private readonly IUserRepository repository;
         private readonly IHttpClientFactory clientFactory;
 
-        public WebHookHandler(TelegramBotClient bot, IConfiguration configuration, IUserRepository repo, IHttpClientFactory clientFactory)
+        public WebHookHandler(IBotService botService, IConfiguration configuration, IUserRepository repo, IHttpClientFactory clientFactory)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.configuration = configuration;
             this.repository = repo;
             this.clientFactory = clientFactory;
@@ -36,21 +35,21 @@
 
             var commands = new Dictionary<string, IAction>()
             {
-                { "echo",       new Echo(this.bot, chatId, command.Arguments) },
-                { "hey",        new Hey(this.bot, chatId) },
-                { "ex",         new CurrencyExchange(this.bot, chatId, command.Arguments, this.configuration["apiForexKey"]) },
-                { "ud",         new UrbanDictionary(this.bot, this.clientFactory, chatId, command.Arguments) },
-                { "go",         new DuckDuckGo(this.bot, this.clientFactory, chatId, command.Arguments) },
-                { "dice",       new RollDice(this.bot, chatId, command.Arguments, username) },
-                { "poem",       new Poem(this.bot, this.clientFactory, chatId) },
-                { "l",          new GoogleMaps(this.bot, this.clientFactory, chatId, command.Arguments, this.configuration["googleApiKey"]) },
-                { "advice",     new Advice(this.bot, this.clientFactory, chatId, username) },
-                { "weekday",    new WeekDay(this.bot, chatId) },
-                { "timein",     new TimeInPlace(this.bot, this.clientFactory, chatId, command.Arguments, this.configuration["googleApiKey"]) },
-                { "calc",       new Calc(this.bot, this.clientFactory, chatId, command.Arguments) },
-                { "ball",       new MagicBall(this.bot, chatId, command.Arguments) },
-                { "lunch",      new Lunch(this.bot, chatId, userId, chatType, command.Arguments, this.configuration, this.repository, this.clientFactory) },
-                { "setlunch",   new SetLunch(this.bot, chatId, userId, chatType, command.Arguments, this.repository) }
+                { "echo",       new Echo(this.botService, chatId, command.Arguments) },
+                { "hey",        new Hey(this.botService, chatId) },
+                { "ex",         new CurrencyExchange(this.botService, chatId, command.Arguments, this.configuration["apiForexKey"]) },
+                { "ud",         new UrbanDictionary(this.botService, this.clientFactory, chatId, command.Arguments) },
+                { "go",         new DuckDuckGo(this.botService, this.clientFactory, chatId, command.Arguments) },
+                { "dice",       new RollDice(this.botService, chatId, command.Arguments, username) },
+//                { "poem",       new Poem(this.botService, this.clientFactory, chatId) },
+                { "l",          new GoogleMaps(this.botService, this.clientFactory, chatId, command.Arguments, this.configuration["googleApiKey"]) },
+                { "advice",     new Advice(this.botService, this.clientFactory, chatId, username) },
+                { "weekday",    new WeekDay(this.botService, chatId) },
+                { "timein",     new TimeInPlace(this.botService, this.clientFactory, chatId, command.Arguments, this.configuration["googleApiKey"]) },
+//                { "calc",       new Calc(this.botService, this.clientFactory, chatId, command.Arguments) },
+                { "ball",       new MagicBall(this.botService, chatId, command.Arguments) },
+                { "lunch",      new Lunch(this.botService, chatId, userId, chatType, command.Arguments, this.configuration, this.repository, this.clientFactory) },
+                { "setlunch",   new SetLunch(this.botService, chatId, userId, chatType, command.Arguments, this.repository) }
             };
 
             if (commands.ContainsKey(command.Name))

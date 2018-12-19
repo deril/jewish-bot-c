@@ -9,9 +9,9 @@
 
     public class WebHookController : Controller
     {
-        private WebHookHandler handler;
+        private readonly IWebHookHandler handler;
 
-        public WebHookController(WebHookHandler webHook)
+        public WebHookController(IWebHookHandler webHook)
         {
             this.handler = webHook;
         }

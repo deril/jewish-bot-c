@@ -2,23 +2,19 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using global::Telegram.Bot;
 
     internal class Echo : IAction
     {
-        private readonly TelegramBotClient bot;
+        private readonly IBotService botService;
         private readonly long chatId;
-        private IReadOnlyCollection<string> args;
+        private readonly IReadOnlyCollection<string> args;
 
-        public Echo(TelegramBotClient bot, long chatId, IReadOnlyCollection<string> args)
+        public Echo(IBotService botService, long chatId, IReadOnlyCollection<string> args)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.chatId = chatId;
             this.args = args;
         }
-
-        public static string Description { get; } = @"Returns input text.
-            Usage: /echo <text>";
 
         public async Task HandleAsync()
         {
@@ -27,7 +23,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
                 return;
             }
 
-            await this.bot.SendTextMessageAsync(this.chatId, string.Join(" ", this.args));
+            await this.botService.Client.SendTextMessageAsync(this.chatId, string.Join(" ", this.args));
         }
     }
 }

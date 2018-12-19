@@ -3,19 +3,18 @@
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using global::Telegram.Bot;
     using Services.GreatAdvice;
 
     public class Advice : IAction
     {
-        private readonly TelegramBotClient bot;
+        private readonly IBotService botService;
         private readonly long chatId;
         private readonly string username;
         private readonly IHttpClientFactory clientFactory;
 
-        public Advice(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, string username)
+        public Advice(IBotService botService, IHttpClientFactory clientFactory, long chatId, string username)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.username = username;
@@ -28,7 +27,7 @@
             var textResult = WebUtility.HtmlDecode(result.Text);
             var message = $"Advice for {this.username}: {textResult}";
 
-            await this.bot.SendTextMessageAsync(this.chatId, message);
+            await this.botService.Client.SendTextMessageAsync(this.chatId, message);
         }
     }
 }

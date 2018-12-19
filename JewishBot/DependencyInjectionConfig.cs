@@ -14,7 +14,7 @@
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(configuration["Data:ConnectionString"]));
             services.AddSingleton(configuration);
             services.AddTransient<IUserRepository, EFUserRepository>();
-            services.AddTransient<WebHookHandler>();
+            services.AddScoped<IWebHookHandler, WebHookHandler>();
             services.AddHttpClient();
             services.AddHttpClient("urbandictionary", c =>
             {

@@ -6,7 +6,7 @@
 
     public class CommandParser
     {
-        private const char MainDetermiter = ' ';
+        private const char MainDelimiter = ' ';
         private const char BotNameDelimiter = '@';
 
         public CommandParser(string msg)
@@ -18,7 +18,7 @@
 
         public Command Parse()
         {
-            var firstSpace = this.Message.IndexOf(MainDetermiter, StringComparison.OrdinalIgnoreCase);
+            var firstSpace = this.Message.IndexOf(MainDelimiter, StringComparison.OrdinalIgnoreCase);
             string name;
             var args = new ReadOnlyCollection<string>(new List<string>());
 

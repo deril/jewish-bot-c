@@ -3,31 +3,30 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using global::Telegram.Bot;
     using Services.Mathjs;
 
     public class Calc : IAction
     {
-        private readonly TelegramBotClient bot;
+        private const string Description = @"Calculate using math.js API.
+Usage: /calc <query>";
+
+        private readonly IBotService botService;
         private readonly long chatId;
         private readonly IHttpClientFactory clientFactory;
-        private IReadOnlyCollection<string> args;
+        private readonly IReadOnlyCollection<string> args;
 
-        public Calc(TelegramBotClient bot, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
+        public Calc(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
         {
-            this.bot = bot;
+            this.botService = botService;
             this.clientFactory = clientFactory;
             this.chatId = chatId;
             this.args = args;
         }
 
-        public static string Description { get; } = @"Calculate using math.js API.
-Usage: /calc <query>";
-
         public async Task HandleAsync()
         {
             var message = await this.PrepareMessageAsync();
-            await this.bot.SendTextMessageAsync(this.chatId, message);
+            await this.botService.Client.SendTextMessageAsync(this.chatId, message);
         }
 
         private async Task<string> PrepareMessageAsync()
