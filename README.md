@@ -8,14 +8,12 @@ A Telegram bot for the secret Post-Apocalyptic B. community. This community appe
 - ud - define word using Urban Dictionary
 - go - search on DuckDuckGo (beta)
 - dice - roll a basic dice
-- poem - show a poem written by AI
 - l - find a location by address
-- advice - give very usefull advice
 - weekday - current day of week (in Europe, Kiev timezone)
 - timein - gets time at specific location
-- calc - calculates using math.js
 - ball - ask Magic Ball a question
 - lunch - get lunch data for today
+- setlunch - save your name as default for lunches (PM only)
 
 
 ### Goals
@@ -29,7 +27,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - Development Tools
-- .NET Core 2.1
+- .NET Core 2.2
 - Docker
 - Docker Compose
 - Sqlite 3

@@ -17,45 +17,40 @@
         private readonly int userId;
         private readonly ChatType chatType;
         private readonly IReadOnlyCollection<string> args;
-        private readonly IConfiguration config;
+        private readonly LunchConfiguration lunchConfiguration;
         private readonly IUserRepository repository;
         private readonly IHttpClientFactory clientFactory;
 
-        public Lunch(IBotService botService, long chatId, int userId, ChatType chatType, IReadOnlyCollection<string> args, IConfiguration config, IUserRepository repo, IHttpClientFactory clientFactory)
+        public Lunch(IBotService botService, long chatId, int userId, ChatType chatType, IReadOnlyCollection<string> args, LunchConfiguration lunchConfiguration, IUserRepository repo, IHttpClientFactory clientFactory)
         {
             this.botService = botService;
             this.chatId = chatId;
             this.userId = userId;
             this.chatType = chatType;
             this.args = args;
-            this.config = config;
+            this.lunchConfiguration = lunchConfiguration;
             this.repository = repo;
             this.clientFactory = clientFactory;
         }
 
         public async Task HandleAsync()
         {
-            string[] members;
+            List<string> members;
 
             // if user send something via arguments use that values, otherwise look for its name in repo
             // if nothing found or group message use predefined names
             if (this.CanUsePresetName())
             {
                 var member = this.repository.Users.FirstOrDefault(u => u.TelegramId == this.userId)?.LunchName;
-                members = member == null ? this.MembersFromConfig() : new[] { member };
+                members = member == null ? this.lunchConfiguration.Members : new List<string> { member };
             }
             else
             {
-                members = this.args.Count == 0 ? this.MembersFromConfig() : this.args.ToArray();
+                members = this.args.Count == 0 ? this.lunchConfiguration.Members : this.args.ToList();
             }
 
-            var lunchApi = new LunchApi(this.config["lunch:email"], this.config["lunch:password"], members, this.clientFactory);
-            await this.botService.Client.SendTextMessageAsync(this.chatId, lunchApi.Invoke());
-        }
-
-        private string[] MembersFromConfig()
-        {
-            return this.config["lunch:members"].Split(",");
+            var lunchApi = new LunchApi(this.lunchConfiguration.Email, this.lunchConfiguration.Password, members, this.lunchConfiguration.Providers, this.clientFactory);
+            await this.botService.Client.SendTextMessageAsync(this.chatId, lunchApi.Invoke()).ConfigureAwait(false);
         }
 
         private bool CanUsePresetName()

@@ -10,41 +10,41 @@
 
     public class LunchApi
     {
-        private readonly Uri obediUrl = new Uri("http://lunches.vps.lviv.ua/staff/1/bills");
-        private readonly Uri koloSmakuUrl = new Uri("http://lunches.vps.lviv.ua/staff/5/bills");
         private readonly string email;
         private readonly string password;
-        private readonly string[] members;
+        private readonly List<string> members;
         private readonly IHttpClientFactory clientFactory;
+        private readonly Dictionary<string, string> providers;
 
-        public LunchApi(string email, string password, string[] members, IHttpClientFactory clientFactory)
+        public LunchApi(string email, string password, List<string> members, Dictionary<string, string> providers, IHttpClientFactory clientFactory)
         {
             this.email = email;
             this.password = password;
             this.members = members;
             this.clientFactory = clientFactory;
+            this.providers = providers;
         }
 
         public string Invoke()
         {
-            var obedi = this.RequestResult(this.obediUrl);
-            var koloSmaku = this.RequestResult(this.koloSmakuUrl);
-            var obediResults = this.ParseMeals(obedi);
-            var koloSmakuResults = this.ParseMeals(koloSmaku);
-            var obediFormated = this.FormatMeals(obediResults);
-            var koloSmakuFormated = this.FormatMeals(koloSmakuResults);
             var output = new StringBuilder();
-            if (!string.IsNullOrEmpty(obediFormated))
+            foreach (var (providerName, providerUrl) in this.providers)
             {
-                output.Append($"Obedi:\n\n{obediFormated}\n\n");
-            }
-
-            if (!string.IsNullOrEmpty(koloSmakuFormated))
-            {
-                output.Append($"Kolo Smaku:\n\n{koloSmakuFormated}\n\n");
+                var formatted = this.FormatProvider(providerUrl);
+                if (!string.IsNullOrEmpty(formatted))
+                {
+                    output.Append($"{providerName}:\n\n{formatted}\n\n");
+                }
             }
 
             return string.IsNullOrEmpty(output.ToString()) ? "Not Found." : output.ToString();
+        }
+
+        private string FormatProvider(string url)
+        {
+            var response = this.RequestResult(new Uri(url));
+            var parsed = this.ParseMeals(response);
+            return this.FormatMeals(parsed);
         }
 
         private IEnumerable<Order> ParseMeals(CQ provider)
@@ -70,9 +70,9 @@
                                 new KeyValuePair<string, string>("auth[password]", this.password)
                             }))
             {
-                var requestResponce = client.PostAsync(url, authParams).Result;
-                requestResponce.EnsureSuccessStatusCode();
-                html = requestResponce.Content.ReadAsStringAsync().Result;
+                var requestResponse = client.PostAsync(url, authParams).Result;
+                requestResponse.EnsureSuccessStatusCode();
+                html = requestResponse.Content.ReadAsStringAsync().Result;
             }
 
             var dom = CQ.Create(html);
@@ -81,7 +81,7 @@
 
         private string FormatMeals(IEnumerable<Order> orders)
         {
-            var i = orders.Where(order => Array.Exists(this.members, member => order.Name.ToUpperInvariant().Contains(member.ToUpperInvariant(), StringComparison.CurrentCulture)))
+            var i = orders.Where(order => this.members.Exists(member => order.Name.ToUpperInvariant().Contains(member.ToUpperInvariant(), StringComparison.CurrentCulture)))
                           .ToLookup(order => order.Name, order => order.Meal)
                           .Select(group => $"☻ {group.Key}\n\n{string.Join("\n", group.Select(meal => $"• {meal}"))}");
             return string.Join("\n\n", i);

@@ -33,6 +33,7 @@
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<BotConfiguration>(this.Configuration.GetSection("BotConfiguration"));
+            services.Configure<LunchConfiguration>(this.Configuration.GetSection("LunchConfiguration"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,6 +7,7 @@
     using Data;
     using global::Telegram.Bot.Types;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
 
     public class WebHookHandler : IWebHookHandler
     {
@@ -14,10 +15,12 @@
         private readonly IConfiguration configuration;
         private readonly IUserRepository repository;
         private readonly IHttpClientFactory clientFactory;
+        private readonly LunchConfiguration lunchConfiguration;
 
-        public WebHookHandler(IBotService botService, IConfiguration configuration, IUserRepository repo, IHttpClientFactory clientFactory)
+        public WebHookHandler(IBotService botService, IOptions<LunchConfiguration> lunchConfiguration, IConfiguration configuration, IUserRepository repo, IHttpClientFactory clientFactory)
         {
             this.botService = botService;
+            this.lunchConfiguration = lunchConfiguration.Value;
             this.configuration = configuration;
             this.repository = repo;
             this.clientFactory = clientFactory;
@@ -41,15 +44,12 @@
                 { "ud",         new UrbanDictionary(this.botService, this.clientFactory, chatId, command.Arguments) },
                 { "go",         new DuckDuckGo(this.botService, this.clientFactory, chatId, command.Arguments) },
                 { "dice",       new RollDice(this.botService, chatId, command.Arguments, username) },
-//                { "poem",       new Poem(this.botService, this.clientFactory, chatId) },
                 { "l",          new GoogleMaps(this.botService, this.clientFactory, chatId, command.Arguments, this.configuration["googleApiKey"]) },
-                { "advice",     new Advice(this.botService, this.clientFactory, chatId, username) },
                 { "weekday",    new WeekDay(this.botService, chatId) },
                 { "timein",     new TimeInPlace(this.botService, this.clientFactory, chatId, command.Arguments, this.configuration["googleApiKey"]) },
-//                { "calc",       new Calc(this.botService, this.clientFactory, chatId, command.Arguments) },
                 { "ball",       new MagicBall(this.botService, chatId, command.Arguments) },
-                { "lunch",      new Lunch(this.botService, chatId, userId, chatType, command.Arguments, this.configuration, this.repository, this.clientFactory) },
-                { "setlunch",   new SetLunch(this.botService, chatId, userId, chatType, command.Arguments, this.repository) }
+                { "lunch",      new Lunch(this.botService, chatId, userId, chatType, command.Arguments, this.lunchConfiguration, this.repository, this.clientFactory) },
+                { "setlunch",   new SetLunch(this.botService, chatId, userId, chatType, command.Arguments, this.repository) },
             };
 
             if (commands.ContainsKey(command.Name))
