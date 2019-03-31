@@ -1,9 +1,9 @@
-﻿FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+﻿FROM mcr.microsoft.com/dotnet/core/runtime:2.2 AS base
 WORKDIR /app
 ENV ASPNETCORE_URLS http://+:5000
 EXPOSE 5000
 
-FROM microsoft/dotnet:2.2-sdk AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
 WORKDIR /src
 COPY JewishBot.csproj ./
 RUN dotnet restore ./JewishBot.csproj
