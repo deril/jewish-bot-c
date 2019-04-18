@@ -21,7 +21,7 @@ namespace JewishBot.WebHookHandlers.Services.UrbanDictionary
             var client = this.clientFactory.CreateClient("urbandictionary");
             var query = new Dictionary<string, string>
             {
-                { "term", string.Join(string.Empty, arguments) }
+                { "term", string.Join(" ", arguments) }
             };
             var route = new UriBuilder(client.BaseAddress)
             {
