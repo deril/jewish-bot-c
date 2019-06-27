@@ -14,6 +14,7 @@ A Telegram bot for the secret Post-Apocalyptic B. community. This community appe
 - ball - ask Magic Ball a question
 - lunch - get lunch data for today
 - setlunch - save your name as default for lunches (PM only)
+- weather - get weather in location (pas as argument)
 
 
 ### Goals

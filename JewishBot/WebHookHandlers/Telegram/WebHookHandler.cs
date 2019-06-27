@@ -50,6 +50,7 @@
                 { "ball",       new MagicBall(this.botService, chatId, command.Arguments) },
                 { "lunch",      new Lunch(this.botService, chatId, userId, chatType, command.Arguments, this.lunchConfiguration, this.repository, this.clientFactory) },
                 { "setlunch",   new SetLunch(this.botService, chatId, userId, chatType, command.Arguments, this.repository) },
+                { "weather",    new Weather(this.botService, this.clientFactory, chatId, command.Arguments) }
             };
 
             if (commands.ContainsKey(command.Name))

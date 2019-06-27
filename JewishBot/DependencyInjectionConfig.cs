@@ -40,6 +40,10 @@
             {
                 c.BaseAddress = new Uri(configuration["ExternalHosts:poemapi"]);
             });
+            services.AddHttpClient("weatherapi", c =>
+            {
+                c.BaseAddress = new Uri(configuration["ExternalHosts:weatherapi"]);
+            });
         }
     }
 }
