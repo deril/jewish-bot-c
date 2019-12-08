@@ -1,22 +1,28 @@
-﻿namespace JewishBot.Controllers
-{
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
-    using Telegram.Bot.Types;
-    using Telegram.Bot.Types.Enums;
-    using WebHookHandlers.Telegram;
+﻿using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using JewishBot.WebHookHandlers.Telegram;
+using Microsoft.Extensions.Logging;
 
+namespace JewishBot.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
     public class WebHookController : Controller
     {
         private readonly IWebHookHandler handler;
+        private readonly ILogger<WebHookController> _logger;
 
-        public WebHookController(IWebHookHandler webHook)
+        public WebHookController(IWebHookHandler webHook, ILogger<WebHookController> logger)
         {
             this.handler = webHook;
+            _logger = logger;
         }
 
         // GET: /WebHook/
+        [HttpGet]
         public string Index()
         {
             return "hello, there";
@@ -24,21 +30,24 @@
 
         // POST: /WebHook/Post
         [HttpPost]
-        public async Task<StatusCodeResult> Post([FromBody] Update update)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        [Route("Post")]
+        public async Task<StatusCodeResult> Post(Update update)
         {
+            if (update is null) return this.BadRequest();
+
             var message = update.Message;
             if (CannotHandleMessage(message))
             {
-                return this.NoContent();
+                return this.BadRequest();
             }
 
-            await this.handler.OnMessageReceived(message);
+            await handler.OnMessageReceived(message).ConfigureAwait(true);
 
-            return this.Ok();
+            return this.NoContent();
         }
-
-        // GET: /WebHook/Error
-        public IActionResult Error() => this.BadRequest();
 
         private static bool CannotHandleMessage(Message message)
         {

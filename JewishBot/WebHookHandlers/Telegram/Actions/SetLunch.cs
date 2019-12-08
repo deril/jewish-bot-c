@@ -17,7 +17,6 @@
         private readonly IUserRepository repository;
         private readonly IReadOnlyCollection<string> args;
 
-        [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1008:OpeningParenthesisMustBeSpacedCorrectly", Justification = "This is OK here.")]
         public SetLunch(IBotService botService, long chatId, int userId, ChatType chatType, IReadOnlyCollection<string> args, IUserRepository repo)
         {
             (this.botService, this.chatId, this.userId, this.chatType, this.args, this.repository) = (botService, chatId, userId, chatType, args, repo);
@@ -27,8 +26,7 @@
         {
             if (this.chatType != ChatType.Private)
             {
-                const string message = "Allowed only in private conversation!";
-                await this.botService.Client.SendTextMessageAsync(this.chatId, message).ConfigureAwait(false);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, "Allowed only in private conversation!").ConfigureAwait(false);
                 return;
             }
 
@@ -42,7 +40,7 @@
 
             this.repository.SaveUser(user);
 
-            await this.botService.Client.SendTextMessageAsync(this.chatId, $"Your lunch name successfully set to {user.LunchName}");
+            await botService.Client.SendTextMessageAsync(chatId, $"Your lunch name successfully set to {user.LunchName}").ConfigureAwait(false);
         }
     }
 }

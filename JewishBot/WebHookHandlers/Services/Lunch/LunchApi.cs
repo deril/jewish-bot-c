@@ -62,14 +62,14 @@
 
         private CQ RequestResult(Uri url)
         {
-            var client = this.clientFactory.CreateClient();
             string html;
-            using (var authParams = new FormUrlEncodedContent(new[]
-                {
-                                new KeyValuePair<string, string>("auth[email]", this.email),
-                                new KeyValuePair<string, string>("auth[password]", this.password)
-                            }))
+            using (var client = this.clientFactory.CreateClient())
             {
+                using var authParams = new FormUrlEncodedContent(new[]
+                    {
+                        new KeyValuePair<string, string>("auth[email]", this.email),
+                        new KeyValuePair<string, string>("auth[password]", this.password)
+                    });
                 var requestResponse = client.PostAsync(url, authParams).Result;
                 requestResponse.EnsureSuccessStatusCode();
                 html = requestResponse.Content.ReadAsStringAsync().Result;
