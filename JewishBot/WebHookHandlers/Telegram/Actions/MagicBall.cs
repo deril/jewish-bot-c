@@ -55,14 +55,14 @@
         {
             if (this.args == null)
             {
-                await this.botService.Client.SendTextMessageAsync(this.chatId, Description);
+                await botService.Client.SendTextMessageAsync(chatId, Description).ConfigureAwait(false);
                 return;
             }
 
             if (this.rnd.Next(1, 6) == 1)
             {
                 var index = this.rnd.Next(this.askAgainAnswers.Count + 1);
-                await this.botService.Client.SendTextMessageAsync(this.chatId, this.askAgainAnswers[index]);
+                await botService.Client.SendTextMessageAsync(chatId, askAgainAnswers[index]).ConfigureAwait(false);
             }
             else
             {
@@ -71,7 +71,7 @@
                     var time = DateTime.Now.Ticks;
                     var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", this.args) + time));
                     var index = (int)(ConvertHash(hash) % this.answers.Count);
-                    await this.botService.Client.SendTextMessageAsync(this.chatId, this.answers[index]);
+                    await botService.Client.SendTextMessageAsync(chatId, answers[index]).ConfigureAwait(false);
                 }
             }
         }
