@@ -30,7 +30,7 @@ namespace JewishBot.Controllers
 
         // POST: /WebHook/Post
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         [Route("Post")]
@@ -41,12 +41,13 @@ namespace JewishBot.Controllers
             var message = update.Message;
             if (CannotHandleMessage(message))
             {
-                return this.BadRequest();
+                _logger.Log(LogLevel.Information, $"Cannot handle message {message}");
+                return this.Ok();
             }
 
-            await handler.OnMessageReceived(message).ConfigureAwait(true);
+            await this.handler.OnMessageReceived(message).ConfigureAwait(true);
 
-            return this.NoContent();
+            return this.Ok();
         }
 
         private static bool CannotHandleMessage(Message message)

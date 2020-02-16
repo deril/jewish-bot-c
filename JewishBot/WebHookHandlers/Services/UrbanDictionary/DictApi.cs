@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
+
 namespace JewishBot.WebHookHandlers.Services.UrbanDictionary
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.WebUtilities;
-    using Newtonsoft.Json;
-
     public class DictApi
     {
         private readonly IHttpClientFactory clientFactory;

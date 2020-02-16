@@ -4,6 +4,7 @@ namespace JewishBot.WebHookHandlers.Services.DuckDuckGo
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using JewishBot.Attributes;
     using Microsoft.AspNetCore.WebUtilities;
     using Newtonsoft.Json;
 

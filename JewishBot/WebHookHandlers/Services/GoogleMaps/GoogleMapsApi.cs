@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using JewishBot.Attributes;
     using Microsoft.AspNetCore.WebUtilities;
     using Newtonsoft.Json;
 
@@ -18,6 +19,7 @@
             this.apiKey = apiKey;
         }
 
+        [RequestRateLimit(Name = "Limit Request Number", Seconds = 2)]
         public async Task<QueryModel> InvokeAsync(IReadOnlyCollection<string> arguments)
         {
             var client = this.clientFactory.CreateClient("googleapis");

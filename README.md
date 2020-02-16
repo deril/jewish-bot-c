@@ -12,8 +12,6 @@ A Telegram bot for the secret Post-Apocalyptic B. community. This community appe
 - weekday - current day of week (in Europe, Kiev timezone)
 - timein - gets time at specific location
 - ball - ask Magic Ball a question
-- lunch - get lunch data for today
-- setlunch - save your name as default for lunches (PM only)
 - weather - get weather in location (pas as argument)
 
 
@@ -54,7 +52,7 @@ Currently I'm working on making all this tests passed.
 
 ## Deployment
 
-For deploy using docker as a delivery tool. You need to build and publish the app. Then build the docker container, deliver it to the server with other configs (like nginx.conf) and run 
+For deploy using docker as a delivery tool. You need to build and publish the app. Then build the docker container, deliver it to the server with other configs (like nginx.conf) and run
 
 ```docker compose up -d```
 

@@ -3,6 +3,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using JewishBot.Attributes;
     using Services.UrbanDictionary;
 
     internal class UrbanDictionary : IAction
@@ -20,6 +21,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             this.args = args;
         }
 
+        [RequestRateLimit(Name = "Limit Request Number", Seconds = 10)]
         public async Task HandleAsync()
         {
             var message = "Please specify at least 1 search term";

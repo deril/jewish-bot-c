@@ -4,6 +4,7 @@ namespace JewishBot.WebHookHandlers.Services.Weather
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using JewishBot.Attributes;
     using Microsoft.AspNetCore.WebUtilities;
 
     public class WeatherApi
@@ -15,6 +16,7 @@ namespace JewishBot.WebHookHandlers.Services.Weather
             this.clientFactory = clientFactory;
         }
 
+        [RequestRateLimit(Name = "Limit Request Number", Seconds = 2)]
         public async Task<string> InvokeAsync(IReadOnlyCollection<string> arguments)
         {
             var client = this.clientFactory.CreateClient("weatherapi");
