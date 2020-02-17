@@ -27,27 +27,17 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
             {
                 var go = new GoApi(this.clientFactory);
                 var result = await go.InvokeAsync(this.args);
-                switch (result.Type)
+                message = result.Type switch
                 {
-                    case "A":
-                        message = result.AbstractText;
-                        break;
-                    case "D":
-                        message = result.RelatedTopics[0].Text;
-                        break;
-                    case "E":
-                        message = result.Redirect;
-                        break;
-                    case "C":
-                        message = result.AbstractUrl.ToString();
-                        break;
-                    default:
-                        message = "Nothing found \uD83D\uDE22";
-                        break;
-                }
+                    "A" => result.AbstractText,
+                    "D" => result.RelatedTopics[0].Text,
+                    "E" => result.Redirect,
+                    "C" => result.AbstractUrl.ToString(),
+                    _ => "Nothing found \uD83D\uDE22"
+                };
             }
 
-            await this.botService.Client.SendTextMessageAsync(this.chatId, message);
+            await this.botService.Client.SendTextMessageAsync(this.chatId, message ?? "Nothing found \uD83D\uDE22");
         }
     }
 }
