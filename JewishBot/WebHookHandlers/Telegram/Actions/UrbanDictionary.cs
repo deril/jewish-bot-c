@@ -3,7 +3,7 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using JewishBot.Attributes;
+    using Attributes;
     using Services.UrbanDictionary;
 
     internal class UrbanDictionary : IAction

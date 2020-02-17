@@ -66,13 +66,11 @@
             }
             else
             {
-                using (var algorithm = SHA256.Create())
-                {
-                    var time = DateTime.Now.Ticks;
-                    var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", this.args) + time));
-                    var index = (int)(ConvertHash(hash) % this.answers.Count);
-                    await botService.Client.SendTextMessageAsync(chatId, answers[index]).ConfigureAwait(false);
-                }
+                using var algorithm = SHA256.Create();
+                var time = DateTime.Now.Ticks;
+                var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", this.args) + time));
+                var index = (int)(ConvertHash(hash) % this.answers.Count);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, this.answers[index]).ConfigureAwait(false);
             }
         }
 

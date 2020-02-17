@@ -35,7 +35,6 @@ namespace JewishBot.WebHookHandlers.Telegram.Actions
                 return;
             }
             await this.botService.Client.SendTextMessageAsync(this.chatId, response);
-            return;
         }
     }
 }

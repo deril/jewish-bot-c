@@ -22,10 +22,8 @@ namespace JewishBot.WebHookHandlers.Telegram
                 return;
             }
 
-            using (var certificate = File.OpenRead("jewish_bot.pem"))
-            {
-                this.Client.SetWebhookAsync(webHookUrl, certificate).Wait();
-            }
+            using var certificate = File.OpenRead("jewish_bot.pem");
+            this.Client.SetWebhookAsync(webHookUrl, certificate).Wait();
         }
 
         public TelegramBotClient Client { get; }

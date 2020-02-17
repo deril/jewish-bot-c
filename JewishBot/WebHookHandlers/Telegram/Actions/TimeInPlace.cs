@@ -17,9 +17,10 @@ Usage: /timein location";
         private readonly long chatId;
         private readonly string apiKey;
         private readonly IHttpClientFactory clientFactory;
-        private IReadOnlyCollection<string> args;
+        private readonly IReadOnlyCollection<string> args;
 
-        public TimeInPlace(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args, string key)
+        public TimeInPlace(IBotService botService, IHttpClientFactory clientFactory, long chatId,
+            IReadOnlyCollection<string> args, string key)
         {
             this.botService = botService;
             this.clientFactory = clientFactory;
@@ -42,15 +43,15 @@ Usage: /timein location";
                 return;
             }
 
-            var locationResult = await this.GetLocationAsync(this.args);
-            if (locationResult.Item1 == Status.Error)
+            var (status, location) = await this.GetLocationAsync(this.args);
+            if (status == Status.Error)
             {
                 const string errorMessage = "Something goes wrong \uD83D\uDE22";
                 await this.botService.Client.SendTextMessageAsync(this.chatId, errorMessage);
                 return;
             }
 
-            var time = GetTimeInLocation(locationResult.Item2);
+            var time = GetTimeInLocation(location);
             await this.botService.Client.SendTextMessageAsync(this.chatId, $"In {string.Join(" ", this.args)}: {time}");
         }
 
@@ -60,7 +61,7 @@ Usage: /timein location";
             var culture = new CultureInfo("uk-UA", true);
 
             return TimeZoneInfo.ConvertTime(DateTimeOffset.Now, TimeZoneInfo.FindSystemTimeZoneById(timeZone))
-                               .ToString("t", culture);
+                .ToString("t", culture);
         }
 
         private async Task<Tuple<Status, Location>> GetLocationAsync(IReadOnlyCollection<string> place)

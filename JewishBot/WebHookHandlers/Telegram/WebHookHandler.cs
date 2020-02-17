@@ -47,13 +47,10 @@
                     this.configuration["googleApiKey"]),
                 "ball" => new MagicBall(this.botService, chatId, command.Arguments),
                 "weather" => new Weather(this.botService, this.clientFactory, chatId, command.Arguments),
-                _ => null
+                _ => new NoCommand()
             };
 
-            if (cmd != null)
-            {
-                await cmd.HandleAsync();
-            }
+            await cmd.HandleAsync();
         }
     }
 }
