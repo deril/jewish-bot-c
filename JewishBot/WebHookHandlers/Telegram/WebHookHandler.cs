@@ -2,24 +2,25 @@
 {
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Actions;
-    using Data;
     using global::Telegram.Bot.Types;
+    using JewishBot.Actions;
+    using JewishBot.Actions.DuckDuckGo;
+    using JewishBot.Actions.GoogleMaps;
+    using JewishBot.Actions.RollDice;
+    using JewishBot.Actions.UrbanDictionary;
+    using JewishBot.Actions.Weather;
     using Microsoft.Extensions.Configuration;
 
     public class WebHookHandler : IWebHookHandler
     {
         private readonly IBotService botService;
         private readonly IConfiguration configuration;
-        private readonly IUserRepository repository;
         private readonly IHttpClientFactory clientFactory;
 
-        public WebHookHandler(IBotService botService, IConfiguration configuration, IUserRepository repo,
-            IHttpClientFactory clientFactory)
+        public WebHookHandler(IBotService botService, IConfiguration configuration, IHttpClientFactory clientFactory)
         {
             this.botService = botService;
             this.configuration = configuration;
-            this.repository = repo;
             this.clientFactory = clientFactory;
         }
 

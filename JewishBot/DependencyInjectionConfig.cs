@@ -1,9 +1,7 @@
 ﻿namespace JewishBot
 {
     using System;
-    using JewishBot.Data;
     using JewishBot.WebHookHandlers.Telegram;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -11,9 +9,7 @@
     {
         public static void AddScope(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(configuration["Data:ConnectionString"]));
             services.AddSingleton(configuration);
-            services.AddTransient<IUserRepository, EFUserRepository>();
             services.AddScoped<IWebHookHandler, WebHookHandler>();
             services.AddHttpClient();
             services.AddHttpClient("urbandictionary", c =>

@@ -13,12 +13,12 @@ namespace JewishBot.Controllers
     public class WebHookController : Controller
     {
         private readonly IWebHookHandler handler;
-        private readonly ILogger<WebHookController> _logger;
+        private readonly ILogger<WebHookController> logger;
 
         public WebHookController(IWebHookHandler webHook, ILogger<WebHookController> logger)
         {
             this.handler = webHook;
-            _logger = logger;
+            this.logger = logger;
         }
 
         // GET: /WebHook/
@@ -41,7 +41,7 @@ namespace JewishBot.Controllers
             var message = update.Message;
             if (CannotHandleMessage(message))
             {
-                _logger.Log(LogLevel.Information, $"Cannot handle message {message}");
+                this.logger.Log(LogLevel.Information, $"Cannot handle message {message}");
                 return this.Ok();
             }
 

@@ -10,10 +10,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="WebHookHandlers\" />
     <Folder Include="WebHookHandlers\Telegram\" />
-    <Folder Include="WebHookHandlers\Telegram\Actions\" />
-    <Folder Include="Models\" />
-    <Folder Include="Data\" />
-    <Folder Include="WebHookHandlers\Services\" />
     <Folder Include="Attributes\" />
   </ItemGroup>
   <ItemGroup>
