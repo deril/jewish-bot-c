@@ -26,10 +26,9 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - Development Tools
-- .NET Core 2.2
+- .NET Core 3.1
 - Docker
 - Docker Compose
-- Sqlite 3
 - Nginx
 
 ### Installing
@@ -59,12 +58,9 @@ For deploy using docker as a delivery tool. You need to build and publish the ap
 ## Built With
 
 * [.NET Core](https://github.com/dotnet/core) - The framework used
-* [EntityFrameworkCore](https://github.com/aspnet/EntityFrameworkCore) - Used for data access in database
 * [Telegram.Bot](https://github.com/TelegramBots/telegram.bot) - Telegram Client for .NET Core
-* [CsQuery](https://github.com/zone117x/CsQuery/) - Used to parse html
-* [Api.Forex.Sharp](https://github.com/ApiForex/Api.Forex.Sharp) - Used for getting currenty rates
+* [Api.Forex.Sharp](https://github.com/ApiForex/Api.Forex.Sharp) - Used for getting currency rates
 * [GeoTimeZone](https://github.com/mj1856/GeoTimeZone) - Used for getting timezone by location
-* [StyleCop](https://github.com/DotNetAnalyzers/StyleCopAnalyzers) - Style code analizing tool
 
 ## Contributing
 
