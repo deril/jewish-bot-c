@@ -21,4 +21,10 @@ namespace JewishBot.Actions.DuckDuckGo
         [JsonProperty("RelatedTopics")]
         public IList<RelatedTopic> RelatedTopics { get; set; }
     }
+
+    public class RelatedTopic
+    {
+        [JsonProperty("Text")]
+        public string Text { get; set; }
+    }
 }

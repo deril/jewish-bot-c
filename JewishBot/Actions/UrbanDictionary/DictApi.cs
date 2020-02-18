@@ -16,7 +16,7 @@ namespace JewishBot.Actions.UrbanDictionary
             this.clientFactory = clientFactory;
         }
 
-        public async Task<QueryModel> InvokeAsync(IReadOnlyCollection<string> arguments)
+        public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
         {
             var client = this.clientFactory.CreateClient("urbandictionary");
             var query = new Dictionary<string, string>

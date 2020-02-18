@@ -11,4 +11,10 @@ namespace JewishBot.Actions.UrbanDictionary
         [JsonProperty("errors")]
         public string Errors { get; set; }
     }
+
+    public class List
+    {
+        [JsonProperty("definition")]
+        public string Definition { get; set; }
+    }
 }

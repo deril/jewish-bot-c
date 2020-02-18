@@ -4,7 +4,6 @@ namespace JewishBot.Actions.Weather
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Attributes;
     using Microsoft.AspNetCore.WebUtilities;
 
     public class WeatherApi
@@ -16,8 +15,7 @@ namespace JewishBot.Actions.Weather
             this.clientFactory = clientFactory;
         }
 
-        [RequestRateLimit(Name = "Limit Request Number", Seconds = 2)]
-        public async Task<string> InvokeAsync(IReadOnlyCollection<string> arguments)
+        public async Task<string> InvokeAsync(IEnumerable<string> arguments)
         {
             var client = this.clientFactory.CreateClient("weatherapi");
             var query = new Dictionary<string, string>

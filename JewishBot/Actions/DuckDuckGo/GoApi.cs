@@ -16,7 +16,7 @@ namespace JewishBot.Actions.DuckDuckGo
             this.clientFactory = clientFactory;
         }
 
-        public async Task<QueryModel> InvokeAsync(IReadOnlyCollection<string> arguments)
+        public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
         {
             var client = this.clientFactory.CreateClient("duckduckgo");
             var query = new Dictionary<string, string>
