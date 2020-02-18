@@ -21,7 +21,7 @@ namespace JewishBot.Actions.UrbanDictionary
             var client = this.clientFactory.CreateClient("urbandictionary");
             var query = new Dictionary<string, string>
             {
-                { "term", string.Join(" ", arguments) }
+                {"term", string.Join(" ", arguments)}
             };
             var route = new UriBuilder(client.BaseAddress)
             {
@@ -30,7 +30,8 @@ namespace JewishBot.Actions.UrbanDictionary
 
             try
             {
-                var response = await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
+                var response =
+                    await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
                 return JsonConvert.DeserializeObject<QueryModel>(response);
             }
             catch (HttpRequestException e)

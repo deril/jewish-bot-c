@@ -6,9 +6,9 @@ namespace JewishBot.Actions
 
     internal class Echo : IAction
     {
+        private readonly IReadOnlyCollection<string> args;
         private readonly IBotService botService;
         private readonly long chatId;
-        private readonly IReadOnlyCollection<string> args;
 
         public Echo(IBotService botService, long chatId, IReadOnlyCollection<string> args)
         {

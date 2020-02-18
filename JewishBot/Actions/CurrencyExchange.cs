@@ -14,10 +14,11 @@ namespace JewishBot.Actions
 Usage: /ex [amount] [fromCurrency] in [toCurrency];
 /ex [fromCurrency] [toCurrency]";
 
-        private readonly IBotService botService;
-        private readonly long chatId;
         private readonly string apiKey;
         private readonly ReadOnlyCollection<string> args;
+
+        private readonly IBotService botService;
+        private readonly long chatId;
 
         public CurrencyExchange(IBotService botService, long chatId, ReadOnlyCollection<string> args, string key)
         {

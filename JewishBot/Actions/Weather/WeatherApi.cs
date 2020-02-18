@@ -20,7 +20,7 @@ namespace JewishBot.Actions.Weather
             var client = this.clientFactory.CreateClient("weatherapi");
             var query = new Dictionary<string, string>
             {
-                { "format", "3" }
+                {"format", "3"}
             };
             var route = new UriBuilder(client.BaseAddress)
             {
@@ -28,7 +28,8 @@ namespace JewishBot.Actions.Weather
             };
             try
             {
-                var response = await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
+                var response =
+                    await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
                 return response;
             }
             catch (HttpRequestException e)

@@ -7,12 +7,13 @@ namespace JewishBot.Actions.UrbanDictionary
 
     internal class UrbanDictionary : IAction
     {
+        private readonly IReadOnlyCollection<string> args;
         private readonly IBotService botService;
         private readonly long chatId;
         private readonly IHttpClientFactory clientFactory;
-        private readonly IReadOnlyCollection<string> args;
 
-        public UrbanDictionary(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
+        public UrbanDictionary(IBotService botService, IHttpClientFactory clientFactory, long chatId,
+            IReadOnlyCollection<string> args)
         {
             this.botService = botService;
             this.clientFactory = clientFactory;
@@ -31,7 +32,8 @@ namespace JewishBot.Actions.UrbanDictionary
                 message = result.Errors == null && result.List.Count > 0 ? result.List[0].Definition : result.Errors;
             }
 
-            await this.botService.Client.SendTextMessageAsync(this.chatId, string.IsNullOrEmpty(message) ? "Nothing found \uD83D\uDE22" : message);
+            await this.botService.Client.SendTextMessageAsync(this.chatId,
+                string.IsNullOrEmpty(message) ? "Nothing found \uD83D\uDE22" : message);
         }
     }
 }

@@ -13,10 +13,6 @@
         private const string Description = @"Predicts a future.
             Usage: /ball <question>";
 
-        private readonly IBotService botService;
-        private readonly long chatId;
-        private readonly IReadOnlyCollection<string> args;
-        private readonly Random rnd = new Random();
         private readonly List<string> answers = new List<string>
         {
             "It is certain",
@@ -36,6 +32,8 @@
             "Very doubtful"
         };
 
+        private readonly IReadOnlyCollection<string> args;
+
         private readonly List<string> askAgainAnswers = new List<string>
         {
             "Reply hazy try again",
@@ -44,6 +42,10 @@
             "Cannot predict now",
             "Concentrate and ask again"
         };
+
+        private readonly IBotService botService;
+        private readonly long chatId;
+        private readonly Random rnd = new Random();
 
         public MagicBall(IBotService botService, long chatId, IReadOnlyCollection<string> args)
         {
@@ -63,15 +65,17 @@
             if (this.rnd.Next(1, 6) == 1)
             {
                 var index = this.rnd.Next(this.askAgainAnswers.Count + 1);
-                await this.botService.Client.SendTextMessageAsync(this.chatId, this.askAgainAnswers[index]).ConfigureAwait(false);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, this.askAgainAnswers[index])
+                    .ConfigureAwait(false);
             }
             else
             {
                 using var algorithm = SHA256.Create();
                 var time = DateTime.Now.Ticks;
                 var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", this.args) + time));
-                var index = (int)(ConvertHash(hash) % this.answers.Count);
-                await this.botService.Client.SendTextMessageAsync(this.chatId, this.answers[index]).ConfigureAwait(false);
+                var index = (int) (ConvertHash(hash) % this.answers.Count);
+                await this.botService.Client.SendTextMessageAsync(this.chatId, this.answers[index])
+                    .ConfigureAwait(false);
             }
         }
 

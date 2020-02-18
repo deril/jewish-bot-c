@@ -2,20 +2,20 @@
 {
     using System.Net.Http;
     using System.Threading.Tasks;
-    using global::Telegram.Bot.Types;
     using Actions;
     using Actions.DuckDuckGo;
     using Actions.GoogleMaps;
     using Actions.RollDice;
     using Actions.UrbanDictionary;
     using Actions.Weather;
+    using global::Telegram.Bot.Types;
     using Microsoft.Extensions.Configuration;
 
     public class WebHookHandler : IWebHookHandler
     {
         private readonly IBotService botService;
-        private readonly IConfiguration configuration;
         private readonly IHttpClientFactory clientFactory;
+        private readonly IConfiguration configuration;
 
         public WebHookHandler(IBotService botService, IConfiguration configuration, IHttpClientFactory clientFactory)
         {

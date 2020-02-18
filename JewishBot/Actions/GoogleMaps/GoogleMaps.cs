@@ -7,13 +7,14 @@
 
     internal class GoogleMaps : IAction
     {
+        private readonly string apiKey;
+        private readonly IReadOnlyCollection<string> args;
         private readonly IBotService botService;
         private readonly long chatId;
         private readonly IHttpClientFactory clientFactory;
-        private readonly string apiKey;
-        private readonly IReadOnlyCollection<string> args;
 
-        public GoogleMaps(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args, string key)
+        public GoogleMaps(IBotService botService, IHttpClientFactory clientFactory, long chatId,
+            IReadOnlyCollection<string> args, string key)
         {
             this.botService = botService;
             this.clientFactory = clientFactory;

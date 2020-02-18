@@ -9,10 +9,10 @@ namespace JewishBot.Actions.RollDice
     {
         private const string CommonRollRegexPattern = "d *\\d+(?: *k *\\d+)?";
         private const string StrictRollPattern = "(?:(?:\\d* +)|(?:\\d+ *)|^)" + CommonRollRegexPattern;
+        private readonly int die;
+        private readonly int quantity;
 
         private readonly Random rnd = new Random();
-        private readonly int quantity;
-        private readonly int die;
 
         public Dice(string toParse)
         {
@@ -66,10 +66,7 @@ namespace JewishBot.Actions.RollDice
         {
             var rolls = new List<int>(this.quantity);
 
-            for (var i = 0; i < this.quantity; i++)
-            {
-                rolls.Add(this.Roll());
-            }
+            for (var i = 0; i < this.quantity; i++) rolls.Add(this.Roll());
 
             return rolls;
         }

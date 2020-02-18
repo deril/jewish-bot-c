@@ -23,8 +23,8 @@
             var client = this.clientFactory.CreateClient("googleapis");
             var query = new Dictionary<string, string>
             {
-                { "address", string.Join(string.Empty, arguments) },
-                { "key", this.apiKey }
+                {"address", string.Join(string.Empty, arguments)},
+                {"key", this.apiKey}
             };
             var route = new UriBuilder(client.BaseAddress)
             {
@@ -33,7 +33,8 @@
 
             try
             {
-                var response = await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
+                var response =
+                    await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
                 return JsonConvert.DeserializeObject<QueryModel>(response);
             }
             catch (HttpRequestException e)

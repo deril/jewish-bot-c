@@ -21,13 +21,15 @@ namespace JewishBot.Actions.DuckDuckGo
             var client = this.clientFactory.CreateClient("duckduckgo");
             var query = new Dictionary<string, string>
             {
-                { "q", string.Join(string.Empty, arguments) },
-                { "format", "json" }
+                {"q", string.Join(string.Empty, arguments)},
+                {"format", "json"}
             };
 
             try
             {
-                var response = await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(client.BaseAddress.ToString(), query)));
+                var response =
+                    await client.GetStringAsync(
+                        new Uri(QueryHelpers.AddQueryString(client.BaseAddress.ToString(), query)));
                 return JsonConvert.DeserializeObject<QueryModel>(response);
             }
             catch (HttpRequestException e)

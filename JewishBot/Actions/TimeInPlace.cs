@@ -14,11 +14,12 @@
         private const string Description = @"Returns time in specified location
 Usage: /timein location";
 
+        private readonly string apiKey;
+        private readonly IReadOnlyCollection<string> args;
+
         private readonly IBotService botService;
         private readonly long chatId;
-        private readonly string apiKey;
         private readonly IHttpClientFactory clientFactory;
-        private readonly IReadOnlyCollection<string> args;
 
         public TimeInPlace(IBotService botService, IHttpClientFactory clientFactory, long chatId,
             IReadOnlyCollection<string> args, string key)
@@ -28,12 +29,6 @@ Usage: /timein location";
             this.chatId = chatId;
             this.args = args;
             this.apiKey = key;
-        }
-
-        private enum Status
-        {
-            Ok,
-            Error
         }
 
         public async Task HandleAsync()
@@ -73,6 +68,12 @@ Usage: /timein location";
             return response.Status == "OK"
                 ? new Tuple<Status, Location>(Status.Ok, response.Results[0].Geometry.Location)
                 : new Tuple<Status, Location>(Status.Error, null);
+        }
+
+        private enum Status
+        {
+            Ok,
+            Error
         }
     }
 }

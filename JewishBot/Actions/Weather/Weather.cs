@@ -7,12 +7,13 @@ namespace JewishBot.Actions.Weather
 
     internal class Weather : IAction
     {
+        private readonly IReadOnlyCollection<string> args;
         private readonly IBotService botService;
         private readonly long chatId;
         private readonly IHttpClientFactory clientFactory;
-        private readonly IReadOnlyCollection<string> args;
 
-        public Weather(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
+        public Weather(IBotService botService, IHttpClientFactory clientFactory, long chatId,
+            IReadOnlyCollection<string> args)
         {
             this.botService = botService;
             this.clientFactory = clientFactory;
@@ -27,6 +28,7 @@ namespace JewishBot.Actions.Weather
                 await this.botService.Client.SendTextMessageAsync(this.chatId, "Please specify a city or region");
                 return;
             }
+
             var weatherApi = new WeatherApi(this.clientFactory);
             var response = await weatherApi.InvokeAsync(this.args);
             if (string.IsNullOrEmpty(response))
@@ -34,6 +36,7 @@ namespace JewishBot.Actions.Weather
                 await this.botService.Client.SendTextMessageAsync(this.chatId, "Nothing \uD83D\uDE22");
                 return;
             }
+
             await this.botService.Client.SendTextMessageAsync(this.chatId, response);
         }
     }

@@ -7,10 +7,12 @@ namespace JewishBot.WebHookHandlers.Telegram
 
     public class BotService : IBotService
     {
-
         public BotService(IOptions<BotConfiguration> config)
         {
-            if (config is null) throw new ArgumentNullException($"{nameof(config)} cannot be null");
+            if (config is null)
+            {
+                throw new ArgumentNullException($"{nameof(config)} cannot be null");
+            }
 
             var configuration = config.Value;
             this.Client = new TelegramBotClient(configuration.BotToken);

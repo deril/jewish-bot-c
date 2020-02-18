@@ -7,10 +7,10 @@ namespace JewishBot.Actions.RollDice
     internal class RollDice : IAction
     {
         private const string DefaultPattern = "1d6";
+        private readonly ReadOnlyCollection<string> args;
+        private readonly IBotService botService;
         private readonly long chatId;
         private readonly string username;
-        private readonly IBotService botService;
-        private readonly ReadOnlyCollection<string> args;
 
         public RollDice(IBotService botService, long chatId, ReadOnlyCollection<string> args, string username)
         {

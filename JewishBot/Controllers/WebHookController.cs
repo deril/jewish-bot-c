@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using JewishBot.WebHookHandlers.Telegram;
-using Microsoft.Extensions.Logging;
-
-namespace JewishBot.Controllers
+﻿namespace JewishBot.Controllers
 {
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using Telegram.Bot.Types;
+    using Telegram.Bot.Types.Enums;
+    using WebHookHandlers.Telegram;
+
     [ApiController]
     [Route("[controller]")]
     public class WebHookController : Controller
@@ -36,7 +36,10 @@ namespace JewishBot.Controllers
         [Route("Post")]
         public async Task<StatusCodeResult> Post(Update update)
         {
-            if (update is null) return this.BadRequest();
+            if (update is null)
+            {
+                return this.BadRequest();
+            }
 
             var message = update.Message;
             if (CannotHandleMessage(message))

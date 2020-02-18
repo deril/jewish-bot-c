@@ -7,12 +7,13 @@ namespace JewishBot.Actions.DuckDuckGo
 
     internal class DuckDuckGo : IAction
     {
+        private readonly IReadOnlyCollection<string> args;
         private readonly IBotService botService;
         private readonly long chatId;
         private readonly IHttpClientFactory clientFactory;
-        private readonly IReadOnlyCollection<string> args;
 
-        public DuckDuckGo(IBotService botService, IHttpClientFactory clientFactory, long chatId, IReadOnlyCollection<string> args)
+        public DuckDuckGo(IBotService botService, IHttpClientFactory clientFactory, long chatId,
+            IReadOnlyCollection<string> args)
         {
             this.botService = botService;
             this.clientFactory = clientFactory;
