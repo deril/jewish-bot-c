@@ -3,12 +3,12 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using global::Telegram.Bot.Types;
-    using JewishBot.Actions;
-    using JewishBot.Actions.DuckDuckGo;
-    using JewishBot.Actions.GoogleMaps;
-    using JewishBot.Actions.RollDice;
-    using JewishBot.Actions.UrbanDictionary;
-    using JewishBot.Actions.Weather;
+    using Actions;
+    using Actions.DuckDuckGo;
+    using Actions.GoogleMaps;
+    using Actions.RollDice;
+    using Actions.UrbanDictionary;
+    using Actions.Weather;
     using Microsoft.Extensions.Configuration;
 
     public class WebHookHandler : IWebHookHandler

@@ -16,11 +16,11 @@ namespace JewishBot.Attributes
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var memoryCacheKey = Name;
+            var memoryCacheKey = this.Name;
             if (!Cache.TryGetValue(memoryCacheKey, out bool _))
             {
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(Seconds));
+                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(this.Seconds));
 
                 Cache.Set(memoryCacheKey, true, cacheEntryOptions);
             }
@@ -28,7 +28,7 @@ namespace JewishBot.Attributes
             {
                 context.Result = new ContentResult
                 {
-                    Content = $"Requests are limited to 1, every {Seconds} seconds.",
+                    Content = $"Requests are limited to 1, every {this.Seconds} seconds.",
                 };
 
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
