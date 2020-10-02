@@ -6,7 +6,6 @@ namespace JewishBot.Actions.RollDice
 
     internal class RollDice : IAction
     {
-        private const string DefaultPattern = "1d6";
         private readonly ReadOnlyCollection<string> args;
         private readonly IBotService botService;
         private readonly long chatId;
@@ -22,9 +21,13 @@ namespace JewishBot.Actions.RollDice
 
         public async Task HandleAsync()
         {
-            var toParse = this.IsParsableArguments() ? this.args[0] : DefaultPattern;
-            var result = new Dice(toParse);
+            if (!this.IsParsableArguments())
+            {
+                await this.botService.Client.SendDiceAsync(this.chatId);
+                return;
+            }
 
+            var result = new Dice(this.args[0]);
             var message = result.GetSum();
 
             await this.botService.Client.SendTextMessageAsync(this.chatId, $"{this.username}: \uD83C\uDFB2 {message}");

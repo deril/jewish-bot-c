@@ -44,9 +44,11 @@
             var message = update.Message;
             if (CannotHandleMessage(message))
             {
-                this.logger.Log(LogLevel.Information, $"Cannot handle message {message}");
                 return this.Ok();
             }
+
+            this.logger.LogWarning(
+                $"Input for bot: Message from {message.Chat.Id}/{message.From.Username}, Text: {message.Text}");
 
             await this.handler.OnMessageReceived(message).ConfigureAwait(true);
 

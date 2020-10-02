@@ -8,20 +8,25 @@
     using Actions.RollDice;
     using Actions.UrbanDictionary;
     using Actions.Weather;
+    using global::Telegram.Bot.Exceptions;
     using global::Telegram.Bot.Types;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
 
     public class WebHookHandler : IWebHookHandler
     {
         private readonly IBotService botService;
         private readonly IHttpClientFactory clientFactory;
         private readonly IConfiguration configuration;
+        private readonly ILogger<WebHookHandler> logger;
 
-        public WebHookHandler(IBotService botService, IConfiguration configuration, IHttpClientFactory clientFactory)
+        public WebHookHandler(IBotService botService, IConfiguration configuration, IHttpClientFactory clientFactory,
+            ILogger<WebHookHandler> logger)
         {
             this.botService = botService;
             this.configuration = configuration;
             this.clientFactory = clientFactory;
+            this.logger = logger;
         }
 
         public async Task OnMessageReceived(Message message)
@@ -51,7 +56,14 @@
                 _ => new NoCommand()
             };
 
-            await cmd.HandleAsync();
+            try
+            {
+                await cmd.HandleAsync();
+            }
+            catch (ApiRequestException e)
+            {
+                this.logger.LogError($"Cannot execute command, error {e.Message}");
+            }
         }
     }
 }
