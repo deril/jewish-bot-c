@@ -1,5 +1,6 @@
 ﻿namespace JewishBot.WebHookHandlers.Telegram
 {
+    using System;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Actions;
@@ -8,7 +9,6 @@
     using Actions.RollDice;
     using Actions.UrbanDictionary;
     using Actions.Weather;
-    using global::Telegram.Bot.Exceptions;
     using global::Telegram.Bot.Types;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -60,7 +60,7 @@
             {
                 await cmd.HandleAsync();
             }
-            catch (ApiRequestException e)
+            catch (Exception e)
             {
                 this.logger.LogError($"Cannot execute command, error {e.Message}");
             }
