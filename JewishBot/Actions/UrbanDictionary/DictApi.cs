@@ -9,16 +9,16 @@ namespace JewishBot.Actions.UrbanDictionary
 
     public class DictApi
     {
-        private readonly IHttpClientFactory clientFactory;
+        private readonly IHttpClientFactory _clientFactory;
 
         public DictApi(IHttpClientFactory clientFactory)
         {
-            this.clientFactory = clientFactory;
+            _clientFactory = clientFactory;
         }
 
         public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
         {
-            var client = this.clientFactory.CreateClient("urbandictionary");
+            var client = _clientFactory.CreateClient("urbandictionary");
             var query = new Dictionary<string, string>
             {
                 {"term", string.Join(" ", arguments)}

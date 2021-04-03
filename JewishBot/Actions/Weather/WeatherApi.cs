@@ -8,16 +8,16 @@ namespace JewishBot.Actions.Weather
 
     public class WeatherApi
     {
-        private readonly IHttpClientFactory clientFactory;
+        private readonly IHttpClientFactory _clientFactory;
 
         public WeatherApi(IHttpClientFactory clientFactory)
         {
-            this.clientFactory = clientFactory;
+            _clientFactory = clientFactory;
         }
 
         public async Task<string> InvokeAsync(IEnumerable<string> arguments)
         {
-            var client = this.clientFactory.CreateClient("weatherapi");
+            var client = _clientFactory.CreateClient("weatherapi");
             var query = new Dictionary<string, string>
             {
                 {"format", "3"}

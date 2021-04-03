@@ -9,22 +9,22 @@
 
     public class GoogleMapsApi
     {
-        private readonly string apiKey;
-        private readonly IHttpClientFactory clientFactory;
+        private readonly string _apiKey;
+        private readonly IHttpClientFactory _clientFactory;
 
         public GoogleMapsApi(IHttpClientFactory clientFactory, string apiKey)
         {
-            this.clientFactory = clientFactory;
-            this.apiKey = apiKey;
+            _clientFactory = clientFactory;
+            _apiKey = apiKey;
         }
 
         public async Task<QueryModel> InvokeAsync(IReadOnlyCollection<string> arguments)
         {
-            var client = this.clientFactory.CreateClient("googleapis");
+            var client = _clientFactory.CreateClient("googleapis");
             var query = new Dictionary<string, string>
             {
                 {"address", string.Join(string.Empty, arguments)},
-                {"key", this.apiKey}
+                {"key", _apiKey}
             };
             var route = new UriBuilder(client.BaseAddress)
             {

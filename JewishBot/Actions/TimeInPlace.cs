@@ -14,41 +14,41 @@
         private const string Description = @"Returns time in specified location
 Usage: /timein location";
 
-        private readonly string apiKey;
-        private readonly IReadOnlyCollection<string> args;
+        private readonly string _apiKey;
+        private readonly IReadOnlyCollection<string> _args;
 
-        private readonly IBotService botService;
-        private readonly long chatId;
-        private readonly IHttpClientFactory clientFactory;
+        private readonly IBotService _botService;
+        private readonly long _chatId;
+        private readonly IHttpClientFactory _clientFactory;
 
         public TimeInPlace(IBotService botService, IHttpClientFactory clientFactory, long chatId,
             IReadOnlyCollection<string> args, string key)
         {
-            this.botService = botService;
-            this.clientFactory = clientFactory;
-            this.chatId = chatId;
-            this.args = args;
-            this.apiKey = key;
+            _botService = botService;
+            _clientFactory = clientFactory;
+            _chatId = chatId;
+            _args = args;
+            _apiKey = key;
         }
 
         public async Task HandleAsync()
         {
-            if (this.args == null)
+            if (_args == null)
             {
-                await this.botService.Client.SendTextMessageAsync(this.chatId, Description);
+                await _botService.Client.SendTextMessageAsync(_chatId, Description);
                 return;
             }
 
-            var (status, location) = await this.GetLocationAsync(this.args);
+            var (status, location) = await GetLocationAsync(_args);
             if (status == Status.Error)
             {
                 const string errorMessage = "Something goes wrong \uD83D\uDE22";
-                await this.botService.Client.SendTextMessageAsync(this.chatId, errorMessage);
+                await _botService.Client.SendTextMessageAsync(_chatId, errorMessage);
                 return;
             }
 
             var time = GetTimeInLocation(location);
-            await this.botService.Client.SendTextMessageAsync(this.chatId, $"In {string.Join(" ", this.args)}: {time}");
+            await _botService.Client.SendTextMessageAsync(_chatId, $"In {string.Join(" ", _args)}: {time}");
         }
 
         private static string GetTimeInLocation(Location location)
@@ -62,7 +62,7 @@ Usage: /timein location";
 
         private async Task<Tuple<Status, Location>> GetLocationAsync(IReadOnlyCollection<string> place)
         {
-            var mapsApi = new GoogleMapsApi(this.clientFactory, this.apiKey);
+            var mapsApi = new GoogleMapsApi(_clientFactory, _apiKey);
             var response = await mapsApi.InvokeAsync(place);
 
             return response.Status == "OK"

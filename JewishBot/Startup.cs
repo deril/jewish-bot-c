@@ -12,7 +12,7 @@
     {
         public Startup(IConfiguration configuration)
         {
-            this.Configuration = configuration;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -21,12 +21,12 @@
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            DependencyInjectionConfig.AddScope(services, this.Configuration);
+            DependencyInjectionConfig.AddScope(services, Configuration);
             services.AddSingleton<IBotService, BotService>()
                 .AddScoped<WebHookLogger>();
             services.AddControllers().AddNewtonsoftJson();
 
-            services.Configure<BotConfiguration>(this.Configuration.GetSection("BotConfiguration"));
+            services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

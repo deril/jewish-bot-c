@@ -9,31 +9,31 @@ namespace JewishBot.Actions.RollDice
     {
         private const string CommonRollRegexPattern = "d *\\d+(?: *k *\\d+)?";
         private const string StrictRollPattern = "(?:(?:\\d* +)|(?:\\d+ *)|^)" + CommonRollRegexPattern;
-        private readonly int die;
-        private readonly int quantity;
+        private readonly int _die;
+        private readonly int _quantity;
 
-        private readonly Random rnd = new Random();
+        private readonly Random _rnd = new Random();
 
         public Dice(string toParse)
         {
             var sections = toParse.Split('d');
             if (!string.IsNullOrEmpty(sections[0]))
             {
-                if (!int.TryParse(sections[1], out this.die))
+                if (!int.TryParse(sections[1], out _die))
                 {
-                    this.die = 6;
+                    _die = 6;
                 }
             }
 
-            this.quantity = 1;
+            _quantity = 1;
             if (string.IsNullOrEmpty(sections[0]))
             {
                 return;
             }
 
-            if (!int.TryParse(sections[0], out this.quantity))
+            if (!int.TryParse(sections[0], out _quantity))
             {
-                this.quantity = 1;
+                _quantity = 1;
             }
         }
 
@@ -53,20 +53,20 @@ namespace JewishBot.Actions.RollDice
 
         public int GetSum()
         {
-            var rolls = this.GetRolls();
+            var rolls = GetRolls();
             return rolls.Sum();
         }
 
         private int Roll()
         {
-            return this.rnd.Next(this.die) + 1;
+            return _rnd.Next(_die) + 1;
         }
 
         private IEnumerable<int> GetRolls()
         {
-            var rolls = new List<int>(this.quantity);
+            var rolls = new List<int>(_quantity);
 
-            for (var i = 0; i < this.quantity; i++) rolls.Add(this.Roll());
+            for (var i = 0; i < _quantity; i++) rolls.Add(Roll());
 
             return rolls;
         }

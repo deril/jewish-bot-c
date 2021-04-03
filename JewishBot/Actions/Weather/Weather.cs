@@ -7,37 +7,37 @@ namespace JewishBot.Actions.Weather
 
     internal class Weather : IAction
     {
-        private readonly IReadOnlyCollection<string> args;
-        private readonly IBotService botService;
-        private readonly long chatId;
-        private readonly IHttpClientFactory clientFactory;
+        private readonly IReadOnlyCollection<string> _args;
+        private readonly IBotService _botService;
+        private readonly long _chatId;
+        private readonly IHttpClientFactory _clientFactory;
 
         public Weather(IBotService botService, IHttpClientFactory clientFactory, long chatId,
             IReadOnlyCollection<string> args)
         {
-            this.botService = botService;
-            this.clientFactory = clientFactory;
-            this.chatId = chatId;
-            this.args = args;
+            _botService = botService;
+            _clientFactory = clientFactory;
+            _chatId = chatId;
+            _args = args;
         }
 
         public async Task HandleAsync()
         {
-            if (this.args == null)
+            if (_args == null)
             {
-                await this.botService.Client.SendTextMessageAsync(this.chatId, "Please specify a city or region");
+                await _botService.Client.SendTextMessageAsync(_chatId, "Please specify a city or region");
                 return;
             }
 
-            var weatherApi = new WeatherApi(this.clientFactory);
-            var response = await weatherApi.InvokeAsync(this.args);
+            var weatherApi = new WeatherApi(_clientFactory);
+            var response = await weatherApi.InvokeAsync(_args);
             if (string.IsNullOrEmpty(response))
             {
-                await this.botService.Client.SendTextMessageAsync(this.chatId, "Nothing \uD83D\uDE22");
+                await _botService.Client.SendTextMessageAsync(_chatId, "Nothing \uD83D\uDE22");
                 return;
             }
 
-            await this.botService.Client.SendTextMessageAsync(this.chatId, response);
+            await _botService.Client.SendTextMessageAsync(_chatId, response);
         }
     }
 }

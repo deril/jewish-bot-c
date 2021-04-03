@@ -12,13 +12,13 @@
     [Route("[controller]")]
     public class WebHookController : Controller
     {
-        private readonly IWebHookHandler handler;
-        private readonly ILogger<WebHookController> logger;
+        private readonly IWebHookHandler _handler;
+        private readonly ILogger<WebHookController> _logger;
 
         public WebHookController(IWebHookHandler webHook, ILogger<WebHookController> logger)
         {
-            this.handler = webHook;
-            this.logger = logger;
+            _handler = webHook;
+            _logger = logger;
         }
 
         // GET: /WebHook/
@@ -38,21 +38,21 @@
         {
             if (update is null)
             {
-                return this.BadRequest();
+                return BadRequest();
             }
 
             var message = update.Message;
             if (CannotHandleMessage(message))
             {
-                return this.Ok();
+                return Ok();
             }
 
-            this.logger.LogWarning(
+            _logger.LogWarning(
                 $"Input for bot: Message from {message.Chat.Id}/{message.From.Username}, Text: {message.Text}");
 
-            await this.handler.OnMessageReceived(message).ConfigureAwait(true);
+            await _handler.OnMessageReceived(message).ConfigureAwait(true);
 
-            return this.Ok();
+            return Ok();
         }
 
         private static bool CannotHandleMessage(Message message)

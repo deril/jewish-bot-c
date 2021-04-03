@@ -1,13 +1,13 @@
 namespace JewishBot.WebHookHandlers.Telegram
 {
     using System;
-    using System.IO;
     using global::Telegram.Bot;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 
     public class BotService : IBotService
     {
-        public BotService(IOptions<BotConfiguration> config)
+        public BotService(IOptions<BotConfiguration> config, ILogger<BotService> logger)
         {
             if (config is null)
             {
@@ -15,19 +15,29 @@ namespace JewishBot.WebHookHandlers.Telegram
             }
 
             var configuration = config.Value;
-            this.Client = new TelegramBotClient(configuration.BotToken);
+            Client = new TelegramBotClient(configuration.BotToken);
+            IsPrivateMode = configuration.PrivateMode;
+            PrivateChetId = configuration.PrivateChetId;
 
+            UpdateWebHook(logger, configuration);
+        }
+
+        private void UpdateWebHook(ILogger logger, BotConfiguration configuration)
+        {
             var webHookUrl = $"https://{configuration.HostN}/WebHook/Post";
-            var webHookInfo = this.Client.GetWebhookInfoAsync().GetAwaiter();
-            if (webHookInfo.GetResult().Url == webHookUrl)
+            var webHookInfo = Client.GetWebhookInfoAsync().GetAwaiter();
+            var setWebHookUrl = webHookInfo.GetResult().Url;
+            logger.LogWarning("Webhook set on the server: {SetWebHookUrl}", setWebHookUrl);
+            if (setWebHookUrl == webHookUrl)
             {
                 return;
             }
 
-            using var certificate = File.OpenRead("jewish_bot.pem");
-            this.Client.SetWebhookAsync(webHookUrl, certificate).Wait();
+            Client.SetWebhookAsync(webHookUrl).Wait();
         }
 
         public TelegramBotClient Client { get; }
+        public bool IsPrivateMode { get; }
+        public long PrivateChetId { get; }
     }
 }

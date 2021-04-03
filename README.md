@@ -26,10 +26,9 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - Development Tools
-- .NET Core 3.1
+- .NET 5.0
 - Docker
 - Docker Compose
-- Nginx
 
 ### Installing
 

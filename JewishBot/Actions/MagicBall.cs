@@ -13,7 +13,7 @@
         private const string Description = @"Predicts a future.
             Usage: /ball <question>";
 
-        private readonly List<string> answers = new List<string>
+        private readonly List<string> _answers = new()
         {
             "It is certain",
             "It is decidedly so",
@@ -32,9 +32,9 @@
             "Very doubtful"
         };
 
-        private readonly IReadOnlyCollection<string> args;
+        private readonly IReadOnlyCollection<string> _args;
 
-        private readonly List<string> askAgainAnswers = new List<string>
+        private readonly List<string> _askAgainAnswers = new()
         {
             "Reply hazy try again",
             "Ask again later",
@@ -43,38 +43,38 @@
             "Concentrate and ask again"
         };
 
-        private readonly IBotService botService;
-        private readonly long chatId;
-        private readonly Random rnd = new Random();
+        private readonly IBotService _botService;
+        private readonly long _chatId;
+        private readonly Random _rnd = new Random();
 
         public MagicBall(IBotService botService, long chatId, IReadOnlyCollection<string> args)
         {
-            this.botService = botService;
-            this.chatId = chatId;
-            this.args = args;
+            _botService = botService;
+            _chatId = chatId;
+            _args = args;
         }
 
         public async Task HandleAsync()
         {
-            if (this.args == null)
+            if (_args == null)
             {
-                await this.botService.Client.SendTextMessageAsync(this.chatId, Description).ConfigureAwait(false);
+                await _botService.Client.SendTextMessageAsync(_chatId, Description).ConfigureAwait(false);
                 return;
             }
 
-            if (this.rnd.Next(1, 6) == 1)
+            if (_rnd.Next(1, 6) == 1)
             {
-                var index = this.rnd.Next(this.askAgainAnswers.Count + 1);
-                await this.botService.Client.SendTextMessageAsync(this.chatId, this.askAgainAnswers[index])
+                var index = _rnd.Next(_askAgainAnswers.Count + 1);
+                await _botService.Client.SendTextMessageAsync(_chatId, _askAgainAnswers[index])
                     .ConfigureAwait(false);
             }
             else
             {
                 using var algorithm = SHA256.Create();
                 var time = DateTime.Now.Ticks;
-                var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", this.args) + time));
-                var index = (int) (ConvertHash(hash) % this.answers.Count);
-                await this.botService.Client.SendTextMessageAsync(this.chatId, this.answers[index])
+                var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", _args) + time));
+                var index = (int) (ConvertHash(hash) % _answers.Count);
+                await _botService.Client.SendTextMessageAsync(_chatId, _answers[index])
                     .ConfigureAwait(false);
             }
         }

@@ -1,9 +1,10 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+LABEL org.opencontainers.image.source=https://github.com/deril/jewish-bot-c
 WORKDIR /app
 ENV ASPNETCORE_URLS http://+:5000
 EXPOSE 5000
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /src
 COPY JewishBot.csproj ./
 RUN dotnet restore ./JewishBot.csproj

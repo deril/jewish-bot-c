@@ -11,25 +11,25 @@
 
         public CommandParser(string msg)
         {
-            this.Message = msg;
+            Message = msg;
         }
 
         private string Message { get; }
 
         public Command Parse()
         {
-            var firstSpace = this.Message.IndexOf(MainDelimiter, StringComparison.OrdinalIgnoreCase);
+            var firstSpace = Message.IndexOf(MainDelimiter, StringComparison.OrdinalIgnoreCase);
             string name;
             var args = new ReadOnlyCollection<string>(new List<string>());
 
             if (firstSpace == -1)
             {
-                name = this.Message.Substring(1);
+                name = Message.Substring(1);
             }
             else
             {
-                name = this.Message.Substring(1, firstSpace - 1);
-                args = Array.AsReadOnly(this.Message.Substring(firstSpace + 1).Split());
+                name = Message.Substring(1, firstSpace - 1);
+                args = Array.AsReadOnly(Message.Substring(firstSpace + 1).Split());
             }
 
             var botNameDelimiterIndex = name.IndexOf(BotNameDelimiter, StringComparison.OrdinalIgnoreCase);

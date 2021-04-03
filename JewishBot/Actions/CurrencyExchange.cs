@@ -14,24 +14,24 @@ namespace JewishBot.Actions
 Usage: /ex [amount] [fromCurrency] in [toCurrency];
 /ex [fromCurrency] [toCurrency]";
 
-        private readonly string apiKey;
-        private readonly ReadOnlyCollection<string> args;
+        private readonly string _apiKey;
+        private readonly ReadOnlyCollection<string> _args;
 
-        private readonly IBotService botService;
-        private readonly long chatId;
+        private readonly IBotService _botService;
+        private readonly long _chatId;
 
         public CurrencyExchange(IBotService botService, long chatId, ReadOnlyCollection<string> args, string key)
         {
-            this.botService = botService;
-            this.chatId = chatId;
-            this.args = args;
-            this.apiKey = key;
+            _botService = botService;
+            _chatId = chatId;
+            _args = args;
+            _apiKey = key;
         }
 
         public async Task HandleAsync()
         {
-            var message = this.PrepareMessage();
-            await this.botService.Client.SendTextMessageAsync(this.chatId, message);
+            var message = PrepareMessage();
+            await _botService.Client.SendTextMessageAsync(_chatId, message);
         }
 
         private string PrepareMessage()
@@ -40,25 +40,25 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
             string toCurrency;
             decimal amount = 0;
 
-            if (this.IsInvalidArguments())
+            if (IsInvalidArguments())
             {
                 return Description;
             }
 
-            switch (this.args.Count)
+            switch (_args.Count)
             {
                 case 2:
-                    fromCurrency = this.args[0];
-                    toCurrency = this.args[1];
+                    fromCurrency = _args[0];
+                    toCurrency = _args[1];
                     break;
                 case 4:
-                    if (!decimal.TryParse(this.args[0], out amount))
+                    if (!decimal.TryParse(_args[0], out amount))
                     {
                         amount = 0;
                     }
 
-                    fromCurrency = this.args[1];
-                    toCurrency = this.args[3];
+                    fromCurrency = _args[1];
+                    toCurrency = _args[3];
                     break;
                 default:
                     return Description;
@@ -67,7 +67,7 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
             try
             {
                 var culture = new CultureInfo("uk-UA", true);
-                var financeApi = ApiForex.GetRate(this.apiKey).Result;
+                var financeApi = ApiForex.GetRate(_apiKey).Result;
                 var value = financeApi.Convert(toCurrency.ToUpper(culture), fromCurrency.ToUpper(culture), amount);
                 return $"{amount} {fromCurrency} -> {value:0.00} {toCurrency}";
             }
@@ -80,7 +80,7 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
 
         private bool IsInvalidArguments()
         {
-            return this.args == null || this.args.Any(argument => argument == null);
+            return _args == null || _args.Any(argument => argument == null);
         }
     }
 }

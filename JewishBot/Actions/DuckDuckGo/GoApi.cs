@@ -9,16 +9,16 @@ namespace JewishBot.Actions.DuckDuckGo
 
     public class GoApi
     {
-        private readonly IHttpClientFactory clientFactory;
+        private readonly IHttpClientFactory _clientFactory;
 
         public GoApi(IHttpClientFactory clientFactory)
         {
-            this.clientFactory = clientFactory;
+            _clientFactory = clientFactory;
         }
 
         public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
         {
-            var client = this.clientFactory.CreateClient("duckduckgo");
+            var client = _clientFactory.CreateClient("duckduckgo");
             var query = new Dictionary<string, string>
             {
                 {"q", string.Join(string.Empty, arguments)},

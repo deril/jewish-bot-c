@@ -6,25 +6,25 @@ namespace JewishBot.Actions
 
     internal class Echo : IAction
     {
-        private readonly IReadOnlyCollection<string> args;
-        private readonly IBotService botService;
-        private readonly long chatId;
+        private readonly IReadOnlyCollection<string> _args;
+        private readonly IBotService _botService;
+        private readonly long _chatId;
 
         public Echo(IBotService botService, long chatId, IReadOnlyCollection<string> args)
         {
-            this.botService = botService;
-            this.chatId = chatId;
-            this.args = args;
+            _botService = botService;
+            _chatId = chatId;
+            _args = args;
         }
 
         public async Task HandleAsync()
         {
-            if (this.args == null)
+            if (_args == null)
             {
                 return;
             }
 
-            await this.botService.Client.SendTextMessageAsync(this.chatId, string.Join(" ", this.args));
+            await _botService.Client.SendTextMessageAsync(_chatId, string.Join(" ", _args));
         }
     }
 }

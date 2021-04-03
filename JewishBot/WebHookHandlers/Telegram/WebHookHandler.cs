@@ -15,18 +15,18 @@
 
     public class WebHookHandler : IWebHookHandler
     {
-        private readonly IBotService botService;
-        private readonly IHttpClientFactory clientFactory;
-        private readonly IConfiguration configuration;
-        private readonly ILogger<WebHookHandler> logger;
+        private readonly IBotService _botService;
+        private readonly IHttpClientFactory _clientFactory;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<WebHookHandler> _logger;
 
         public WebHookHandler(IBotService botService, IConfiguration configuration, IHttpClientFactory clientFactory,
             ILogger<WebHookHandler> logger)
         {
-            this.botService = botService;
-            this.configuration = configuration;
-            this.clientFactory = clientFactory;
-            this.logger = logger;
+            _botService = botService;
+            _configuration = configuration;
+            _clientFactory = clientFactory;
+            _logger = logger;
         }
 
         public async Task OnMessageReceived(Message message)
@@ -37,24 +37,31 @@
                 ? $"{message.From.FirstName} {message.From.LastName}"
                 : message.From.Username;
 
-            IAction cmd = command.Name switch
+            IAction cmd;
+            if (_botService.IsPrivateMode && chatId != _botService.PrivateChetId)
             {
-                "echo" => new Echo(this.botService, chatId, command.Arguments),
-                "hey" => new Hey(this.botService, chatId),
-                "ex" => new CurrencyExchange(this.botService, chatId, command.Arguments,
-                    this.configuration["apiForexKey"]),
-                "ud" => new UrbanDictionary(this.botService, this.clientFactory, chatId, command.Arguments),
-                "go" => new DuckDuckGo(this.botService, this.clientFactory, chatId, command.Arguments),
-                "dice" => new RollDice(this.botService, chatId, command.Arguments, username),
-                "l" => new GoogleMaps(this.botService, this.clientFactory, chatId, command.Arguments,
-                    this.configuration["googleApiKey"]),
-                "weekday" => new WeekDay(this.botService, chatId),
-                "timein" => new TimeInPlace(this.botService, this.clientFactory, chatId, command.Arguments,
-                    this.configuration["googleApiKey"]),
-                "ball" => new MagicBall(this.botService, chatId, command.Arguments),
-                "weather" => new Weather(this.botService, this.clientFactory, chatId, command.Arguments),
-                _ => new NoCommand()
-            };
+                cmd = new NoCommand();
+            }
+            else
+            {
+                cmd = command.Name switch
+                {
+                    "echo" => new Echo(_botService, chatId, command.Arguments),
+                    "hey" => new Hey(_botService, chatId),
+                    "ex" => new CurrencyExchange(_botService, chatId, command.Arguments, _configuration["apiForexKey"]),
+                    "ud" => new UrbanDictionary(_botService, _clientFactory, chatId, command.Arguments),
+                    "go" => new DuckDuckGo(_botService, _clientFactory, chatId, command.Arguments),
+                    "dice" => new RollDice(_botService, chatId, command.Arguments, username),
+                    "l" => new GoogleMaps(_botService, _clientFactory, chatId, command.Arguments,
+                        _configuration["googleApiKey"]),
+                    "weekday" => new WeekDay(_botService, chatId),
+                    "timein" => new TimeInPlace(_botService, _clientFactory, chatId, command.Arguments,
+                        _configuration["googleApiKey"]),
+                    "ball" => new MagicBall(_botService, chatId, command.Arguments),
+                    "weather" => new Weather(_botService, _clientFactory, chatId, command.Arguments),
+                    _ => new NoCommand()
+                };
+            }
 
             try
             {
@@ -62,7 +69,7 @@
             }
             catch (Exception e)
             {
-                this.logger.LogError($"Cannot execute command, error {e.Message}");
+                _logger.LogError("Cannot execute command, error {Message}", e.Message);
             }
         }
     }

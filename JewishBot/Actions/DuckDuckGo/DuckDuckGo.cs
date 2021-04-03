@@ -7,27 +7,27 @@ namespace JewishBot.Actions.DuckDuckGo
 
     internal class DuckDuckGo : IAction
     {
-        private readonly IReadOnlyCollection<string> args;
-        private readonly IBotService botService;
-        private readonly long chatId;
-        private readonly IHttpClientFactory clientFactory;
+        private readonly IReadOnlyCollection<string> _args;
+        private readonly IBotService _botService;
+        private readonly long _chatId;
+        private readonly IHttpClientFactory _clientFactory;
 
         public DuckDuckGo(IBotService botService, IHttpClientFactory clientFactory, long chatId,
             IReadOnlyCollection<string> args)
         {
-            this.botService = botService;
-            this.clientFactory = clientFactory;
-            this.chatId = chatId;
-            this.args = args;
+            _botService = botService;
+            _clientFactory = clientFactory;
+            _chatId = chatId;
+            _args = args;
         }
 
         public async Task HandleAsync()
         {
             var message = "Please specify at least 1 search term";
-            if (this.args != null)
+            if (_args != null)
             {
-                var go = new GoApi(this.clientFactory);
-                var result = await go.InvokeAsync(this.args);
+                var go = new GoApi(_clientFactory);
+                var result = await go.InvokeAsync(_args);
                 message = result.Type switch
                 {
                     "A" => result.AbstractText,
@@ -38,7 +38,7 @@ namespace JewishBot.Actions.DuckDuckGo
                 };
             }
 
-            await this.botService.Client.SendTextMessageAsync(this.chatId, message ?? "Nothing found \uD83D\uDE22");
+            await _botService.Client.SendTextMessageAsync(_chatId, message ?? "Nothing found \uD83D\uDE22");
         }
     }
 }
