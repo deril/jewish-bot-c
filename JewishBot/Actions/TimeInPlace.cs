@@ -33,7 +33,7 @@ Usage: /timein location";
 
     public async Task HandleAsync()
     {
-        if (_args == null)
+        if (_args.Count == 0)
         {
             await _botService.Client.SendTextMessageAsync(_chatId, Description);
             return;
@@ -42,7 +42,7 @@ Usage: /timein location";
         var (status, location) = await GetLocationAsync(_args);
         if (status == Status.Error)
         {
-            const string errorMessage = "Something goes wrong \uD83D\uDE22";
+            const string errorMessage = "Something went wrong \uD83D\uDE22";
             await _botService.Client.SendTextMessageAsync(_chatId, errorMessage);
             return;
         }
@@ -60,14 +60,16 @@ Usage: /timein location";
             .ToString("t", culture);
     }
 
-    private async Task<Tuple<Status, Location>> GetLocationAsync(IReadOnlyCollection<string> place)
+    private async Task<Tuple<Status, Location>> GetLocationAsync(IEnumerable<string> place)
     {
         var mapsApi = new GoogleMapsApi(_clientFactory, _apiKey);
         var response = await mapsApi.InvokeAsync(place);
 
-        return response.Status == "OK"
-            ? new Tuple<Status, Location>(Status.Ok, response.Results[0].Geometry.Location)
-            : new Tuple<Status, Location>(Status.Error, null);
+        var geometryLocation = response.Results?[0].Geometry?.Location;
+        if (response.Status != "OK" || geometryLocation is null)
+            return new Tuple<Status, Location>(Status.Error, new Location());
+
+        return new Tuple<Status, Location>(Status.Ok, geometryLocation);
     }
 
     private enum Status

@@ -19,7 +19,9 @@ public class DictApi
     public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
     {
         var client = _clientFactory.CreateClient("urbandictionary");
-        var query = new Dictionary<string, string>
+        if (client.BaseAddress is null) return new QueryModel();
+
+        var query = new Dictionary<string, string?>
         {
             {"term", string.Join(" ", arguments)}
         };
@@ -32,9 +34,9 @@ public class DictApi
         {
             var response =
                 await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
-            return JsonConvert.DeserializeObject<QueryModel>(response);
+            return JsonConvert.DeserializeObject<QueryModel>(response) ?? new QueryModel();
         }
-        catch (HttpRequestException e)
+        catch (HttpRequestException)
         {
             return new QueryModel();
         }

@@ -24,16 +24,16 @@ internal class DuckDuckGo : IAction
     public async Task HandleAsync()
     {
         var message = "Please specify at least 1 search term";
-        if (_args != null)
+        if (_args.Count != 0)
         {
             var go = new GoApi(_clientFactory);
             var result = await go.InvokeAsync(_args);
             message = result.Type switch
             {
                 "A" => result.AbstractText,
-                "D" => result.RelatedTopics[0].Text,
+                "D" => result.RelatedTopics?[0].Text,
                 "E" => result.Redirect,
-                "C" => result.AbstractUrl.ToString(),
+                "C" => result.AbstractUrl?.ToString(),
                 _ => "Nothing found \uD83D\uDE22"
             };
         }

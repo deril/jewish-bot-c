@@ -19,7 +19,9 @@ public class GoApi
     public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
     {
         var client = _clientFactory.CreateClient("duckduckgo");
-        var query = new Dictionary<string, string>
+        if (client.BaseAddress is null) return new QueryModel();
+
+        var query = new Dictionary<string, string?>
         {
             {"q", string.Join(string.Empty, arguments)},
             {"format", "json"}
@@ -30,7 +32,7 @@ public class GoApi
             var response =
                 await client.GetStringAsync(
                     new Uri(QueryHelpers.AddQueryString(client.BaseAddress.ToString(), query)));
-            return JsonConvert.DeserializeObject<QueryModel>(response);
+            return JsonConvert.DeserializeObject<QueryModel>(response) ?? new QueryModel();
         }
         catch (HttpRequestException e)
         {

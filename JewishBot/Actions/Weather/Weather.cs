@@ -23,7 +23,7 @@ internal class Weather : IAction
 
     public async Task HandleAsync()
     {
-        if (_args == null)
+        if (_args.Count == 0)
         {
             await _botService.Client.SendTextMessageAsync(_chatId, "Please specify a city or region");
             return;

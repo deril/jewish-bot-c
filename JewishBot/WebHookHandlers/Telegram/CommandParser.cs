@@ -24,17 +24,17 @@ public class CommandParser
 
         if (firstSpace == -1)
         {
-            name = Message.Substring(1);
+            name = Message[1..];
         }
         else
         {
-            name = Message.Substring(1, firstSpace - 1);
-            args = Array.AsReadOnly(Message.Substring(firstSpace + 1).Split());
+            name = Message[1..firstSpace];
+            args = Array.AsReadOnly(Message[(firstSpace + 1)..].Split());
         }
 
         var botNameDelimiterIndex = name.IndexOf(BotNameDelimiter, StringComparison.OrdinalIgnoreCase);
 
-        if (botNameDelimiterIndex != -1) name = name.Substring(0, botNameDelimiterIndex);
+        if (botNameDelimiterIndex != -1) name = name[..botNameDelimiterIndex];
 
         return new Command(name, args);
     }

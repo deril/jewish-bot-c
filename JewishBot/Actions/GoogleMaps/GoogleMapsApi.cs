@@ -18,10 +18,12 @@ public class GoogleMapsApi
         _apiKey = apiKey;
     }
 
-    public async Task<QueryModel> InvokeAsync(IReadOnlyCollection<string> arguments)
+    public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
     {
         var client = _clientFactory.CreateClient("googleapis");
-        var query = new Dictionary<string, string>
+        if (client.BaseAddress is null) return new QueryModel();
+
+        var query = new Dictionary<string, string?>
         {
             {"address", string.Join(string.Empty, arguments)},
             {"key", _apiKey}
@@ -35,9 +37,9 @@ public class GoogleMapsApi
         {
             var response =
                 await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
-            return JsonConvert.DeserializeObject<QueryModel>(response);
+            return JsonConvert.DeserializeObject<QueryModel>(response) ?? new QueryModel();
         }
-        catch (HttpRequestException e)
+        catch (HttpRequestException)
         {
             return new QueryModel();
         }

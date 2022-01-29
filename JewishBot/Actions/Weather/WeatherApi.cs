@@ -18,7 +18,9 @@ public class WeatherApi
     public async Task<string> InvokeAsync(IEnumerable<string> arguments)
     {
         var client = _clientFactory.CreateClient("weatherapi");
-        var query = new Dictionary<string, string>
+        if (client.BaseAddress is null) return string.Empty;
+
+        var query = new Dictionary<string, string?>
         {
             {"format", "3"}
         };
@@ -32,7 +34,7 @@ public class WeatherApi
                 await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
             return response;
         }
-        catch (HttpRequestException e)
+        catch (HttpRequestException)
         {
             return string.Empty;
         }

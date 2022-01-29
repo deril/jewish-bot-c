@@ -10,11 +10,13 @@ using JewishBot.Actions.Weather;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace JewishBot.WebHookHandlers.Telegram;
 
 public class WebHookHandler : IWebHookHandler
 {
+    private const string MessageLogMsg = "Input for bot: Message from {ChatId}/{Username}, Text: {Text}";
     private readonly IBotService _botService;
     private readonly IHttpClientFactory _clientFactory;
     private readonly IConfiguration _configuration;
@@ -31,6 +33,10 @@ public class WebHookHandler : IWebHookHandler
 
     public async Task OnMessageReceived(Message message)
     {
+        _logger.LogInformation(MessageLogMsg, message.Chat.Id, message.From.Username, message.Text);
+
+        if (CannotHandleMessage(message)) return;
+
         var command = new CommandParser(message.Text).Parse();
         var chatId = message.Chat.Id;
         var username = string.IsNullOrEmpty(message.From.Username)
@@ -67,5 +73,15 @@ public class WebHookHandler : IWebHookHandler
         {
             _logger.LogError("Cannot execute command, error {Message}", e.Message);
         }
+    }
+
+    private static bool CannotHandleMessage(Message message)
+    {
+        return !IsTextMessage(message);
+    }
+
+    private static bool IsTextMessage(Message message)
+    {
+        return message.Type == MessageType.Text;
     }
 }

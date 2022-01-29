@@ -74,6 +74,6 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
 
     private bool IsInvalidArguments()
     {
-        return _args == null || _args.Any(argument => argument == null);
+        return _args.Count == 0 || _args.Any(string.IsNullOrEmpty);
     }
 }

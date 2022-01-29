@@ -19,7 +19,7 @@ internal class Echo : IAction
 
     public async Task HandleAsync()
     {
-        if (_args == null) return;
+        if (_args.Count == 0) return;
 
         await _botService.Client.SendTextMessageAsync(_chatId, string.Join(" ", _args));
     }

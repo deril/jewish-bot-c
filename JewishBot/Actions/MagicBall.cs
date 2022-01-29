@@ -56,7 +56,7 @@ internal class MagicBall : IAction
 
     public async Task HandleAsync()
     {
-        if (_args == null)
+        if (_args.Count == 0)
         {
             await _botService.Client.SendTextMessageAsync(_chatId, Description).ConfigureAwait(false);
             return;
@@ -82,9 +82,9 @@ internal class MagicBall : IAction
     private static BigInteger ConvertHash(byte[] hash)
     {
         // make int unsigned
-        var uhash = new byte[hash.Length + 1];
-        hash.CopyTo(uhash, 0);
-        uhash[hash.Length] = 00;
-        return new BigInteger(uhash);
+        var unsignedHash = new byte[hash.Length + 1];
+        hash.CopyTo(unsignedHash, 0);
+        unsignedHash[hash.Length] = 00;
+        return new BigInteger(unsignedHash);
     }
 }

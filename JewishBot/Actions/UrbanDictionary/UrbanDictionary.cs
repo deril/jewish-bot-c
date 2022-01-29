@@ -25,11 +25,13 @@ internal class UrbanDictionary : IAction
     {
         var message = "Please specify at least 1 search term";
 
-        if (_args != null)
+        if (_args.Count != 0)
         {
             var ud = new DictApi(_clientFactory);
             var result = await ud.InvokeAsync(_args);
-            message = result.Errors == null && result.List.Count > 0 ? result.List[0].Definition : result.Errors;
+            message = result.List is not null && result.Errors is null && result.List.Count > 0
+                ? result.List[0].Definition
+                : result.Errors;
         }
 
         await _botService.Client.SendTextMessageAsync(_chatId,
