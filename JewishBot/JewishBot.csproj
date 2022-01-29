@@ -3,7 +3,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <Nullable>enable</Nullable>
-        <ReleaseVersion>1.16</ReleaseVersion>
+        <ReleaseVersion>1.17</ReleaseVersion>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
     <ItemGroup>

@@ -26,7 +26,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - Development Tools
-- .NET 5.0
+- .NET 6.0
 - Docker
 - Docker Compose
 
@@ -57,7 +57,7 @@ For deploy using docker as a delivery tool. You need to build and publish the ap
 ## Built With
 
 * [.NET Core](https://github.com/dotnet/core) - The framework used
-* [Telegram.Bot](https://github.com/TelegramBots/telegram.bot) - Telegram Client for .NET Core
+* [Telegram.Bot](https://github.com/TelegramBots/telegram.bot) - .NET Client for Telegram Bot API
 * [Api.Forex.Sharp](https://github.com/ApiForex/Api.Forex.Sharp) - Used for getting currency rates
 * [GeoTimeZone](https://github.com/mj1856/GeoTimeZone) - Used for getting timezone by location
 
