@@ -1,10 +1,9 @@
-﻿namespace JewishBot.WebHookHandlers.Telegram
-{
-    using System.Threading.Tasks;
-    using global::Telegram.Bot.Types;
+﻿using System.Threading.Tasks;
+using Telegram.Bot.Types;
 
-    public interface IWebHookHandler
-    {
-        Task OnMessageReceived(Message message);
-    }
+namespace JewishBot.WebHookHandlers.Telegram;
+
+public interface IWebHookHandler
+{
+    Task OnMessageReceived(Message message);
 }

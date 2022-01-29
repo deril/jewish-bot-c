@@ -1,44 +1,43 @@
-namespace JewishBot.Actions.DuckDuckGo
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using JewishBot.WebHookHandlers.Telegram;
+
+namespace JewishBot.Actions.DuckDuckGo;
+
+internal class DuckDuckGo : IAction
 {
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using WebHookHandlers.Telegram;
+    private readonly IReadOnlyCollection<string> _args;
+    private readonly IBotService _botService;
+    private readonly long _chatId;
+    private readonly IHttpClientFactory _clientFactory;
 
-    internal class DuckDuckGo : IAction
+    public DuckDuckGo(IBotService botService, IHttpClientFactory clientFactory, long chatId,
+        IReadOnlyCollection<string> args)
     {
-        private readonly IReadOnlyCollection<string> _args;
-        private readonly IBotService _botService;
-        private readonly long _chatId;
-        private readonly IHttpClientFactory _clientFactory;
+        _botService = botService;
+        _clientFactory = clientFactory;
+        _chatId = chatId;
+        _args = args;
+    }
 
-        public DuckDuckGo(IBotService botService, IHttpClientFactory clientFactory, long chatId,
-            IReadOnlyCollection<string> args)
+    public async Task HandleAsync()
+    {
+        var message = "Please specify at least 1 search term";
+        if (_args != null)
         {
-            _botService = botService;
-            _clientFactory = clientFactory;
-            _chatId = chatId;
-            _args = args;
-        }
-
-        public async Task HandleAsync()
-        {
-            var message = "Please specify at least 1 search term";
-            if (_args != null)
+            var go = new GoApi(_clientFactory);
+            var result = await go.InvokeAsync(_args);
+            message = result.Type switch
             {
-                var go = new GoApi(_clientFactory);
-                var result = await go.InvokeAsync(_args);
-                message = result.Type switch
-                {
-                    "A" => result.AbstractText,
-                    "D" => result.RelatedTopics[0].Text,
-                    "E" => result.Redirect,
-                    "C" => result.AbstractUrl.ToString(),
-                    _ => "Nothing found \uD83D\uDE22"
-                };
-            }
-
-            await _botService.Client.SendTextMessageAsync(_chatId, message ?? "Nothing found \uD83D\uDE22");
+                "A" => result.AbstractText,
+                "D" => result.RelatedTopics[0].Text,
+                "E" => result.Redirect,
+                "C" => result.AbstractUrl.ToString(),
+                _ => "Nothing found \uD83D\uDE22"
+            };
         }
+
+        await _botService.Client.SendTextMessageAsync(_chatId, message ?? "Nothing found \uD83D\uDE22");
     }
 }

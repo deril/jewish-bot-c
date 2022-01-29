@@ -1,41 +1,40 @@
-namespace JewishBot.Actions.Weather
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
+
+namespace JewishBot.Actions.Weather;
+
+public class WeatherApi
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.WebUtilities;
+    private readonly IHttpClientFactory _clientFactory;
 
-    public class WeatherApi
+    public WeatherApi(IHttpClientFactory clientFactory)
     {
-        private readonly IHttpClientFactory _clientFactory;
+        _clientFactory = clientFactory;
+    }
 
-        public WeatherApi(IHttpClientFactory clientFactory)
+    public async Task<string> InvokeAsync(IEnumerable<string> arguments)
+    {
+        var client = _clientFactory.CreateClient("weatherapi");
+        var query = new Dictionary<string, string>
         {
-            _clientFactory = clientFactory;
+            {"format", "3"}
+        };
+        var route = new UriBuilder(client.BaseAddress)
+        {
+            Path = string.Join("+", arguments)
+        };
+        try
+        {
+            var response =
+                await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
+            return response;
         }
-
-        public async Task<string> InvokeAsync(IEnumerable<string> arguments)
+        catch (HttpRequestException e)
         {
-            var client = _clientFactory.CreateClient("weatherapi");
-            var query = new Dictionary<string, string>
-            {
-                {"format", "3"}
-            };
-            var route = new UriBuilder(client.BaseAddress)
-            {
-                Path = string.Join("+", arguments)
-            };
-            try
-            {
-                var response =
-                    await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
-                return response;
-            }
-            catch (HttpRequestException e)
-            {
-                return string.Empty;
-            }
+            return string.Empty;
         }
     }
 }

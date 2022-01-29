@@ -1,43 +1,42 @@
-namespace JewishBot.Actions.Weather
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using JewishBot.WebHookHandlers.Telegram;
+
+namespace JewishBot.Actions.Weather;
+
+internal class Weather : IAction
 {
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using WebHookHandlers.Telegram;
+    private readonly IReadOnlyCollection<string> _args;
+    private readonly IBotService _botService;
+    private readonly long _chatId;
+    private readonly IHttpClientFactory _clientFactory;
 
-    internal class Weather : IAction
+    public Weather(IBotService botService, IHttpClientFactory clientFactory, long chatId,
+        IReadOnlyCollection<string> args)
     {
-        private readonly IReadOnlyCollection<string> _args;
-        private readonly IBotService _botService;
-        private readonly long _chatId;
-        private readonly IHttpClientFactory _clientFactory;
+        _botService = botService;
+        _clientFactory = clientFactory;
+        _chatId = chatId;
+        _args = args;
+    }
 
-        public Weather(IBotService botService, IHttpClientFactory clientFactory, long chatId,
-            IReadOnlyCollection<string> args)
+    public async Task HandleAsync()
+    {
+        if (_args == null)
         {
-            _botService = botService;
-            _clientFactory = clientFactory;
-            _chatId = chatId;
-            _args = args;
+            await _botService.Client.SendTextMessageAsync(_chatId, "Please specify a city or region");
+            return;
         }
 
-        public async Task HandleAsync()
+        var weatherApi = new WeatherApi(_clientFactory);
+        var response = await weatherApi.InvokeAsync(_args);
+        if (string.IsNullOrEmpty(response))
         {
-            if (_args == null)
-            {
-                await _botService.Client.SendTextMessageAsync(_chatId, "Please specify a city or region");
-                return;
-            }
-
-            var weatherApi = new WeatherApi(_clientFactory);
-            var response = await weatherApi.InvokeAsync(_args);
-            if (string.IsNullOrEmpty(response))
-            {
-                await _botService.Client.SendTextMessageAsync(_chatId, "Nothing \uD83D\uDE22");
-                return;
-            }
-
-            await _botService.Client.SendTextMessageAsync(_chatId, response);
+            await _botService.Client.SendTextMessageAsync(_chatId, "Nothing \uD83D\uDE22");
+            return;
         }
+
+        await _botService.Client.SendTextMessageAsync(_chatId, response);
     }
 }

@@ -1,74 +1,60 @@
-namespace JewishBot.Actions.RollDice
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace JewishBot.Actions.RollDice;
+
+public class Dice
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.RegularExpressions;
+    private const string CommonRollRegexPattern = "d *\\d+(?: *k *\\d+)?";
+    private const string StrictRollPattern = "(?:(?:\\d* +)|(?:\\d+ *)|^)" + CommonRollRegexPattern;
+    private readonly int _die;
+    private readonly int _quantity;
 
-    public class Dice
+    private readonly Random _rnd = new();
+
+    public Dice(string toParse)
     {
-        private const string CommonRollRegexPattern = "d *\\d+(?: *k *\\d+)?";
-        private const string StrictRollPattern = "(?:(?:\\d* +)|(?:\\d+ *)|^)" + CommonRollRegexPattern;
-        private readonly int _die;
-        private readonly int _quantity;
+        var sections = toParse.Split('d');
+        if (!string.IsNullOrEmpty(sections[0]))
+            if (!int.TryParse(sections[1], out _die))
+                _die = 6;
 
-        private readonly Random _rnd = new Random();
+        _quantity = 1;
+        if (string.IsNullOrEmpty(sections[0])) return;
 
-        public Dice(string toParse)
-        {
-            var sections = toParse.Split('d');
-            if (!string.IsNullOrEmpty(sections[0]))
-            {
-                if (!int.TryParse(sections[1], out _die))
-                {
-                    _die = 6;
-                }
-            }
+        if (!int.TryParse(sections[0], out _quantity)) _quantity = 1;
+    }
 
-            _quantity = 1;
-            if (string.IsNullOrEmpty(sections[0]))
-            {
-                return;
-            }
+    public static bool CanParse(string toParse)
+    {
+        if (string.IsNullOrWhiteSpace(toParse)) return false;
 
-            if (!int.TryParse(sections[0], out _quantity))
-            {
-                _quantity = 1;
-            }
-        }
+        var trimmedSource = toParse.Trim();
+        var strictRollRegex = new Regex(StrictRollPattern);
+        var rollMatch = strictRollRegex.Match(trimmedSource);
 
-        public static bool CanParse(string toParse)
-        {
-            if (string.IsNullOrWhiteSpace(toParse))
-            {
-                return false;
-            }
+        return rollMatch.Success && rollMatch.Value == trimmedSource;
+    }
 
-            var trimmedSource = toParse.Trim();
-            var strictRollRegex = new Regex(StrictRollPattern);
-            var rollMatch = strictRollRegex.Match(trimmedSource);
+    public int GetSum()
+    {
+        var rolls = GetRolls();
+        return rolls.Sum();
+    }
 
-            return rollMatch.Success && rollMatch.Value == trimmedSource;
-        }
+    private int Roll()
+    {
+        return _rnd.Next(_die) + 1;
+    }
 
-        public int GetSum()
-        {
-            var rolls = GetRolls();
-            return rolls.Sum();
-        }
+    private IEnumerable<int> GetRolls()
+    {
+        var rolls = new List<int>(_quantity);
 
-        private int Roll()
-        {
-            return _rnd.Next(_die) + 1;
-        }
+        for (var i = 0; i < _quantity; i++) rolls.Add(Roll());
 
-        private IEnumerable<int> GetRolls()
-        {
-            var rolls = new List<int>(_quantity);
-
-            for (var i = 0; i < _quantity; i++) rolls.Add(Roll());
-
-            return rolls;
-        }
+        return rolls;
     }
 }

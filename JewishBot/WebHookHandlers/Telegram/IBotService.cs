@@ -1,11 +1,10 @@
-namespace JewishBot.WebHookHandlers.Telegram
-{
-    using global::Telegram.Bot;
+using Telegram.Bot;
 
-    public interface IBotService
-    {
-        TelegramBotClient Client { get; }
-        bool IsPrivateMode { get; }
-        long PrivateChetId { get; }
-    }
+namespace JewishBot.WebHookHandlers.Telegram;
+
+public interface IBotService
+{
+    TelegramBotClient Client { get; }
+    bool IsPrivateMode { get; }
+    long PrivateChetId { get; }
 }

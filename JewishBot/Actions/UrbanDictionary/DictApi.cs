@@ -1,43 +1,42 @@
-namespace JewishBot.Actions.UrbanDictionary
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
+
+namespace JewishBot.Actions.UrbanDictionary;
+
+public class DictApi
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.WebUtilities;
-    using Newtonsoft.Json;
+    private readonly IHttpClientFactory _clientFactory;
 
-    public class DictApi
+    public DictApi(IHttpClientFactory clientFactory)
     {
-        private readonly IHttpClientFactory _clientFactory;
+        _clientFactory = clientFactory;
+    }
 
-        public DictApi(IHttpClientFactory clientFactory)
+    public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
+    {
+        var client = _clientFactory.CreateClient("urbandictionary");
+        var query = new Dictionary<string, string>
         {
-            _clientFactory = clientFactory;
+            {"term", string.Join(" ", arguments)}
+        };
+        var route = new UriBuilder(client.BaseAddress)
+        {
+            Path = "v0/define"
+        };
+
+        try
+        {
+            var response =
+                await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
+            return JsonConvert.DeserializeObject<QueryModel>(response);
         }
-
-        public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
+        catch (HttpRequestException e)
         {
-            var client = _clientFactory.CreateClient("urbandictionary");
-            var query = new Dictionary<string, string>
-            {
-                {"term", string.Join(" ", arguments)}
-            };
-            var route = new UriBuilder(client.BaseAddress)
-            {
-                Path = "v0/define"
-            };
-
-            try
-            {
-                var response =
-                    await client.GetStringAsync(new Uri(QueryHelpers.AddQueryString(route.Uri.ToString(), query)));
-                return JsonConvert.DeserializeObject<QueryModel>(response);
-            }
-            catch (HttpRequestException e)
-            {
-                return new QueryModel();
-            }
+            return new QueryModel();
         }
     }
 }

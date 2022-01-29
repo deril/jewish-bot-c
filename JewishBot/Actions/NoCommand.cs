@@ -1,12 +1,11 @@
-namespace JewishBot.Actions
-{
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-    internal class NoCommand : IAction
+namespace JewishBot.Actions;
+
+internal class NoCommand : IAction
+{
+    public Task HandleAsync()
     {
-        public Task HandleAsync()
-        {
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

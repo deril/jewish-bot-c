@@ -1,41 +1,40 @@
-namespace JewishBot.Actions.DuckDuckGo
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
+
+namespace JewishBot.Actions.DuckDuckGo;
+
+public class GoApi
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.WebUtilities;
-    using Newtonsoft.Json;
+    private readonly IHttpClientFactory _clientFactory;
 
-    public class GoApi
+    public GoApi(IHttpClientFactory clientFactory)
     {
-        private readonly IHttpClientFactory _clientFactory;
+        _clientFactory = clientFactory;
+    }
 
-        public GoApi(IHttpClientFactory clientFactory)
+    public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
+    {
+        var client = _clientFactory.CreateClient("duckduckgo");
+        var query = new Dictionary<string, string>
         {
-            _clientFactory = clientFactory;
+            {"q", string.Join(string.Empty, arguments)},
+            {"format", "json"}
+        };
+
+        try
+        {
+            var response =
+                await client.GetStringAsync(
+                    new Uri(QueryHelpers.AddQueryString(client.BaseAddress.ToString(), query)));
+            return JsonConvert.DeserializeObject<QueryModel>(response);
         }
-
-        public async Task<QueryModel> InvokeAsync(IEnumerable<string> arguments)
+        catch (HttpRequestException e)
         {
-            var client = _clientFactory.CreateClient("duckduckgo");
-            var query = new Dictionary<string, string>
-            {
-                {"q", string.Join(string.Empty, arguments)},
-                {"format", "json"}
-            };
-
-            try
-            {
-                var response =
-                    await client.GetStringAsync(
-                        new Uri(QueryHelpers.AddQueryString(client.BaseAddress.ToString(), query)));
-                return JsonConvert.DeserializeObject<QueryModel>(response);
-            }
-            catch (HttpRequestException e)
-            {
-                return new QueryModel();
-            }
+            return new QueryModel();
         }
     }
 }

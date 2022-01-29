@@ -1,9 +1,8 @@
-namespace JewishBot.Actions
-{
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
 
-    internal interface IAction
-    {
-        Task HandleAsync();
-    }
+namespace JewishBot.Actions;
+
+internal interface IAction
+{
+    Task HandleAsync();
 }

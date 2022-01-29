@@ -1,6 +1,5 @@
-namespace JewishBot.WebHookHandlers.Telegram
+namespace JewishBot.WebHookHandlers.Telegram;
+
+public class WebHookLogger
 {
-    public class WebHookLogger
-    {
-    }
 }

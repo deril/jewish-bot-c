@@ -1,30 +1,26 @@
-namespace JewishBot.Actions
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using JewishBot.WebHookHandlers.Telegram;
+
+namespace JewishBot.Actions;
+
+internal class Echo : IAction
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using WebHookHandlers.Telegram;
+    private readonly IReadOnlyCollection<string> _args;
+    private readonly IBotService _botService;
+    private readonly long _chatId;
 
-    internal class Echo : IAction
+    public Echo(IBotService botService, long chatId, IReadOnlyCollection<string> args)
     {
-        private readonly IReadOnlyCollection<string> _args;
-        private readonly IBotService _botService;
-        private readonly long _chatId;
+        _botService = botService;
+        _chatId = chatId;
+        _args = args;
+    }
 
-        public Echo(IBotService botService, long chatId, IReadOnlyCollection<string> args)
-        {
-            _botService = botService;
-            _chatId = chatId;
-            _args = args;
-        }
+    public async Task HandleAsync()
+    {
+        if (_args == null) return;
 
-        public async Task HandleAsync()
-        {
-            if (_args == null)
-            {
-                return;
-            }
-
-            await _botService.Client.SendTextMessageAsync(_chatId, string.Join(" ", _args));
-        }
+        await _botService.Client.SendTextMessageAsync(_chatId, string.Join(" ", _args));
     }
 }

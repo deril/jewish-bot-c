@@ -1,25 +1,24 @@
-﻿namespace JewishBot.Actions
+﻿using System;
+using System.Threading.Tasks;
+using JewishBot.WebHookHandlers.Telegram;
+
+namespace JewishBot.Actions;
+
+internal class WeekDay : IAction
 {
-    using System;
-    using System.Threading.Tasks;
-    using WebHookHandlers.Telegram;
+    private const string TimeZoneId = "Europe/Kiev";
+    private readonly IBotService _botService;
+    private readonly long _chatId;
 
-    internal class WeekDay : IAction
+    public WeekDay(IBotService botService, long chatId)
     {
-        private const string TimeZoneId = "Europe/Kiev";
-        private readonly IBotService _botService;
-        private readonly long _chatId;
+        _botService = botService;
+        _chatId = chatId;
+    }
 
-        public WeekDay(IBotService botService, long chatId)
-        {
-            _botService = botService;
-            _chatId = chatId;
-        }
-
-        public async Task HandleAsync()
-        {
-            var currentTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId));
-            await _botService.Client.SendTextMessageAsync(_chatId, $"Today is {currentTime.DayOfWeek}");
-        }
+    public async Task HandleAsync()
+    {
+        var currentTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId));
+        await _botService.Client.SendTextMessageAsync(_chatId, $"Today is {currentTime.DayOfWeek}");
     }
 }
