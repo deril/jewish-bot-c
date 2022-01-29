@@ -23,14 +23,14 @@ internal class RollDice : IAction
     {
         if (!IsParsableArguments())
         {
-            await _botService.Client.SendDiceAsync(_chatId);
+            await _botService.SendDiceAsync(_chatId);
             return;
         }
 
         var result = new Dice(_args[0]);
         var message = result.GetSum();
 
-        await _botService.Client.SendTextMessageAsync(_chatId, $"{_username}: \uD83C\uDFB2 {message}");
+        await _botService.SendMessageAsync($"{_username}: \uD83C\uDFB2 {message}", _chatId);
     }
 
     private bool IsParsableArguments()

@@ -31,17 +31,27 @@ public class WebHookHandler : IWebHookHandler
         _logger = logger;
     }
 
-    public async Task OnMessageReceived(Message message)
+    public async Task OnMessageReceived(Message? message)
     {
-        _logger.LogInformation(MessageLogMsg, message.Chat.Id, message.From.Username, message.Text);
+        _logger.LogInformation(MessageLogMsg, message?.Chat.Id, message?.From?.Username, message?.Text);
 
-        if (CannotHandleMessage(message)) return;
+        if (message?.Text is null || message.Type != MessageType.Text) return;
 
         var command = new CommandParser(message.Text).Parse();
         var chatId = message.Chat.Id;
-        var username = string.IsNullOrEmpty(message.From.Username)
-            ? $"{message.From.FirstName} {message.From.LastName}"
-            : message.From.Username;
+        string username;
+
+        if (message.From is null)
+        {
+            username = "Anonymous";
+        }
+        else
+        {
+
+            username = string.IsNullOrEmpty(message.From.Username)
+                ? $"{message.From.FirstName} {message.From.LastName}"
+                : message.From.Username;
+        }
 
         IAction cmd;
         if (_botService.IsPrivateMode && chatId != _botService.PrivateChetId)
@@ -73,15 +83,5 @@ public class WebHookHandler : IWebHookHandler
         {
             _logger.LogError("Cannot execute command, error {Message}", e.Message);
         }
-    }
-
-    private static bool CannotHandleMessage(Message message)
-    {
-        return !IsTextMessage(message);
-    }
-
-    private static bool IsTextMessage(Message message)
-    {
-        return message.Type == MessageType.Text;
     }
 }

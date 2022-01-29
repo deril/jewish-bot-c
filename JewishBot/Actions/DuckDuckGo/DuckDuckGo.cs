@@ -38,6 +38,6 @@ internal class DuckDuckGo : IAction
             };
         }
 
-        await _botService.Client.SendTextMessageAsync(_chatId, message ?? "Nothing found \uD83D\uDE22");
+        await _botService.SendMessageAsync(message ?? "Nothing found \uD83D\uDE22", _chatId);
     }
 }

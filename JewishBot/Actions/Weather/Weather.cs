@@ -25,7 +25,7 @@ internal class Weather : IAction
     {
         if (_args.Count == 0)
         {
-            await _botService.Client.SendTextMessageAsync(_chatId, "Please specify a city or region");
+            await _botService.SendMessageAsync("Please specify a city or region", _chatId);
             return;
         }
 
@@ -33,10 +33,10 @@ internal class Weather : IAction
         var response = await weatherApi.InvokeAsync(_args);
         if (string.IsNullOrEmpty(response))
         {
-            await _botService.Client.SendTextMessageAsync(_chatId, "Nothing \uD83D\uDE22");
+            await _botService.SendMessageAsync("Nothing \uD83D\uDE22", _chatId);
             return;
         }
 
-        await _botService.Client.SendTextMessageAsync(_chatId, response);
+        await _botService.SendMessageAsync(response, _chatId);
     }
 }

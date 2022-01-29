@@ -21,6 +21,6 @@ internal class Echo : IAction
     {
         if (_args.Count == 0) return;
 
-        await _botService.Client.SendTextMessageAsync(_chatId, string.Join(" ", _args));
+        await _botService.SendMessageAsync(string.Join(" ", _args), _chatId);
     }
 }

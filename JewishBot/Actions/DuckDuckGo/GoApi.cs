@@ -34,7 +34,7 @@ public class GoApi
                     new Uri(QueryHelpers.AddQueryString(client.BaseAddress.ToString(), query)));
             return JsonConvert.DeserializeObject<QueryModel>(response) ?? new QueryModel();
         }
-        catch (HttpRequestException e)
+        catch (HttpRequestException)
         {
             return new QueryModel();
         }

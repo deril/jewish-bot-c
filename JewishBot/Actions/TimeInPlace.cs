@@ -35,7 +35,7 @@ Usage: /timein location";
     {
         if (_args.Count == 0)
         {
-            await _botService.Client.SendTextMessageAsync(_chatId, Description);
+            await _botService.SendMessageAsync(Description, _chatId);
             return;
         }
 
@@ -43,12 +43,12 @@ Usage: /timein location";
         if (status == Status.Error)
         {
             const string errorMessage = "Something went wrong \uD83D\uDE22";
-            await _botService.Client.SendTextMessageAsync(_chatId, errorMessage);
+            await _botService.SendMessageAsync(errorMessage, _chatId);
             return;
         }
 
         var time = GetTimeInLocation(location);
-        await _botService.Client.SendTextMessageAsync(_chatId, $"In {string.Join(" ", _args)}: {time}");
+        await _botService.SendMessageAsync($"In {string.Join(" ", _args)}: {time}", _chatId);
     }
 
     private static string GetTimeInLocation(Location location)

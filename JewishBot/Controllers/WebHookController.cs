@@ -2,7 +2,6 @@
 using JewishBot.WebHookHandlers.Telegram;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 
 namespace JewishBot.Controllers;
@@ -12,12 +11,10 @@ namespace JewishBot.Controllers;
 public class WebHookController : Controller
 {
     private readonly IWebHookHandler _handler;
-    private readonly ILogger<WebHookController> _logger;
 
-    public WebHookController(IWebHookHandler webHook, ILogger<WebHookController> logger)
+    public WebHookController(IWebHookHandler webHook)
     {
         _handler = webHook;
-        _logger = logger;
     }
 
     // GET: /WebHook/

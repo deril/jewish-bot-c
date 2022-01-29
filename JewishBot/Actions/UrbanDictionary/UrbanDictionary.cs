@@ -34,7 +34,7 @@ internal class UrbanDictionary : IAction
                 : result.Errors;
         }
 
-        await _botService.Client.SendTextMessageAsync(_chatId,
-            string.IsNullOrEmpty(message) ? "Nothing found \uD83D\uDE22" : message);
+        await _botService.SendMessageAsync(string.IsNullOrEmpty(message) ? "Nothing found \uD83D\uDE22" : message,
+            _chatId);
     }
 }

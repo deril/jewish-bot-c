@@ -58,15 +58,14 @@ internal class MagicBall : IAction
     {
         if (_args.Count == 0)
         {
-            await _botService.Client.SendTextMessageAsync(_chatId, Description).ConfigureAwait(false);
+            await _botService.SendMessageAsync(Description, _chatId);
             return;
         }
 
         if (_rnd.Next(1, 6) == 1)
         {
             var index = _rnd.Next(_askAgainAnswers.Count + 1);
-            await _botService.Client.SendTextMessageAsync(_chatId, _askAgainAnswers[index])
-                .ConfigureAwait(false);
+            await _botService.SendMessageAsync(_askAgainAnswers[index], _chatId);
         }
         else
         {
@@ -74,8 +73,7 @@ internal class MagicBall : IAction
             var time = DateTime.Now.Ticks;
             var hash = algorithm.ComputeHash(Encoding.ASCII.GetBytes(string.Join(" ", _args) + time));
             var index = (int) (ConvertHash(hash) % _answers.Count);
-            await _botService.Client.SendTextMessageAsync(_chatId, _answers[index])
-                .ConfigureAwait(false);
+            await _botService.SendMessageAsync(_answers[index], _chatId);
         }
     }
 

@@ -31,7 +31,7 @@ Usage: /ex [amount] [fromCurrency] in [toCurrency];
     public async Task HandleAsync()
     {
         var message = PrepareMessage();
-        await _botService.Client.SendTextMessageAsync(_chatId, message);
+        await _botService.SendMessageAsync(message, _chatId);
     }
 
     private string PrepareMessage()

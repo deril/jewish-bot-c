@@ -28,7 +28,7 @@ internal class GoogleMaps : IAction
         var message = "Please specify an address";
         if (_args.Count == 0)
         {
-            await _botService.Client.SendTextMessageAsync(_chatId, message);
+            await _botService.SendMessageAsync(message, _chatId);
             return;
         }
 
@@ -40,10 +40,10 @@ internal class GoogleMaps : IAction
         if (response.Status != "OK" || geometryLocation is null)
         {
             message = "Nothing \uD83D\uDE22";
-            await _botService.Client.SendTextMessageAsync(_chatId, message);
+            await _botService.SendMessageAsync(message, _chatId);
             return;
         }
 
-        await _botService.Client.SendLocationAsync(_chatId, geometryLocation.Lattitude, geometryLocation.Longtitude);
+        await _botService.SendLocationAsync(geometryLocation.Lattitude, geometryLocation.Longtitude, _chatId);
     }
 }

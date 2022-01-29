@@ -16,6 +16,6 @@ internal class Hey : IAction
 
     public async Task HandleAsync()
     {
-        await _botService.Client.SendTextMessageAsync(_chatId, "היי! (Hey)");
+        await _botService.SendMessageAsync("היי! (Hey)", _chatId);
     }
 }

@@ -5,5 +5,5 @@ namespace JewishBot.WebHookHandlers.Telegram;
 
 public interface IWebHookHandler
 {
-    Task OnMessageReceived(Message message);
+    Task OnMessageReceived(Message? message);
 }

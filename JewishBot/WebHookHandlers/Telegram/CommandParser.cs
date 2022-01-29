@@ -9,27 +9,27 @@ public class CommandParser
     private const char MainDelimiter = ' ';
     private const char BotNameDelimiter = '@';
 
-    public CommandParser(string msg)
+    public CommandParser(string text)
     {
-        Message = msg;
+        Text = text;
     }
 
-    private string Message { get; }
+    private string Text { get; }
 
     public Command Parse()
     {
-        var firstSpace = Message.IndexOf(MainDelimiter, StringComparison.OrdinalIgnoreCase);
+        var firstSpace = Text.IndexOf(MainDelimiter, StringComparison.OrdinalIgnoreCase);
         string name;
         var args = new ReadOnlyCollection<string>(new List<string>());
 
         if (firstSpace == -1)
         {
-            name = Message[1..];
+            name = Text[1..];
         }
         else
         {
-            name = Message[1..firstSpace];
-            args = Array.AsReadOnly(Message[(firstSpace + 1)..].Split());
+            name = Text[1..firstSpace];
+            args = Array.AsReadOnly(Text[(firstSpace + 1)..].Split());
         }
 
         var botNameDelimiterIndex = name.IndexOf(BotNameDelimiter, StringComparison.OrdinalIgnoreCase);

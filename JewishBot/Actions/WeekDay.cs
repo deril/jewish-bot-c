@@ -19,6 +19,6 @@ internal class WeekDay : IAction
     public async Task HandleAsync()
     {
         var currentTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId));
-        await _botService.Client.SendTextMessageAsync(_chatId, $"Today is {currentTime.DayOfWeek}");
+        await _botService.SendMessageAsync($"Today is {currentTime.DayOfWeek}", _chatId);
     }
 }
