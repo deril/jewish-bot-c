@@ -1,19 +1,15 @@
-﻿namespace JewishBot
-{
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Hosting;
+﻿using JewishBot;
+using JewishBot.WebHookHandlers.Telegram;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
-    public static class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
+DependencyInjectionConfig.AddScope(builder.Services, builder.Configuration);
+builder.Services.AddSingleton<IBotService, BotService>().AddScoped<WebHookLogger>();
+builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.Configure<BotConfiguration>(builder.Configuration.GetSection("BotConfiguration"));
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
-        }
-    }
-}
+var app = builder.Build();
+app.MapControllers();
+
+app.Run();
