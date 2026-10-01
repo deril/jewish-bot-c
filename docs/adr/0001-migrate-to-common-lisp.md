@@ -70,7 +70,8 @@ remaining playful commands stay `/commands`.
 | HTTP client | dexador (already pulled in by cl-telegram-bot2) | Weather, geocoding, rates, Urban Dictionary |
 | Currency rates | [National Bank of Ukraine API](https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json) | Free, no key, UAH rates for every currency. Cached once a day. Replaces Api.Forex |
 | Time | local-time | `weekday`, `котра година в` |
-| Config | Environment variables | `TELEGRAM_TOKEN`, `GOOGLE_API_KEY`. Nothing secret in the repository |
+| Config | Environment variables | `TELEGRAM_TOKEN`, `GOOGLE_API_KEY`, `ALLOWED_CHAT_IDS`. Nothing secret in the repository |
+| Chat allowlist | `ALLOWED_CHAT_IDS` | See *Which chats the bot serves* |
 | Distribution | Docker image on `ghcr.io/deril/jewish-bot-c`, plus the plain binary | See *Docker image* |
 | Tests | FiveAM | Intents and commands are tested without Telegram |
 | Logging | log4cl at Information | Every matched intent and command is logged with chat id and name (not the message text), so usage can be measured from now on |
@@ -149,6 +150,27 @@ Rules for the data behind the slots:
 **Share the units with UkrainianCuisine.** Kitchen conversions and ingredient densities
 are what the recipe app needs for scaling and merging lists. The unit and density tables
 go into a small shared system that both projects load, instead of two copies.
+
+### Which chats the bot serves
+
+The .NET bot already has a private mode: `PrivateMode` and `PrivateChetId` in
+`appsettings.json`, checked in `WebHookHandler.cs`. With it on, a message from any other
+chat becomes `NoCommand` and gets no reply. The rewrite keeps the idea and makes it
+stricter, because with privacy mode off the bot reads every message in every chat it is
+added to, and anyone can add it to their own group and spend the Google API quota.
+
+- **`ALLOWED_CHAT_IDS`**: a comma-separated list of chat ids (group ids are negative). It
+  replaces the `PrivateMode` flag plus one id: a non-empty list turns the restriction on,
+  and more than one chat (the group plus the author's private chat for testing) is allowed.
+- **Checked first.** Updates from other chats are dropped before matching, before calling
+  any external API and before logging, so they leave no trace and cost nothing.
+- **Unset means every chat**, so the Docker image still works for someone who runs their
+  own bot with their own token. The README says to set it.
+- **Leave unknown groups.** When the bot is added to a group that isn't on the list, it
+  calls `leaveChat`, so it doesn't keep receiving that group's messages.
+- **Finding the id.** At startup the bot logs the allowlist. A `/chatid` command replies
+  with the current chat's id, and works in any chat, so the id can be found before it is
+  added to the list.
 
 ### Telegram privacy mode
 
@@ -256,7 +278,11 @@ For one bot in a few chats, polling costs at most about a second of delay. In re
 - **False positives annoy a group chat.** Whole-message matching, typed slots and a test
   suite of everyday sentences that must not match are the safeguards.
 - **The bot reads every group message** once privacy mode is off. It drops what doesn't
-  match and doesn't log message text.
+  match and doesn't log message text. `ALLOWED_CHAT_IDS` limits this to the chats it is
+  meant for.
+- **Unset allowlist on the author's deployment** would let strangers use the bot and its
+  API keys. The production config must set it; the bot logs a warning at startup when it
+  is empty.
 - **Data entry is most of the work**: word forms, densities, currency names and symbols.
 - **Dependency weight.** cl-telegram-bot2 brings 15+ systems and an actor runtime for a
   bot that keeps no per-chat state. The wrapper layer and the fallback (option 5) limit the
@@ -270,13 +296,13 @@ For one bot in a few chats, polling costs at most about a second of delay. In re
 
 ## Implementation plan
 
-Estimated 4–5 focused days (36–45 h) in total. Phase 1 alone is about 1–1.5 days.
+Estimated 4–5 focused days (37–46 h) in total. Phase 1 alone is about 1–1.5 days.
 
 | Step | Estimate |
 |---|---|
 | Skeleton: `.asd`, `qlfile`, config, `start-polling`, logging | 2–3 h |
 | Getting cl-telegram-bot2 to load and learning its state DSL | 2–4 h |
-| Wrapper layer: commands, and text routed to the matcher | 1–2 h |
+| Wrapper layer: commands, text routed to the matcher, chat allowlist, `leaveChat`, `/chatid` | 2–3 h |
 | `dice`, `ball`, `weekday`, `echo`, `hey` with FiveAM tests | 3–4 h |
 | Intent matcher: tokenizer, numbers, `defintent`, matching and choosing, tests | ~1 day |
 | `convert`: unit table, densities, word forms, NBU rates with a daily cache | 1 day |
